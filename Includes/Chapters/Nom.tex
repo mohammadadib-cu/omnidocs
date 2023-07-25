@@ -1,0 +1,35 @@
+\chapter{Nomenclature and Index}
+
+This chapter describes how to create Nomenclature and Index in \LaTeX. Please note that having Nomenclature and Index sections in your report is recommended, as it can be very informative and helpful for the future readers of your report.
+
+\section{Nomenclature}
+
+All the acronyms, symbols, subscripts, and superscripts should be described in the Nomenclature section. Please follow the presented examples in this template in the \verb|Includes/Nomenclature.tex| file. The nomenclature list is created by means of the \verb|nomencl| and \verb|siunitx| packages.
+
+You can see that there are predefined subgroups in the list. These subgroups are presented in Table \ref{tab:NomSubgroups}. If you need to define extra subgroups you can manipulate the \emph{Nomenclature definition} section of the \verb|Includes/Settings.tex| file. The list is automatically presented in the alphabetical order.
+
+\begin{table}[!h]
+	\caption{Nomenclature subgroups}
+	\label{tab:NomSubgroups}
+    \centering
+    \begin{tabular}{c c}
+		\hline
+		Prefix & Group \\
+		\hline
+		A & Acronyms \\
+		E & English \\
+		G & Greek \\
+		S & Superscripts \\
+		U & Subscripts \\
+		X & Other Symbols \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{Index}
+An index is a list of words or phrases (``headings") and associated pointers (``locators") to where useful material relating to that heading can be found in a document or collection of documents \cite{IndexWiki}. The index list is created using the \verb|imakeidx| package. This document has the index at the end (please have a look).
+
+In this example (see \LaTeX~source code of this paragraph) several keywords\index{keywords} will be used which are important and deserve to appear in the index\index{index}. Terms like OpenFOAM\index{OpenFOAM}, project\index{project}, report\index{report} and some others\index{others} will also show up.
+
+
+There is no need to bother about the index keywords when writing the document. After you are finished with the report, you may decide which index keywords you want to use, and use search and replace to create the index. For instance, if you wish to index the keyword \verb|turbulence|, you may search for all of the instances of that keyword and \emph{manually accept the replacement of them} with \verb|turbulence\index{turbulence}|. Just make sure that you do not replace your keywords inside verbatim mode, since then it will not work properly! Instead, put the \verb|\index{}| just outside the verbatim mode. That is why you should manually accept every replacement rather than to automatically accept all of them. Some typical keywords would be standard OpenFOAM solvers, utilities, libraries, classes, etc., as well as your own developments. Quite often you may be using verbatim mode for OpenFOAM names. Again, make sure that the \verb|\index{}| ends up outside the verbatim mode!

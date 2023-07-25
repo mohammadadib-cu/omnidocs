@@ -1,0 +1,31 @@
+\documentclass{report}
+
+\include{Includes/Settings/Settings}
+
+\begin{document}
+
+% ----------------------- Front Matter ----------------------- %
+\include{Includes/FrontMatter/TitlePage}
+\tableofcontents
+\include{Includes/FrontMatter/Nomenclature}
+% ------------------------------------------------------------ %
+
+
+% ------------------------- Chapters ------------------------- %
+\include{Includes/Chapters/Introduction}
+\include{Includes/Chapters/Theory}
+
+%\include{Includes/Chapters/Nom}
+% ------------------------------------------------------------ %
+\clearpage
+\bibliography{Includes/Bibliography/all.bib}
+
+% ----------------------- Back Matter ------------------------ %
+
+\appendix
+%\include{Includes/Appendix/Appendix1}
+%\include{Includes/Appendix/Appendix2}
+\printindex
+% ------------------------------------------------------------ %
+
+\end{document}

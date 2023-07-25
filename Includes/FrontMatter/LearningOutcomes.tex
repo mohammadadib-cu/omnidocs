@@ -1,0 +1,26 @@
+\chapter*{Learning outcomes}
+
+The main requirements of a tutorial in the course is that it should teach the four points: How to use it, The theory of it, How it is implemented, and How to modify it. Therefore the list of learning outcomes is organized with those headers.\\[0.4cm]
+
+\noindent The reader will learn:\\[0.4cm]
+
+\noindent{\bf How to use it:}
+
+\begin{itemize}
+    \item how to use \verb|laminarSoot| combustion model with \verb|reactingFoam|
+    \item how to set up cases that can be used with \verb|laminarSoot| to simulate soot formation in combustion or pyrolysis of hydrocarbons 
+\end{itemize}
+{\bf The theory of it:}
+\begin{itemize}
+\item how the proposed monodisperse population balance model (MPBM) describes soot evolution
+\item how the soot model impacts the production/destruction rate of species 
+\end{itemize}
+{\bf How it is implemented:}
+\begin{itemize}
+\item how a combustion model communicates with \verb|reactingFoam| solver 
+\item how to calculate soot inception, growth, oxidation and coagulation rates within \verb|laminarSoot| library and utilize them to solve transport equations of tracked fields
+\end{itemize}
+{\bf How to modify it:}    
+\begin{itemize}
+\item how the reaction rates and heat release obtained from gas chemistry should be modified to account for the production/consumption of species mass and energy by soot inception, growth and oxidation
+\end{itemize}
