@@ -1,7 +1,10 @@
-\chapter{Theory}
-In this chapter, an overview of mathematical basic of the soot model is presented, which includes the transport equations, characterization of soot morphology and calculation of source terms corresponding to each step of soot evolution. All equations will be used to implement the soot model in \verb|laminarSoot| library. 
-\section{Transport equations}
+\chapter{Mathematical Model}
+In this chapter,  the mathematical model of \textit{omnisoot} is explain in detail, which includes (i) the transport equations for different reactors, (ii) PAH growth (inception and PAH adsorption), (iii) surface growth and oxidation described by HACA, (iv) particle dynamics model. 
 
+\section{Conventions}
+
+
+\section{Reactors}
 MPBM relies on the Eulerian description of particles where certain physical properties representative of particle population such as number density, mass or surface area are treated as continuous quantities that can be described by solving scalar transport equations. The formulation of soot model used in this project is based on MPBM originally proposed and validated by Kholghy and Kelesidis \cite{Kholghy2021}, and it tracks number density of primary particles (N\textsubscript{pri}) and agglomerates (N\textsubscript{agg}), total carbon (C\textsubscript{tot}) and hydrogen (H\textsubscript{tot}) content of soot particles by solving the following transport equations
 
 \begin{equation}
