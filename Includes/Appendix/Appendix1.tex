@@ -1,134 +1,40 @@
-\chapter{Appendix: Source Code}
-\section{HACA-growth functions}
-\label{sec:apphaca}
+\chapter{Appendix: Derivation of Transport Equations}
+This chapter explains the derivation of transport equations from first principles for mass, species, energy and soot variables for the reactors employed in omnisoot.
+\section{Constant Volume Reactor}
+\label{sec:derivconstuv}
 
-\begin{lstlisting}[style=cpp,title=\texttt{laminarSoot.H},captionpos=t]
-        // HACA Rate
-        virtual tmp<volScalarField> k_4_HACA()
-        {
-            const volScalarField& T = this->thermo().T();
-            dimensionedScalar oneKelvin(dimTemperature, scalar(1.0));
-            dimensionedScalar k_unit(dimensionSet(0,3,-1,0,-1,0,0), scalar(1.0));
-            return tmp<volScalarField>
-            (
-                new volScalarField
-                (
-                    "k_4_HACA",
-                    (k_unit * 8.00e1 * pow(T/oneKelvin, 1.56) * exp(oneKelvin * (-1912.43) / T))
-                )
-            );
-        }
-        virtual tmp<volScalarField> k_5_HACA()
-        {
-            const volScalarField& T = this->thermo().T();
-            dimensionedScalar oneKelvin(dimTemperature, scalar(1.0));
-            dimensionedScalar k_unit(dimensionSet(0,3,-1,0,-1,0,0), scalar(1.0));
-            return tmp<volScalarField>
-            (
-                new volScalarField
-                (
-                    "k_5_HACA",
-                    (k_unit * 2.20e6 * exp(oneKelvin * (-3774.53) / T))
-                )
-            );
-        } 
-        virtual tmp<volScalarField> k_6_HACA()
-        {
-            const volScalarField& T = this->thermo().T();
-            dimensionedScalar oneKelvin(dimTemperature, scalar(1.0));
-            dimensionedScalar k_unit(dimensionSet(0,3,-1,0,-1,0,0), scalar(1.0));
-            return tmp<volScalarField>
-            (
-                new volScalarField
-                (
-                    "k_6_HACA",
-                    (k_unit * 0.13e0 * pow(T/oneKelvin, 0.0))
-                )
-            );
-        }       
-        virtual tmp<volScalarField> C_soot_0()
-        {
-            // Species indicies
-            label H_i = speciesIndicies_["H"];
-            label OH_i = speciesIndicies_["OH"];
-            label H2_i = speciesIndicies_["H2"];
-            label H2O_i = speciesIndicies_["H2O"];
-            label C2H2_i = speciesIndicies_["C2H2"];
-            label O2_i = speciesIndicies_["O2"];
-            
-            const volScalarField& T = this->thermo().T();
-            volScalarField rho (this->thermo().rho());
+\subsection{Continuity}
+The rate change of mass of gas mixture is equal to the production rate of soot.
 
-            dimensionedScalar oneKelvin(dimTemperature, scalar(1.0));
-            dimensionedScalar k_unit(dimensionSet(0,3,-1,0,-1,0,0), scalar(1.0));
+\begin{equation*}
+	\frac{d}{dt}\left(m_{gas}\right)=V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i},
+\end{equation*}
+where V is the reactor volume that stays constant during the process, and gas occupies a fraction of volume reactor without soot, so $\mathrm{m_{gas}= \rho V (1-\varphi)}$.
 
-            // Forward Reaction Rates
-            // Units : m3/mol-s
-            volScalarField k_1(k_unit * 4.17e7 * exp(oneKelvin * (-6542.52) / T));
-            volScalarField k_2(k_unit * 1.00e4 * pow(T/oneKelvin, 0.734) * exp(oneKelvin * (-719.68) / T));
-            volScalarField k_3(k_unit * 2.00e7 * pow(T/oneKelvin, 0.0));
+\begin{equation*}
+	\frac{d}{dt}\left(\rho V(1-\varphi)\right)=V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+\end{equation*}
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+\begin{equation}
+	\frac{d}{dt}\left(\rho (1-\varphi)\right)=\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+\end{equation}
 
-            // Reverse Reaction Rates
-            // Units : m3/mol-s
-            volScalarField k_r_1(k_unit * 3.9e6 * exp(oneKelvin * (-5535.98) / T));
-            volScalarField k_r_2(k_unit * 3.68e2 * pow(T/oneKelvin, 1.139) * exp(oneKelvin * (-8605.94) / T));
+\subsection{Species}
 
-            // chi_soot_0
-            // dimensionedScalar chi_soot_0_denum_limit("chi_soot_0_denum_limit",dimless/dimTime, scalar(1e-20));
-            volScalarField chi_soot_0_denum
-            (
-                max 
-                (
-                    k_r_1 * C(H2_i) + k_r_2 * C(H2O_i) + k_3 * C(H_i) + k_4_HACA() * C(C2H2_i) + k_5_HACA() * C(O2_i) + k_1 * C(H_i) + k_2 * C(OH_i),
-                    dimensionedScalar(dimless/dimTime, SMALL)
-                )
-            );
+The rate change of mass of each species can be described as:
 
-            dimensionedScalar chi_soot_CH(dimensionSet(0,-2,0,0,0,0,0), scalar(2.3e19));
-            // 
-            volScalarField chi_soot_0
-            (
-                (k_1 * C(H_i) + k_2 * C(OH_i)) / chi_soot_0_denum * chi_soot_CH 
-            );
-
-            // C_soot_0
-            // unit: mol/m3
-            return tmp<volScalarField>
-            (
-                new volScalarField
-                (
-                    "C_soot_0",
-                    (A_tot_ / Av_ * chi_soot_0) * rho
-                )
-            );
-        }
-
-        virtual tmp<volScalarField> alpha()
-        {
-            dimensionedScalar oneKelvin(dimTemperature, scalar(1.0));
-            dimensionedScalar alpha_min(dimless, scalar(0.0));
-            dimensionedScalar alpha_max(dimless, scalar(1.0));
-            const volScalarField& T = this->thermo().T();
-            return tmp<volScalarField>
-            (
-                new volScalarField
-                (
-                    min
-                    (
-                        max
-                        (
-                            tanh
-                            (
-                                (12.56 - 0.00563 * T / oneKelvin) / log10 ( rho_soot_ * pi_ / 6.0 * pow(d_p_, 3.0) * Av_ / W_carbon_ ) - 
-                                1.38 + 0.00068 * T / oneKelvin
-                            ),
-                            alpha_min
-                        ),
-                        alpha_max
-                    )
-                )
-            );
-        }
-
-
-\end{lstlisting}
+\begin{equation*}
+	\frac{d}{dt}\left(m_k\right)=V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k\ \ 
+\end{equation*}
+The mass of each species is defined as the total gas mass multiplied by the mass fraction as
+\begin{equation*}
+	\frac{dY_k}{dt}\rho\ V(1-\varphi)+Y_k\frac{d}{dt}\left(\rho V(1-\varphi)\right)=V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+\begin{equation*}
+	\Downarrow \times 1/V
+\end{equation*}
+\begin{equation*}
+	\frac{dY_k}{dt}\rho\ (1-\varphi)+Y_k\frac{d}{dt}\left(\rho (1-\varphi)\right)=\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}

@@ -11,8 +11,29 @@
 \usepackage[numbers]{natbib}
 
 \usepackage{float}
+\usepackage{tikz}
 
 
+\makeatletter
+\newcounter{reaction}
+%%% >> for article <<
+%\renewcommand\thereaction{C\,\arabic{reaction}}
+%%% << for article <<
+%%% >> for report and book >>
+\renewcommand\thereaction{R\,\thechapter.\arabic{reaction}}
+\@addtoreset{reaction}{chapter}
+%%% << for report and book <<
+\newcommand\reactiontag%
+{\refstepcounter{reaction}\tag{\thereaction}}
+\newcommand\reaction@[2][]%
+{\begin{equation}\ce{#2}%
+		\ifx\@empty#1\@empty\else\label{#1}\fi%
+		\reactiontag\end{equation}}
+\newcommand\reaction@nonumber[1]%
+{\begin{equation*}\ce{#1}\end{equation*}}
+\newcommand\reaction%
+{\@ifstar{\reaction@nonumber}{\reaction@}}
+\makeatother
 
 
 \newcommand{\changefont}{\fontsize{10}{11}\selectfont}
@@ -127,7 +148,10 @@
 \sisetup{inter-unit-product=\ensuremath{{}\cdot{}},per-mode=symbol}
 \usepackage{nomencl}
 \usepackage{ifthen}
-\renewcommand\nomgroup[1]{%
+\renewcommand\nomgroup[1]{%				C - Constants
+\ifthenelse{\equal{#1}{C}}{%
+\vspace{0.5cm}%
+\item[\textbf{Constants}]}{%
 \ifthenelse{\equal{#1}{A}}{%
 \vspace{0.5cm}%
 \item[\textbf{Acronyms}]}{%              A - Acronyms
@@ -146,7 +170,7 @@
 \ifthenelse{\equal{#1}{X}}{%
 \vspace{0.5cm}%	
 \item[\textbf{Other symbols}]}{%           X - Other Symbols
-{}}}}}}}}
+{}}}}}}}}}
 \renewcommand*{\nompreamble}{\markboth{\nomname}{\nomname}}
 % \newcommand{\nomunit}[1]{\renewcommand{\nomentryend}{\hspace*{\fill}#1}}
 \newcommand{\nomunit}[1]{\renewcommand{\nomentryend}{\dotfill#1}}
