@@ -1,5 +1,9 @@
-\chapter{Appendix: Derivation of Transport Equations}
-This chapter explains the derivation of transport equations from first principles for mass, species, energy and soot variables for the reactors employed in omnisoot.
+\chapter{Derivation of Transport Equations}
+This chapter explains the derivation of transport equations from first principles for mass, species, energy and soot variables for the reactors employed in omnisoot. The conventional reactor transport equation have been derived for a reacting gas without solid particle~\citep{kee2017chemically}, so we provide a step by step derivation of equations that describes transport/evolution of mass, species and energy of gas as well as those of soot variables.
+
+%-----------------------------------------------------
+% Constant Volume Reactor
+% ----------------------------------------------------
 \section{Constant Volume Reactor}
 \label{sec:derivconstuv}
 
@@ -7,9 +11,9 @@ This chapter explains the derivation of transport equations from first principle
 The rate change of mass of gas mixture is equal to the production rate of soot.
 
 \begin{equation*}
-	\frac{d}{dt}\left(m_{gas}\right)=V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i},
+	\frac{d}{dt}\left(m\right)=V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i},
 \end{equation*}
-where V is the reactor volume that stays constant during the process, and gas occupies a fraction of volume reactor without soot, so $\mathrm{m_{gas}= \rho V (1-\varphi)}$.
+where V is the reactor volume that stays constant during the process, and gas occupies a fraction of volume reactor without soot, so $\mathrm{m= \rho V (1-\varphi)}$.
 
 \begin{equation*}
 	\frac{d}{dt}\left(\rho V(1-\varphi)\right)=V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
@@ -19,6 +23,7 @@ where V is the reactor volume that stays constant during the process, and gas oc
 \end{equation*}
 \begin{equation}
 	\frac{d}{dt}\left(\rho (1-\varphi)\right)=\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\label{eqn:app_consuvcont}
 \end{equation}
 
 \subsection{Species}
@@ -29,12 +34,812 @@ The rate change of mass of each species can be described as:
 	\frac{d}{dt}\left(m_k\right)=V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k\ \ 
 \end{equation*}
 The mass of each species is defined as the total gas mass multiplied by the mass fraction as
+
 \begin{equation*}
-	\frac{dY_k}{dt}\rho\ V(1-\varphi)+Y_k\frac{d}{dt}\left(\rho V(1-\varphi)\right)=V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+	\frac{dY_k}{dt}\rho\ V(1-\varphi)
+	+
+	Y_k\color{red}{\frac{d}{dt}\left(\rho V(1-\varphi)\right)}
+	\color{black}
+	=
+	V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+where the colored term can be substituted from Equation~\eqref{eqn:app_consuvcont}.
+\begin{equation*}
+	\frac{dY_k}{dt}\rho\ V(1-\varphi)
+	+
+	Y_k\color{red}{V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}}
+	\color{black}
+	=
+	V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+\begin{equation*}
+	\Downarrow \times \frac{1}{\rho V (1-\varphi)}
+\end{equation*}
+\begin{equation}
+	\frac{dY_k}{dt}
+	=
+	\frac{1}{\rho}
+	\left[
+		\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+		-Y_k{\sum_{i}{{\dot{s}}_iW_i}}
+	\right]
+	\label{eqn:app_speciesconstuv}
+\end{equation}
+
+\subsection{Energy}
+In the constant volume reactor, the internal energy is favorable since the external boundaries of the control volume are not changed,and the work from soot volume is neglected, so formulating the energy balance based on the internal energy is preferred. 
+The energy passes through the boundaries of the control volume via soot generation and external heat source.
+
+\begin{equation*}
+	\frac{dE}{dt}=-\frac{dE_{soot}}{dt}+\dot{Q}
+\end{equation*}
+\begin{equation*}
+	\Downarrow E=m\sum{Y_ke_k}
+\end{equation*}
+\begin{equation*}
+	\color{red}
+	\frac{dm}{dt}
+	\color{black}
+	\sum_{k}{Y_ke_k}+m\sum_{k}{\frac{dY_k}{dt}e_k}+m\sum_{k}{Y_k\frac{de_k}{dt}}
+	=
+	-\frac{dE_{soot}}{dt}+\dot{Q}
+\end{equation*}
+\begin{equation*}
+	\Downarrow \mathrm{from\: continuity}
+\end{equation*}
+\begin{equation*}
+	\color{red}
+	V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\color{black}
+	\sum_{k}{Y_ke_k}
+	+
+	m
+	\sum_{k}\color{blue}{\frac{dY_k}{dt}}
+	\color{black}
+	e_k
+	+
+	m\sum_{k}{Y_k\frac{de_k}{dt}}
+	=
+	-\frac{dE_{soot}}{dt}+\dot{Q}
+\end{equation*}
+\begin{equation*}
+	\Downarrow \mathrm{from\: species}
+\end{equation*}
+\begin{equation*}
+	\color{red}
+	V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\color{black}
+	\sum_{k}{Y_ke_k}
+	+
+	m
+	\sum_{k}\color{blue}
+	{
+		\frac{1}{\rho}
+		\left[
+		\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+		-Y_k{\sum_{i}{{\dot{s}}_iW_i}}
+		\right]
+	}
+	\color{black}
+	e_k
+	+
+	m	
+	\color{orange}\sum_{k}{
+	Y_k
+	\frac{de_k}{dt}}
+	\color{black}
+	=
+	-\frac{dE_{soot}}{dt}+\dot{Q}
+\end{equation*}
+\begin{equation*}
+	\begin{split}
+	\Downarrow
+	Y_k\frac{de_k}{dt} = Y_k c_{c,k}\frac{dT}{dt} \\
+	\Downarrow
+	\sum_{k}^{max} Y_k c_{c,k} = c_p
+	\end{split}
+\end{equation*}
+\begin{equation*}
+	\color{red}
+	V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\color{black}
+	\sum_{k}{Y_ke_k}
+	+
+	m
+	\sum_{k}\color{blue}
+	{
+		\frac{1}{\rho}
+		\left[
+		\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+		-Y_k{\sum_{i}{{\dot{s}}_iW_i}}
+		\right]
+	}
+	\color{black}
+	e_k
+	+
+	m	
+	\color{orange}
+		c_v
+		\frac{dT}{dt}
+	\color{black}
+	=
+	-\frac{dE_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow 
+	\frac{dE_{soot}}{dt}= \left(\rho_{soot}c_{v,soot}\varphi\frac{dT}{dt}-\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ e_{soot}\right)V
+\end{equation*}
+
+\begin{equation*}
+	\begin{split}
+	\color{red}
+	V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\color{black}
+	\sum_{k}{Y_ke_k}
+	+
+	m
+	\sum_{k}\color{blue}
+	{
+		\frac{1}{\rho}
+		\left[
+		\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+		-Y_k{\sum_{i}{{\dot{s}}_iW_i}}
+		\right]
+	}
+	\color{black}
+	e_k
+	+
+	m	
+	\color{orange}
+	c_v
+	\frac{dT}{dt}
+	\color{black}
+	= \\
+	-\left(\rho_{soot}c_{v,soot}\varphi\frac{dT}{dt}-\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ e_{soot}\right)V+\dot{Q}
+	\end{split}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow 
+	m = \rho V (1-\varphi)
+\end{equation*}
+
+
+\begin{equation*}
+	\begin{split}
+		\color{red}
+		V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+		\color{black}
+		\sum_{k}{Y_ke_k}
+		+
+		V (1-\varphi)
+		\sum_{k}
+		{
+			\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k e_k
+		}
+		-
+		V (1-\varphi)
+		\sum_{k} Y_k e_k
+		{\sum_{i}{{\dot{s}}_iW_i}}
+		\color{black}
+		\\
+		+
+		\rho V (1-\varphi)	
+		\color{orange}
+		c_v
+		\frac{dT}{dt}
+		\color{black}
+		= 
+		-\left(\rho_{soot}c_{v,soot}\varphi\frac{dT}{dt}-\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ e_{soot}\right)V+\dot{Q}
+	\end{split}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{Eliminating\:}  
+	V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\sum_{k}{Y_ke_k}
 \end{equation*}
 \begin{equation*}
 	\Downarrow \times 1/V
 \end{equation*}
+
 \begin{equation*}
-	\frac{dY_k}{dt}\rho\ (1-\varphi)+Y_k\frac{d}{dt}\left(\rho (1-\varphi)\right)=\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+	\begin{split}
+		(1-\varphi)
+		\sum_{k}
+		{
+			\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k e_k
+		}
+		+
+		\rho (1-\varphi)	
+		\color{orange}
+		c_v
+		\frac{dT}{dt}
+		\color{black}
+		=
+		-\rho_{soot}c_{v,soot}\varphi\frac{dT}{dt}
+		+\\
+		\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ e_{soot}+\dot{Q}
+	\end{split}
 \end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\left(\rho\left(1-\varphi\right)c_v+\rho_{soot}c_{v,soot}\varphi\right)
+	\frac{dT}{dt}
+	=
+	-\left(1-\varphi\right)\sum_{k}{e_k\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k}+\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ e_{soot}+\frac{\dot{Q}}{V}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation}
+	\begin{split}
+	\frac{dT}{dt}
+	=
+	\frac{1}{\rho\left(1-\varphi\right)c_v+\rho_{soot}c_{v,soot}\varphi}
+	\left[
+		-\left(1-\varphi\right)\sum_{k}{e_k\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k}
+	\right.\\
+	\left.
+		+\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ 	e_{soot}+\frac{\dot{Q}}{V}
+	\right]
+	\label{eqn:app_energyconstuv}
+	\end{split}
+\end{equation}
+
+\subsection{Soot Variables}
+
+The derivation of equations for soot variables can be accomplished similar to species evolution.
+
+\begin{equation*}
+	\frac{d}{dt}\left(m\psi\right)=\ \rho\ V(1-\varphi)S_{\psi}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\frac{d}{dt}\left(\rho V(1-\varphi\psi)\right)=\ \rho\ V(1-\varphi)S_{\psi}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \times 1/V
+\end{equation*}
+
+\begin{equation*}
+	\rho\left(1-\varphi\right)\frac{d\psi}{dt}
+	+
+	\psi\frac{d}{dt}\left(\rho(1-\varphi)\right)=\ \rho(1-\varphi)S_{\psi}\ 
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{from\: continuity}
+\end{equation*}
+
+\begin{equation*}
+	\rho\left(1-\varphi\right)\frac{d\psi}{dt}
+	+
+	\psi V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	=
+	\rho(1-\varphi)S_{\psi}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \times \frac{1}{\rho(1-\varphi)}
+\end{equation*}
+
+\begin{equation}
+	\frac{d\psi}{dt}=\ S_{\psi}-\frac{1}{\rho}\left[\psi\sum_{i}{{\dot{s}}_iW_i}\right]
+	\label{eqn:app_sootconstuv}
+\end{equation}
+
+
+%-----------------------------------------------------
+% Plug Flow Reactor
+% ----------------------------------------------------
+\section{Plug Flow Reactor}
+\label{sec:derivpfr}
+
+\subsection{Continuity}
+The gas flow that passes through the cross-section of a differential element along the flow reactor is described as:
+\begin{equation*}
+	{\rho uA\left(1-\varphi\right)|}_{z+dz}-{\rho uA\left(1-\varphi\right)|}_z
+	=
+	Adz(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\rho\ u(1-\varphi)A=Adz(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation}
+	\frac{d}{dz}\left(\rho u(1-\varphi)\right)\ =(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}\ \ 
+	\label{eqn:app_contpfr}
+\end{equation}
+
+\subsection{Species}
+
+\begin{equation*}
+	\frac{d}{dz}\left(m_k\right)=\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\frac{d}{dz}\left(\rho u(1-\varphi)Y_k\right)=\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k\ \ 
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\rho u\left(1-\varphi\right)\frac{dY_k}{dz}
+	+
+	Y_k
+	\color{red}
+	\frac{d}{dz}\left(\rho u\left(1-\varphi\right)\right)
+	\color{black}
+	=
+	\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{from \: Equation~\eqref{eqn:app_contpfr}}
+\end{equation*}
+
+\begin{equation*}
+	\rho u(1-\varphi)
+	\frac{dY_k}{dz}
+	+
+	Y_k
+	\color{red}
+	(1-\varphi)\sum_{i}{{\dot{\omega}}_iW_i}
+	\color{black}
+	=
+	(1-\varphi)({\dot{\omega}}_k+{\dot{s}}_k)W_k
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow \times 1/(\rho (1-\varphi))
+\end{equation*}
+
+\begin{equation}
+	\frac{dY_k}{dz}=\frac{1}{\rho u(1-\varphi)}\left[(1-\varphi)({\dot{\omega}}_k+{\dot{s}}_k)W_k-Y_k(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}\right]
+	\label{eqn:app_speciespfr}
+\end{equation}
+
+\subsection{Energy}
+
+\begin{equation*}
+	\color{red}
+	\frac{d}{dz}\left(\rho u\left(1-\varphi\right)h\right)
+	\color{black}
+	+
+	\color{blue}
+	\frac{d}{dz}\left(\rho u\varphi h_{soot}\right)
+	\color{black}
+	={\dot{q}}^\prime
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	\color{red}
+	\frac{dh}{dz}\left(\rho u\left(1-\varphi\right)\right)+h\frac{d}{dz}\left(\rho u\left(1-\varphi\right)\right)
+	\color{black}
+	+
+	\color{blue}
+	\frac{d}{dz}\left(\rho u\varphi\right)h_{soot}+\frac{dh_{soot}}{dz}\rho\ u\varphi
+	\color{black}
+	={\dot{q}}^\prime
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow h=\sum_{k}{Y_kh_k}
+\end{equation*}
+
+\begin{equation*}
+	\rho u\left(1-\varphi\right)
+	\color{orange}
+	\frac{d}{dz}\left(
+	\sum_{k}{Y_k h_k}\right)
+	\color{black}
+	+
+	h
+	\frac{d}{dz}\left(\rho u\left(1-\varphi\right)\right)
+	+
+	\frac{d}{dz}\left(\rho u\varphi\right)h_{soot}+\frac{dh_{soot}}{dz}\rho u\varphi={\dot{q}}^\prime
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\rho u\left(1-\varphi\right)
+	\color{orange}\sum_{k}{\frac{dY_k}{dz}h_k}
+	\color{black}
+	+
+	\rho u\left(1-\varphi\right)
+	\color{orange}\sum_{k}{\frac{dh_k}{dz}Y_k}
+	\color{black}
+	+
+	h\frac{d}{dz}\left(\rho u\left(1-\varphi\right)\right)
+	+
+	\color{black}
+	\frac{d}{dz}\left(\rho u\varphi\right)h_{soot}+\frac{dh_{soot}}{dz}\rho\ u\varphi={\dot{q}}^\prime
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow \mathrm{from \: Equation~\eqref{eqn:app_contpfr} \& \eqref{eqn:app_speciespfr}}
+\end{equation*}
+
+
+\begin{equation*}
+	\begin{split}
+	\rho 
+	u\left(1-\varphi\right)
+	\sum_{k}
+	{\frac{1}{\rho u}
+	\left[
+		({\dot{\omega}}_k+{\dot{s}}_k)W_k-Y_k\sum_{i}{{\dot{s}}_iW_i}
+	\right]h_k}
+	+
+	\rho u\left(1-\varphi\right)\sum_{k}{\frac{dh_k}{dz}Y_k}
+	+ \\
+	h\frac{d}{dz}
+	\left(
+		(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}
+	\right)
+	+\frac{d}{dz}\left(\rho u\varphi\right)h_{soot}
+	+
+	\frac{dh_{soot}}{dz}\rho u\varphi={\dot{q}}^\prime
+	\end{split}	
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \frac{dh_k}{dz} = c_{p,k} \frac{dT}{dz}
+\end{equation*}
+\begin{equation*}
+	\Downarrow \sum_{k} Y_k c_{p,k} = c_p
+\end{equation*}
+\begin{equation*}
+	\Downarrow \frac{dh_{soot}}{dz} = c_{p,soot} \frac{dT}{dz}
+\end{equation*}
+
+\begin{equation*}
+	\begin{split}
+	\left(1-\varphi\right)\sum_{k}{\left[({\dot{\omega}}_k+{\dot{s}}_k)W_k-Y_k\sum_{i}{{\dot{s}}_iW_i}\right]h_k}+\rho u
+	\left(1-\varphi\right)
+	c_{p}\frac{dT}{dz}
+	+ h(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}
+	\\
+	+
+	\frac{d}{dz}\left(\rho u\varphi\right)h_{soot}+c_{p,soot}\frac{dT}{dz}\rho u\varphi={\dot{q}}^\prime
+	\end{split}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\left(1-\varphi\right)\sum_{k}{\left[({\dot{\omega}}_k+{\dot{s}}_k)W_k\right]h_k}
+	+
+	\rho u\left(1-\varphi\right)c_p\frac{dT}{dz}-(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}h_{soot}+c_{p,soot}\frac{dT}{dz}\rho u\varphi={\dot{q}}^\prime
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	\left[\rho u\left(1-\varphi\right){c}_p+{\rho u\varphi c}_{p,soot}\right]\frac{dT}{dz}+\left(1-\varphi\right)\sum_{k}{\left[({\dot{\omega}}_k+{\dot{s}}_k)W_k\right]h_k}-(1-\varphi)\sum_{i}{{\dot{s}}_iW_i}h_{soot}={\dot{q}}^\prime
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	\frac{dT}{dz}=\frac{1}{\rho u\left(1-\varphi\right){c}_p+{\rho u\varphi c}_{p,soot}}\left[-\left(1-\varphi\right)\sum_{k}{\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_kh_k}+\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}h_{soot}+{\dot{q}}^\prime\right]
+\end{equation*}
+%-----------------------------------------------------
+% Perfectly Stirred Reactor
+% ----------------------------------------------------
+\section{Perfectly Stirred Reactor}
+\label{sec:derivpsr}
+
+\subsection{Continuity}
+The mass conservation for the partially stirred reactor can be written as:
+
+\begin{equation}
+	\frac{dm}{dt}={\dot{m}}_{in}-{\dot{m}}_{out}+V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\label{eqn:app_contpsr}
+\end{equation}
+
+\subsection{Species}
+
+
+\begin{equation*}
+	\frac{d}{dt}\left(m_k\right)={\dot{m}}_{in}Y_k^\ast-{\dot{m}}_{out}Y_k+V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow m_k=mY_k
+\end{equation*}
+
+
+\begin{equation*}
+	Y_m
+	\color{blue}
+	\frac{dm}{dt}
+	\color{black}
+	+
+	m\left(Y_k\right)
+	=
+	{\dot{m}}_{in}Y_k^\ast-{\dot{m}}_{out}Y_k+V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{from \: Equation~\ref{eqn:app_contpsr}}
+\end{equation*}
+
+
+\begin{equation*}
+	\color{blue}
+	\left(
+		{\dot{m}}_{in}
+		-
+		{\dot{m}}_{out}
+		+V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\right)
+	\color{black}
+	Y_k+\frac{dY_k}{dt}m={\dot{m}}_{in}Y_k^\ast-{\dot{m}}_{out}Y_k+V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+ \begin{equation*}
+ 	\Downarrow
+ \end{equation*}
+
+
+\begin{equation*}
+	V\left(1-\varphi\right)Y_k\sum_{i}{{\dot{s}}_iW_i}
+	+
+	\frac{dY_k}{dt}m=
+	{\dot{m}}_{in}
+	\left(
+		Y_k^\ast - Y_k
+	\right)
+	+
+	V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\frac{dY_k}{dt}\rho\ V\left(1-\varphi\right)={\dot{m}}_{in}\left(Y_k^\ast-Y_k\right)+V\left(1-\varphi\right)\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k-V\left(1-\varphi\right)Y_k\sum_{i}{{\dot{s}}_iW_i}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation}
+	\frac{dY_k}{dt}=\frac{{\dot{m}}_{in}}{\rho V\left(1-\varphi\right)}\left(Y_k^\ast-Y_k\right)+\frac{1}{\rho}\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_k-\frac{1}{\rho}Y_k\sum_{i}{{\dot{s}}_iW_i}
+	\label{eqn:app_spiciespsr}
+\end{equation}
+
+\subsection{Energy}
+
+\begin{equation*}
+	\frac{dH}{dt}={\dot{m}}_{in}h^\ast-{\dot{m}}_{out}h-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow H=mh
+\end{equation*}
+
+
+\begin{equation*}
+	\color{blue}
+	\frac{dm}{dt}
+	\color{black}
+	h+m\frac{dh}{dt}={\dot{m}}_{in}h^\ast-{\dot{m}}_{out}h-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{from \: Equation~\ref{eqn:app_contpsr}}
+\end{equation*}
+
+\begin{equation*}
+	\color{blue}
+	\left(
+		{\dot{m}}_{in}-{\dot{m}}_{out}
+		+V\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}
+	\right)
+	\color{black}h+m\frac{dh}{dt}={\dot{m}}_{in}h^\ast-{\dot{m}}_{out}h-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	V\left(1-\varphi\right)h\sum_{i}{{\dot{s}}_iW_i}+m\frac{dh}{dt}={\dot{m}}_{in}\left(h^\ast-h\right)-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	m\frac{dh}{dt}={\dot{m}}_{in}\left(h^\ast-h\right)-V\left(1-\varphi\right)h\sum_{i}{{\dot{s}}_iW_i}-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow h=\sum{Y_kh_k}
+\end{equation*}
+
+\begin{equation*}
+	m\sum{\frac{dY_k}{dt}h_k}+m\sum{\frac{dh_k}{dt}Y_k}={\dot{m}}_{in}\left(h^\ast-h\right)-V\left(1-\varphi\right)h\sum_{i}{{\dot{s}}_iW_i}-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \mathrm{from \: Equation~\ref{eqn:app_spiciespsr}}
+\end{equation*}
+
+
+\begin{equation*}
+	\begin{split}
+	m\sum{\left(\frac{{\dot{m}}_{in}}{\rho V\left(1-\varphi\right)}\left(Y_k^\ast-Y_k\right)
+		+
+	\frac{1}{\rho}\left({\dot{\omega}}_k
+	+
+	{\dot{s}}_k\right)W_k-\frac{1}{\rho}Y_k\sum_{i}{{\dot{s}}_iW_i}\right)h_k}
+	+
+	m\sum{c_{p,k}\frac{dT}{dt}Y_k}
+	=\\
+	{\dot{m}}_{in}\left(h^\ast-h\right)-V\left(1-\varphi\right)h\sum_{i}{{\dot{s}}_iW_i}-\frac{dH_{soot}}{dt}+\dot{Q}
+	\end{split}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow m=\rho\ V\left(1-\varphi\right)
+\end{equation*}
+
+\begin{equation*}
+	{\dot{m}}_{in}\sum\left(Y_k^\ast-Y_k\right)h_k+V\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_kh_k}+mc_p\frac{dT}{dt}={\dot{m}}_{in}\left(h^\ast-h\right)-\frac{dH_{soot}}{dt}+\dot{Q}
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+\begin{equation*}
+	\begin{split}
+	{\dot{m}}_{in}\sum\left(Y_k^\ast-Y_k\right)h_k
+	+
+	V\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k
+	+
+	{\dot{s}}_k\right)W_kh_k}
+	+
+	mc_p\frac{dT}{dt}
+	=
+	{\dot{m}}_{in}\left(h^\ast-h\right)
+	\\
+	-\left(\rho_{soot}c_{p,soot}\varphi V\frac{dT}{dt}-\left(1-\varphi\right)V\sum_{i}{{\dot{s}}_iW_i}\ h_{soot}\right)+\dot{Q}
+	\end{split}
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	\begin{split}
+		{\dot{m}}_{in}\sum\left(Y_k^\ast-Y_k\right)h_k
+		+
+		V\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k
+			+
+			{\dot{s}}_k\right)W_kh_k}
+		+
+		mc_p\frac{dT}{dt}
+		=
+		{\dot{m}}_{in}\left(h^\ast-h\right)
+		\\
+		-\left(\rho_{soot}c_{p,soot}\varphi V\frac{dT}{dt}-\left(1-\varphi\right)V\sum_{i}{{\dot{s}}_iW_i}\ h_{soot}\right)+\dot{Q}
+	\end{split}
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow m=\rho V (1-\varphi) 
+\end{equation*}
+
+\begin{equation*}
+	\Downarrow \times 1/V
+\end{equation*}
+
+\begin{equation*}
+	\begin{split}
+	{\dot{m}}_{in}\sum\left(Y_k^\ast-Y_k\right)h_k+V\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k+{\dot{s}}_k\right)W_kh_k}+\rho\ V\left(1-\varphi\right)c_p\frac{dT}{dt}=
+	\\
+	{\dot{m}}_{in}\left(h^\ast-h\right)-\left(\rho_{soot}c_{p,soot}\varphi V\frac{dT}{dt}-\left(1-\varphi\right)V\sum_{i}{{\dot{s}}_iW_i}\ h_{soot}\right)+\dot{Q}
+	\end{split}
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation*}
+	\begin{split}
+	\left(\rho\left(1-\varphi\right)c_p+\rho_{soot}c_{p,soot}\varphi\right)\frac{dT}{dt}=
+	\frac{{\dot{m}}_{in}}{V}
+	\left(h^\ast-h\right)
+	-
+	\frac{{\dot{m}}_{in}}{V}\sum\left(Y_k^\ast-Y_k\right)h_k\\
+	-
+	\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k
+	+{\dot{s}}_k\right)W_kh_k}+\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ h_{soot}+\frac{\dot{Q}}{V}
+	\end{split}
+\end{equation*}
+
+
+\begin{equation*}
+	\Downarrow
+\end{equation*}
+
+
+\begin{equation}
+	\begin{split}
+	\frac{dT}{dt}=
+	\frac{1}{\rho\left(1-\varphi\right)c_p+\rho_{soot}c_{p,soot}\varphi}
+	\left[
+		\frac{{\dot{m}}_{in}}{V}
+		\left(h^\ast-h\right)
+		-\frac{{\dot{m}}_{in}}{V}\sum\left(Y_k^\ast-Y_k\right)h_k
+		-\left(1-\varphi\right)\sum{\left({\dot{\omega}}_k
+			+{\dot{s}}_k\right)W_kh_k}
+	\right.
+	\\
+	\left.
+	+\left(1-\varphi\right)\sum_{i}{{\dot{s}}_iW_i}\ h_{soot}+\frac{\dot{Q}}{V}
+	\right]
+	\end{split}
+\end{equation}
+

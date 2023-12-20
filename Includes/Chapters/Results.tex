@@ -1,75 +1,8 @@
 \chapter{Results}
 
-\section{Validation}
+\subimport{./Results/}{Validation.tex}
 
-\subsection{Collision Frequency}
-The collision frequency function determines the rate at which two particles collide resulting in the reduction of total number of particles and increase in their average size. In the absence of strong flow shear or external forces, Brownian motion is the main driving force for particle coagulation. As explained in Sections~\ref{sec:monocoag} \& \ref{sec:sectcoag}, omnisoot employs harmonic mean and Fuchs interpolations to calculate collision frequency of agglomerates from free-molecular to continuum regimes based on gas mean free path, and particle morphology. 
+\subimport{./Results/}{Premixed.tex}
 
-The test case for validation of collision frequency is based on DEM simulation of 2000 monodisperse spherical particles with the density of 2200 $\mathrm{kg/m^3}$ in
-a cubic cell with the constant temperature of 298 K and pressure of 1 atm~\citep{goudeli2015coagulation}. Figure~\ref{fig:kernelvalid} depicts the collision frequency plotted against Knudsen number ($\mathrm{Kn=2\lambda/d_m}$) obtained by omnisoot using harmonic mean (red solid line) and Fuchs interpolation (green dashed line) and DEM results of \citet{goudeli2015coagulation}. The Fuchs interpretation perfectly matches DEM data over the free-molecular (Kn>10) to the continuum (Kn>10) range. However, harmonic mean slightly underpredicts the collision frequency in the transition regime (0.1<Kn<10) with relative errors less than 16\%. 
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=0.6\textwidth]{Figures/Results/Validation/Kernel/kernel_valid.pdf}
-	\caption{The comparison of collision frequency, $\beta$, obtained by omnisoot using harmonic mean (red solid line) and Fuchs interpolation (green dashed line) with DEM results (symbols)~\citep{goudeli2015coagulation}}
-	\label{fig:kernelvalid}
-\end{figure} 
+\subimport{./Results/}{Shocktube.tex}
 
-
-\subsection{Coagulation}
-This test case was designed and conducted to validate the coagulation sub-unit of both particle dynamics models, MPBM and SPBM, by comparing the results of omnisoot with those of DEM~\citep{kholghy2021surface}. The constant volume reactor was used for this test case, but it will be applicable to other reactors and flame models as long as the particle residence time matches with the values obtained by DEM. An adiabatic reactor with the volume of $1 \mathrm{m^3}$ is initialized with $2.6261\times10^{18}$ spherical particles that are 2 nm in diameter. The initial conditions are indicated in Table~\ref{tab:simcond_coagtest}. The particles are allowed to coagulate in the free molecular regime and grow in size while inception, PAH adsorption and surface growth are disabled. Figure~\ref{fig:coagvalid_Nd} demonstrates the number density of agglomerates ($\mathrm{N_{agg}}$) and primary particles ($\mathrm{N_{pri}}$), and mobility ($\mathrm{d_m}$) and gyration ($\mathrm{d_m}$) diameters of particle obtained by omnisoot that are in good agreement with DEM results. $\mathrm{N_{pri}}$ is conserved during coagulation resulting in identical flat lines for both particle dynamics models, but $\mathrm{N_{agg}}$ declines over time with the higher decay rate for SPBM because it accounts for the polydispersity of agglomerates that results in larger collision frequency compared to MPBM. Stronger collision rate leads to agglomerates with larger the mobility and gyrations diameters.
-
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/Results/Validation/Coagulation/coagulation_scheme.pdf}
-	\caption{The schematic of agglomeration process in the coagulation test cases where initially spherical particle collide and form agglomerate}
-	\label{fig:coagscheme}
-\end{figure}
-
-MPBM is based on monodisperse assumption that ignore size spread of particles. The left pane of Figure~\ref{fig:coagvalid_sigmapsd} shows the standard deviation of mobility diameter, $\mathrm{\sigma_g}$ and shows a close agreement with DEM results. It reaches the value of 2.03 that is the signature of the free molecular regime~\citep{vemury1995self}. The right pane of Figure~\ref{fig:coagvalid_sigmapsd} demonstrates the evolution of non-dimensional PSD from t=8 ms to 691 ms. After initial transient phase, the PSD quickly reaches its final stage marking the attainment of self-preserving size distribution which is the signature of Brownian-driven particle coagulation.  
-
-\begin{table}
-	\caption{The simulations conditions of the coagulation test case~\citep{kholghy2021surface}}
-	\label{tab:simcond_coagtest}
-	\centering
-	\begin{tabular}{l l}
-		\hline
-		\textbf{Property} & \textbf{Value} \\
-		\hline
-		Composition & $\mathrm{CH_4}$:0.425, $\mathrm{O_2}$:0.435, $\mathrm{N_2}$:0.14\\
-		T & 1830 K\\
-		P & 1 atm \\
-		$\mathrm{N^1_{agg}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$ \\ 
-		$\mathrm{N^1_{pri}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$\\
-		$\mathrm{d^1_{p}}$ & 2 nm \\
-		\hline
-	\end{tabular}
-\end{table}
-
-\begin{figure}[!htbp]
-	\centering
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/N_agg_pri.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/d_mg.pdf}
-	\end{subfigure}
-	\caption{The total number concentration of agglomerates and primary particles (left pane), and mobility and gyration diameter (right pane) obtained with omnisoot using MPBM and SPBM that are in close agreement with the DEM results~\citep{kholghy2021surface} indicating the validation of coagulation sub-model}
-	\label{fig:coagvalid_Nd}
-\end{figure}
-
-
-\begin{figure}[!htbp]
-	\centering
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/sigmag.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/PSD.pdf}
-	\end{subfigure}
-	\caption{The standard deviation of mobility diameter, $\mathrm{\sigma_g}$ obtained with SPBM in close agreement with DEM results~\citep{kholghy2021surface} (left pane) that reaches $\mathrm{\sigma_{g,fm}=2.03}$ characteristic of the free molecular regime~\citep{vemury1995self}; the particle size distribution (normalized number concentration of agglomerates is plotted against non-dimensional volume in the right pane) at different residence times that overlaps after initial transient phase marking the attainment of self-preserving size distribution}
-	\label{fig:coagvalid_sigmapsd}
-\end{figure}

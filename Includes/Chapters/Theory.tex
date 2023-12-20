@@ -2,18 +2,18 @@
 In this chapter, the mathematical basis of \textit{omnisoot} is explained in top-to-bottom hierarchical order. The highest level is the reactors that include the transport equations of gas mixture and "soot variables" for different reactors that relies on the source terms due to soot formation. These source terms are handled by the particle dynamics model that mainly addresses particle size distribution (PSD), morphology and coagulation rate. The "PAH growth model" computes the inception and adsorption based on PAHs designated as precursors, and returns them to the particle dynamics model. Similarly, the "surface reaction" model obtains the surface growth and oxidation rate by HACA schemes and passes them to the particle dynamics model. 
 
 \section{Assumptions and conventions}
-Here, the main conventions and assumptions used in the derivation of the mathematical model is listed below.
+Here, the main conventions and assumptions used in the derivation of the mathematical model are listed below.
 
 \begin{enumerate}
 \item $\mathrm{\dot{s}_k}$ denotes that rate production/consumption of $k_{th}$ species due to soot formation. It is positive when the species is released to gas mixture.
 
-\item Each soot agglomerates consist of spherical monodisperse primary particles that are in point contact.
+\item Each soot agglomerate consist of spherical monodisperse primary particles that are in point contact.
 
-\item The word \textit{"particle"} refers to soot both in spherical and agglomerate shape. 
+\item The word \textit{``particle"} refers to soot both in spherical and agglomerate shape. 
 
 \item The density of soot is assumed constant at the value of 1800 $\mathrm{kg/m^3}$. This density represents an average between particles with large C/H ratio ($\mathrm{\rho=1600 kg/m^3}$) and small C/H ratios ($\mathrm{\rho=2000 kg/m^3}$)~\citep{jensen2007measurement}.
 
-\item. The incipient soot particles are 2~nm in diameter, so no particles could exist with primary particle diameter smaller than 2~nm. The number of carbon atoms in the incipient soot particle is calculated from the mass of a sphere with the diameter of 2~nm in assuming pure carbon content.
+\item The incipient soot particles are 2~nm in diameter, so no particles could exist with a primary particle diameter smaller than 2~nm. The number of carbon atoms in the incipient soot particle is calculated from the mass of a sphere with the diameter of 2~nm in assuming pure carbon content.
 \begin{equation}
 	\begin{split}
 	d_{p,min}&=2~\mathrm{nm} \\
@@ -21,15 +21,15 @@ Here, the main conventions and assumptions used in the derivation of the mathema
 	\label{eqn:dp_min}.
 	\end{split}
 \end{equation}
-\item The calculation of PAH adsorption and soot oxidation requires “soot concentration” which is defined as number density of soot agglomerates per unit volume of gas. The number density of agglomerates,  $\mathrm{N_agg}$, are tracked per unit of mass of gas mixture. So, soot concentration can be calculated by multiplying agglomerate number density by gas density as:
+\item The calculation of PAH adsorption and soot oxidation requires ``\textit{soot concentration}" which is defined as number density of soot agglomerates per unit volume of gas. The number density of agglomerates,  $\mathrm{N_{agg}}$, are tracked per unit mass of gas mixture i.e. $\mathrm{\#/kg_{gas}}$. So, soot concentration can be calculated by multiplying agglomerate number density by gas density as:
 \begin{equation}
 	[\mathrm{soot}] = \rho\cdot \mathrm{N_{agg}}
 	\label{eqn:sootconcen}.
 \end{equation}
 
-\item The specific heat, internal energy and enthalpy of soot is approximated by those of pure graphite, and employed to close the energy balance in the system~\cite{mcbride1993coefficients}.
+\item The specific heat, internal energy and enthalpy of soot are approximated by those of pure graphite, and employed to close the energy balance in the system~\cite{mcbride1993coefficients}.
 
-\item Soot particles and gas are thermal equilibrium during all the studied processes, and there is not temperature gradient within each agglomerate.
+\item Soot particles and gas are in thermal equilibrium during all the studied processes, and there is no temperature gradient within each agglomerate.
 
 \item \textit{Soot variable} refers to the features/properties of soot particles tracked by the particle dynamics model and used in the soot transport equations.
 
@@ -44,7 +44,7 @@ Here, the main conventions and assumptions used in the derivation of the mathema
 \end{enumerate}
 
 \section{Flames}
-This research focuses on flame that can be described by the axisymmetric stagnation flow assumption that reduces the laminar 3D steady-state Navier-Stokes equations in the cylindrical coordinates to one-dimensional domain in r-z plane. A similar approach is applied to the energy and species conservation. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, growth and oxidation as well as the formation and sensible energy of soot.
+This research focuses on flames that can be described by the axisymmetric stagnation flow assumption that reduces the laminar 3D steady-state Navier-Stokes equations in the cylindrical coordinates to one-dimensional domain in r-z plane. A similar approach is applied to the energy and species conservation. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, surface growth and oxidation as well as the formation and sensible energy of soot.
 
 \noindent Continuity:
 \begin{equation}
@@ -81,10 +81,7 @@ This research focuses on flame that can be described by the axisymmetric stagnat
 \noindent Species:
 \begin{equation}
 	\rho u\frac{\partial Y_k}{\partial z} = 
-	-\frac{\partial}{\partial z}
-	\left(
-	D \frac{\partial \psi}{\partial t}
-	\right)
+	-\frac{\partial J_k}{\partial z}
 	+ W_j 
 	\left(
 	\omega_k+\dot{s}_k
@@ -106,21 +103,24 @@ This research focuses on flame that can be described by the axisymmetric stagnat
 
 The details of calculation of mixture-averaged diffusive fluxes can be found in the documentation of \verb| GasTransport::getMixDiffCoeffs()|\footnote[1]{https://cantera.org/documentation/docs-3.0/doxygen/html/d8/d58/classCantera\_1\_1GasTransport.html} in Cantera~\citep{cantera}. Generic soot variables are treated similar to species, and their transport equations can be written as:
 \begin{equation}
-	\rho u\frac{\partial Y_k}{\partial z} = 
-	-\frac{\partial J_k}{\partial z}
+	\rho u\frac{\partial \psi}{\partial z} = 
+	-\frac{\partial}{\partial z}
+	\left(
+		D\frac{\partial \psi}{\partial z}
+	\right)
 	+ S_{\psi} 
 	\label{eqn:flame_soot},
 \end{equation}
 
 
 \section{Reactors}
-Zero-dimensional reactors are ideal representation of reactive systems typical in industrial applications. The strong mixing in the volume/cross-section allows description of thermal/chemical/hydrodynamic properties of the mixture with a single data-point that evolves in time. This section entails the equations that describes the conservation of mass, momentum (if applicable), species, energy, and soot based on ideal gas assumption for gaseous mixture in three different type of reactors.
+Zero-dimensional reactors are ideal representation of reactive systems typical in industrial applications. The strong mixing in the volume/cross-section allows description of thermal/chemical/hydrodynamic properties of the mixture with a single data-point that evolves in time. This section entails the equations that describes the conservation of mass, momentum (if applicable), species, energy, and soot based on ideal gas assumption for gaseous mixture in three different types of reactors.
 \subsection{Constant Volume Reactor}
-This reactor assumes that the volume of the system does not change during the process. In the absence of soot, this leads to gas with constant density. However, soot formation converts part of gaseous species to solid particle thereby affecting it volume and density. Note that, continuity, species and energy transport equations only track gas mixture properties. Figure~\ref{fig:constuvcv} illustrates the control volume over the gas mixture targeted by mass and energy balance equations. Any mass converted to solid soot particle leaves the control volume. Mass and energy passes through the control surface around solid particles by soot formation processes and variations in the temperature of the particles. Reactor volume is shared between gas ans solid particles.
+This reactor assumes that the volume of the system does not change during the process. In the absence of soot, this leads to gas with constant density. However, soot formation converts part of gaseous species to solid particles thereby affecting its volume and density. Note that, continuity, species and energy transport equations only track gas mixture properties. Figure~\ref{fig:constuvcv} illustrates the control volume over the gas mixture targeted by mass and energy balance equations. Any mass converted to solid soot particles leaves the control volume. Mass and energy passe through the control surface around solid particles by soot formation processes and variations in the temperature of the particles. Reactor volume is shared between gas and solid particles.
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=40mm, ]{Figures/Theory/ConstUV.pdf}
-	\caption{The schematics of the control volume consider for the constant volume reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot.}
+	\caption{The schematics of the control volume considered for the constant volume reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles.}
 	\label{fig:constuvcv}
 \end{figure}
  
@@ -173,7 +173,7 @@ The transport equation for a generic soot variable, $\psi$ can be written as:
 \end{equation}
 
 \subsection{Perfectly Stirred Reactor}
-In this reactor, gas enter with the mass flow rate $\dot{m}$ the composition $Y^\ast$ and temperature $T^\ast$, instantaneously mix and homogeneously react with the mixture resident inside the reactor to reach a spatially uniform temperature and composition described by a single $T$ and $Y$. It is assumed that temperature, composition and soot properties of the outflow is the same as the reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR. $\mathrm{\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates, respectively. Under no-soot conditions, the inlet and outlet mass flow rates are equation, but the gas mixture loses mass by soot formation, so $\mathrm{\dot{m}_{out}}$ is slightly less than $\mathrm{\dot{m}_{in}}$. The pressure of the reactor is assumed to stay constant during the process~\citep{kee2017chemically}. The nominal residence time of gas mixture in the reactor is defined as:
+In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of $Y^\ast$ and temperature of $T^\ast$, instantaneously mixes and homogeneously reactes with the mixture resident inside the reactor to reach a spatially uniform temperature and composition described by a single $T$, and $Y$. It is assumed that temperature, composition and soot properties of the outflow are the same as the reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR. $\mathrm{\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates, respectively. Under no-soot conditions, the inlet and outlet mass flow rates are equal, but the gas mixture loses mass by soot formation, so $\mathrm{\dot{m}_{out}}$ is slightly less than $\mathrm{\dot{m}_{in}}$. The pressure of the reactor is assumed to stay constant during the process~\citep{kee2017chemically}. The nominal residence time of gas mixture in the reactor is defined as:
 
 \begin{equation}
 	\tau = \frac{\rho V}{\dot{m}_{in}}
@@ -185,7 +185,7 @@ In this reactor, gas enter with the mass flow rate $\dot{m}$ the composition $Y^
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=40mm, ]{Figures/Theory/PSR.pdf}
-	\caption{The schematics of the control volume considered for the perfectly stirred reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot. The inlet flow passes species and enthalpy into the control volume and the outlow extract the same properties through the control surface. The gas mass flow rate reduces due to soot formation.}
+	\caption{The schematics of the control volume considered for the perfectly stirred reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles. The inlet flow brings species and enthalpy into the control volume and the outlow discharges them. The gas mass flow rate reduces due to soot formation.}
 	\label{fig:psrcv}
 \end{figure}
 
@@ -253,7 +253,7 @@ The soot transport equations can also be expressed as:
 \end{equation}
 
 \subsection{Plug Flow Reactor}
-The plug flow reactor (PFR) is based on channel or duct with a constant cross-sectional area where a steady-state one-dimensional flow changes temperature, composition, and soot properties along the channel. There is no spatial gradient over the cross-section due to strong mixing, and  diffusion along the channel is negligible. The pressure is assumed constant along the reactor.
+The plug flow reactor (PFR) is based on a channel or duct with a constant cross-sectional area where a steady-state one-dimensional flow changes temperature, composition, and soot properties along the channel. There is no spatial gradient over the cross-section due to strong mixing, and  diffusion along the channel is negligible. The pressure is assumed constant along the reactor.
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=40mm, ]{Figures/Theory/PFR.pdf}
@@ -279,15 +279,15 @@ The energy equation can be expressed as:
 \begin{equation}
 	\begin{split}
 		\frac{d T}{d z}=
-		\frac{1}{\rho (1-\varphi) c_v+\rho_{soot}\varphi 	c_{v,soot}}
+		\frac{1}{\rho u (1-\varphi) c_p+\rho_{soot} u \varphi 	c_{p,soot}}
 		\left[
-			-(1-\varphi)\sum_k e_k
+			-(1-\varphi)\sum_k h_k
 			\left(
 			\dot{\omega}_k+\dot{s}_k
 			\right) W_k
 		\right. \\
 		\left.
-			+u_{soot}(1-\varphi)\sum_k \dot{s}_k W_k
+			+h_{soot}(1-\varphi)\sum_k \dot{s}_k W_k
 			+\dot{q}^\prime
 		\right]
 	\end{split}
@@ -304,7 +304,8 @@ The soot transport equations can also be written as:
 
 
 \section{Particle Dynamics}
-Population balance models rely on the Eulerian description of particles where bulk properties of particle population such as number density, mass or surface area are treated as continuous quantities and tracked by solving scalar transport equations. These methods are computationally cheaper compared with mesoscale models such as DEM, and can be easily interfaced with chemical kinetics in CFD solvers to simulate soot formation in turbulent configurations. Here, "Monodisperse" (MPBM) based on four variables leading to 4 transport equations in total, and "Sectional" population balance models (SPBM) tracking three variables per section. The total number of transport equations in the sectional model is determined by the number of sections. The first two/three variables in the MPBM/SPBM enables description of number, mass, and evolving fractal-like morphology of soot agglomerates that are necessary to accurately predict collision frequency~\citep{mulholland1988cluster} as well as oxidation and surface growth~\citep{kelesidis2019estimating}. The last variable tracks the number of hydrogen atoms in agglomerates that allows the model to capture the soot composition, thereby its maturity~\citep{kholghy2016core}, and surface reactivity~\citep{blanquart2009analyzing}.  are used to address particle dynamics that includes (i) reconstructing particles morphology by determining characteristic diameters from tracked soot variables, (ii) calculating collision frequency and coagulation source term, (iii) combining the contribution of inception, PAH adsorption, surface growth and oxidation into source terms.
+Population balance models rely on the Eulerian description of particles where bulk properties of particle population such as number density, mass or surface area are treated as continuous quantities and tracked by solving scalar transport equations. These methods are computationally cheaper compared with mesoscale models such as DEM, and can be easily interfaced with chemical kinetics in CFD solvers to simulate soot formation in turbulent configurations. Here, we use two particle dynamics models: a monodisperse population balance model (MPBM) based on four variables leading to 4 transport equations in total, and fixed sectional population balance model (SPBM) tracking three variables per section. The total number of transport equations in the sectional model is determined by the number of sections and number of equations solved per section. The first two/three variables in the MPBM/SPBM enables description of number, mass, and evolving fractal-like morphology of soot agglomerates that are necessary to accurately predict collision frequency of agglomerates~\citep{mulholland1988cluster} as well as oxidation and surface growth rates~\citep{kelesidis2019estimating}. The last variable tracks the number of hydrogen atoms in agglomerates that allows the model to capture the soot composition, thereby its maturity~\citep{kholghy2016core}, and surface reactivity~\citep{blanquart2009analyzing}.  
+The tracked variables are used to address particle dynamics that includes (i) reconstructing particles morphology by determining characteristic diameters from tracked soot variables, (ii) calculating collision frequency and coagulation source term, (iii) combining the contribution of inception, PAH adsorption, surface growth and oxidation into source terms.
 First, common features of both particle dynamics models are reviewed. As mentioned before, any parameter with superscript i denotes the section number, which can be ignored/dropped for the MPBM that only has one section. For example, $\mathrm{d^i_m}$ can be replaced with $\mathrm{d_m}$.
 %Here, we use "Monodisperse" and "Sectional" population balance models to account for "particle dynamics". They track large-scale bulk features of the particle population such as number concentration and mass as opposed to the mesoscale methods such as DEM that track particles individually. This makes them computationally cheaper compared with mesoscale models such as DEM. The population balance models are coupled with gas chemistry by two buffer sub-units, "surface reactions" that account for surfaced growth and oxidation via HACA scheme and "PAH growth models" that entails the reaction pathways for inception and adsorption of PAH precursors. The surface reactions to describe soot formation steps from inception, growth, and agglomeration to oxidation.
 
@@ -314,7 +315,7 @@ The evolving fractal-like structure of agglomerates are quantified by their mobi
 simulations 
 Incipient soot is initially a sphere formed of PAHs with constant density that grows in size by surface reactions and forms agglomerates by coagulation. The collision frequency of particles depends on their evolving fractal structure because they have larger cross-sectional area compared with mass-equivalent spheres~\citep{mulholland1988cluster}. Some simplifying assumptions are made to reconstruct the particle morphology from tracked variables. The primary particles of each agglomerate are similar enough that can be described by mean size and composition. They also stay in point contact during surface growth and agglomeration i.e. the necking is ignored. A universal fractal dimension,
 $\mathrm{D_f=1.9}$ is used for agglomerates larger than the sphere~\citep{ball1984finite}.
-The evolving morphology of soot agglomerates by their mobility diameter normalized by primary particle, $\mathrm{d_m/d_p}$, and gyration, $\mathrm{d_m/d_g}$, diameters that are related to the number of primary particles using power-laws derived from DEM simulations~\citep{Kelesidis2017} Mobility and gyration diameters are the diameter of a sphere with the same translational and rotational properties of the agglomerate, respectively. The employed power-laws have been shown to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} illustrates the schematics of sample soot agglomerates with 12 primary particles and depicted $\mathrm{d_p}$, $\mathrm{d_m}$, $\mathrm{d_g}$.  
+The evolving morphology of soot agglomerates by their mobility diameter normalized by primary particle, $\mathrm{d_m/d_p}$, and gyration, $\mathrm{d_m/d_g}$, diameters that are related to the number of primary particles using power-laws derived from DEM simulations~\citep{Kelesidis2017} Mobility and gyration diameters are the diameter of a sphere with the same translational and rotational properties of the agglomerate, respectively. The employed power-laws have been shown to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} illustrates the schematics of sample soot agglomerates with 12 primary particles and depicted $\mathrm{d_p}$, $\mathrm{d_m}$, and $\mathrm{d_g}$.  
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=60mm, ]{Figures/Morphology.pdf}
@@ -336,7 +337,7 @@ Primary particle diameter, $\mathrm{d_p}$, can be obtained from total carbon and
 	\label{eqn:d_p}.
 \end{equation}
 
-The DEM-derived power-laws relate $\mathrm{d_m}$ and $\mathrm{d_g}$ to $\mathrm{d_p}$ and $\mathrm{n_p}$ as
+The DEM-derived power-laws~\citep{Kelesidis2017} relate $\mathrm{d_m}$ and $\mathrm{d_g}$ to $\mathrm{d_p}$ and $\mathrm{n_p}$ as
 
 \begin{equation}
 	d^i_{m} = d^i_p\cdot {n^i_p}^{0.45}
@@ -449,14 +450,14 @@ The composition of soot is characterized by their elemental carbon to hydrogen r
 The carbon content of each agglomerate is a predefined parameter in the SPBM, but it can be calculated by dividing $\mathrm{C_{tot}}$ by $\mathrm{N_{agg}}$ for the MPBM. The hydrogen content of each agglomerate is calculated for both particle dynamics models as:
 
 \begin{equation}
-	H^i_{agg} = 
+	H^i_{agg}
 	=\frac{H^i_{tot}}{N^i_{agg}}   
 	\label{eqn:Hagg}.
 \end{equation}
 
 
 \subsection{Monodisperse Population Balance Model}
-The MPBM used in this research tracks total the number density of primary particles (N\textsubscript{pri}) and agglomerates (N\textsubscript{agg}), total carbon (C\textsubscript{tot}) and hydrogen (H\textsubscript{tot}) content of soot particles per unit mass of gas mixture. The morphological parameters such as primary particle, mobility and gyration diameters obtained from these soot variables are the average values for the population.
+The MPBM used in this research tracks the number density of primary particles (N\textsubscript{pri}) and agglomerates (N\textsubscript{agg}), total carbon (C\textsubscript{tot}) and hydrogen (H\textsubscript{tot}) content of soot particles per unit mass of gas mixture. The morphological parameters such as primary particle, mobility and gyration diameters obtained from these soot variables are the average values for the population.
 
 \subsubsection{Coagulation}
 \label{sec:monocoag}
@@ -465,7 +466,7 @@ Coagulation is the process during which solid and hard soot particles collide an
 	I_{coag} = -\frac{1}{2}\beta N^2_{agg}
 	\label{eqn:Icoag},
 \end{equation}
-where $\mathrm{\beta}$ is the collision frequency of agglomerates for the free molecular ($\mathrm{Kn>10}$) to continuum regime ($\mathrm{Kn<0.1}$). The value of $\mathrm{\beta}$ in the transition regime ($\mathrm{0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum ($\mathrm{\beta_{cont}}$) and free molecular ($\mathrm{\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of the polydispersity as:
+where $\mathrm{\beta}$ is the collision frequency of agglomerates for the free molecular ($\mathrm{Kn>10}$) to continuum regime ($\mathrm{Kn<0.1}$). The value of $\mathrm{\beta}$ in the transition regime ($\mathrm{0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum ($\mathrm{\beta_{cont}}$) and free molecular ($\mathrm{\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of polydispersity~\citep{kelesidis2021self} as:
 \begin{equation}
 	\beta = 1.82\frac{\beta_{fm}\beta_{cont}}{\beta_{fm}+\beta_{cont}}
 	\label{eqn:betahmmono},
@@ -509,7 +510,7 @@ The source terms of tracked variables combines the effect of the inception, PAH 
 	S_{H_{tot}} = I_{H_{tot},inc}+I_{H_{tot},gr}+I_{H_{tot},ads}+I_{H_{tot},ox}
 	\label{eqn:S_H_tot}.
 \end{equation}
-The partial source terms in Equations denoted by $\mathrm{I}$ are determined by PAH growth and surface reaction model explained in sections.
+The partial source terms in Equations denoted by $\mathrm{I}$ are determined by PAH growth and surface reaction model explained in Sections~\ref{sec:pahgrowmodel} and~\ref{sec:surfreacmodel}, respectively.
 
 \subsection{Sectional Population Balance Model}
 A SPBM with the fixed pivot is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles are divided into discrete sections that include agglomerates of the same mass. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of the first section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation. The mass of sections is determined by a geometric progression with a scale factor equal to the mass of the incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of section is approximated by the carbon content of agglomerates in moles as:
@@ -798,16 +799,19 @@ As agglomerates migrate up/down through sections, they carry the number of prima
 	\frac{1}{Av}
 	\left\{
 	\begin{aligned}
-		&-\frac{I^i_{C_{tot},gr}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg}
+		&-\frac{I^i_{C_{tot},gr}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg} 
+		+ I^{i}_{H_{tot}, gr} + I^{i}_{H_{tot}, ads}
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i-1}_{C_{tot},gr}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
 		-\frac{I^{i}_{C_{tot},gr}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg}
+		+ I^{i}_{H_{tot}, gr} + I^{i}_{H_{tot}, ads}
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&\frac{I^{i-1}_{C_{tot},gr}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
+		+ I^{i}_{H_{tot}, gr} + I^{i}_{H_{tot}, ads}
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -876,18 +880,21 @@ Similarly, the agglomerates lose (carbon) mass by oxidation, and descend to the 
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i+1}_{agg}
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}}H^{i}_{agg}
+		+ I^{i}_{H_{tot}, ox}
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i+1}_{agg}
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i}_{agg}
+		+ I^{i}_{H_{tot}, ox}
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i}_{agg}
+		+ I^{i}_{H_{tot}, ox}
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -895,6 +902,7 @@ Similarly, the agglomerates lose (carbon) mass by oxidation, and descend to the 
 \end{equation}
 
 \section{Surface reactions model}
+\label{sec:surfreacmodel}
 The heterogeneous surface reactions are described by hydrogen-abstraction-acetylene-addition (HACA) mechanism~\citep{frenklach1991detailed, appel2000kinetic}. The soot growth in HACA scheme is based on a sequential process similar to PAH growth. The hydrogenated arm-chair sites ($\mathrm{C_{soot}-H}$) on the edge of aromatic rings are dehydrogenated ($\mathrm{C_{soot\mbox{\textdegree}}}$)  that can form bond with  $\mathrm{C_2H_2}$ adding an additional aromatic ring with hydrogenated site. These sites can also be attacked by $\mathrm{O_2}$ or $\mathrm{OH}$. The elementary reactions that describe this sequential process are listed in Table~\ref{tab:HACA}
 The rate of mass growth by HACA is obtained from reaction of $\mathrm{C_2H_2}$ with dehydrogenated sites as:
 
@@ -1020,6 +1028,7 @@ We assume that oxidation does not change the number of surface hydrogen atoms. T
 \end{equation}
 
 \section{PAH growth models}
+\label{sec:pahgrowmodel}
 Here, four different PAH growth models are used to describe the conversion of PAHs to incipient particles and their adsorption on existing agglomerates. All models are collision-based consisting of different pathways with single- or multi-step reactions. The collision frequency of gaseous species including PAH molecules and polymers depend on their mass and diameter, and it is obtained as:
 
 \begin{equation}
