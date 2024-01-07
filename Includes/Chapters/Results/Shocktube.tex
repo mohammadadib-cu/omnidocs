@@ -118,3 +118,49 @@ The $\mathrm{\sigma_{g}}$ values from the SMPS measurements of soot particles at
 	\caption{The temperature dependence of standard geometric deviation of mobility diameter, $\mathrm{\sigma_{g}}$ during pyrolysis of 10\%~$\mathrm{CH_4}$-Ar at T=2500 K (left pane) and T=2700 K (right pane)}
 	\label{fig:shocktubesigmatime} 
 \end{figure}
+
+%
+% STANFORD SHOKCTUBE DATA
+%
+
+The next set of shock tube data comes from experiments on $\mathrm{CH_4}$ pyrolysis conducted by Ronald Hanson Group at Stanford University. The data has not been published yet (at the time of writing the document) and were provided through the collaboration with Monolith Materials and Stanford University.
+
+The first data set includes eight measurements with the fuel loading of 30\% $\mathrm{CH_4}$-Ar at P=4$\pm$0.5 atm in the temperature range of 1900-2300 K. The time history of $\mathrm{CH_4}$, $\mathrm{C_2H_4}$ and $\mathrm{C_2H_2}$ mole fraction as well as soot yield and volume fraction were reported up to 0.5 ms. Soot volume fraction was measured using light extinction at $\mathrm{\lambda}$=632 nm with E(m)=0.37~\citep{agafonov2015soot}. The constant volume reactor was used with all PAH growth and particle dynamics models. First, the effect of gas chemistry on species and soot predictions will be examined by comparing the temperature, mole fraction of $\mathrm{CH_4}$, $\mathrm{C_2H_2}$ and soot volume fraction obtained using Caltech~\citep{blanquart2009chemical}, KAUST~\cite{wang2013pah} and ABF~\citep{appel2000kinetic} reaction mechanisms. Here, the comparison is done for one data point, T=2184 K and P=3.62 atm, but the extensive investigations in Appendix\hl{****} shows that the conclusions about the mechanisms are valid for the entire data set. Fig.\ref{fig:shocktubestT} temperature time history predicted by different PAH growth and particle dynamics models and mechanisms. All mechanisms underpredict the temperature and the discrepancy between numerical results and measurements increases with time. While the error of ABF predictions reaches a maximum of 33 K at t=0.5 ms, which is with acceptable range considering the experimental uncertainties, KAUST and Caltech yield the maximum error of 60 K and 102 K at the same time, respectively. As shown in Fig.\ref{fig:shocktubestch4} and \ref{fig:shocktubestch4}, ABF mechanism has a more accurate prediction of mole fraction of $\mathrm{CH_4}$ and $\mathrm{C_2H_2}$, but Caltech and KAUST uderpredict both quantities indicating that these mechanisms predict a stronger  decomposition rate of $\mathrm{CH_4}$ and a higher conversion of $\mathrm{C_2H_2}$ to larger hydrocarbons, especially PAHs. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Results/Shocktube/Stanford/june/stsh_mech_compare_T.pdf}
+	\caption{The time history of temperature of 30\% $\mathrm{CH_4}$ pyrolysis at T=2184 K and P=3.62 atm using Caltech, KAUST, and ABF mechanism and different PAH growth and particle dynamics models}
+	\label{fig:shocktubestT} 
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Results/Shocktube/Stanford/june/stsh_mech_compare_CH4.pdf}
+	\caption{The time history of $\mathrm{CH_4}$ mole fraction of 30\% $\mathrm{CH_4}$ pyrolysis at T=2184 K and P=3.62 atm using Caltech, KAUST, and ABF mechanism and different PAH growth and particle dynamics models}
+	\label{fig:shocktubestch4} 
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Results/Shocktube/Stanford/june/stsh_mech_compare_C2H2.pdf}
+	\caption{The time history of $\mathrm{C_2H_2}$ mole fraction of 30\% $\mathrm{CH_4}$ pyrolysis at T=2184 K and P=3.62 atm using Caltech, KAUST, and ABF mechanism and different PAH growth and particle dynamics models}
+	\label{fig:shocktubestc2h2} 
+\end{figure}
+
+This is better evident in Fig.~\ref{fig:shocktubestch4} showing CMF of $\mathrm{CH_4}$, $\mathrm{C_2H_4}$, and $\mathrm{C_2H_2}$ combined. The results obtained using ABF increases after the initial decrease varying in the range of 1-0.95 indicating that most of carbon mass ($>$95\%) remains in these three species in the studied time frame. However, CMF of the species continuously decreases with KAUST and Caltech confirming the lack/weakness of pathways driving the transfer of carbon from small to large hydrocarbon in ABF mechanism that significantly reduces the soot inception rates. Fig.~\ref{fig:shocktubestvf} shows the soot volume fraction predicted using different models and mechanisms. ABF underpredicts $f_v$ by more than three orders of magnitude, but KAUST and Caltech predictions are close, for some PAH growth models, exceeds the measurements. Interestingly, the combination of KAUST and Ebridge Formation perfectly matches the value and trend of experimental $f_v$. The mechanism comparison can be summarized as following: ABF mechanism predict more accurate temperature and the mole fraction of $\mathrm{CH_4}$ and $\mathrm{C_2H_2}$, but remarkably underestimates soot volume fraction due to a low production rate of PAHs from $\mathrm{C_2H_2}$. Caltech and KAUST overestimate the endothermic decomposition of $\mathrm{CH_4}$ leading to lower temperature prediction, and directs more carbon to PAHs resulting in comparable soot mass. The temperature and species mole fractions is not sensitive to PAH growth and particle dynamics models. $f_v$ significantly changes with PAH growth model, but MPBM and SPBM predictions overlap within 1.5 ms of the simulation. As a results, only simulations by KAUST and MPBM are used to examine soot morphology and composition and the effect of PAH growth models in the temperature range. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Results/Shocktube/Stanford/june/stsh_mech_compare_CCC.pdf}
+	\caption{The time history of carbon mass fraction of $\mathrm{CH_4}$, $\mathrm{C_2H_4}$, and $\mathrm{C_2H_2}$ of 30\% $\mathrm{CH_4}$ pyrolysis at T=2184 K and P=3.62 atm using Caltech, KAUST, and ABF mechanism and different PAH growth and particle dynamics models}
+	\label{fig:shocktubestccc} 
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/Results/Shocktube/Stanford/june/stsh_mech_compare_vf.pdf}
+	\caption{The time history of soot volume fraction of 30\% $\mathrm{CH_4}$ pyrolysis at T=2184 K and P=3.62 atm using Caltech, KAUST, and ABF mechanism and different PAH growth and particle dynamics models}
+	\label{fig:shocktubestvf} 
+\end{figure}
