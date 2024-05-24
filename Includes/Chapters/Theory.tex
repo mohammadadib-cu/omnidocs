@@ -269,6 +269,36 @@ The continuity equation for PFR is written as:
 	\label{eqn:contpfr}.
 \end{equation}
 
+The momentum equation can also be established as:
+\begin{equation}
+	u (1-\varphi) \sum_i \dot s_i W_i + \rho u (1-\varphi) \frac{du}{dz}
+	=-\frac{d}{dz}(P(1-\varphi))-\frac{\tau_{w}}{\mathrm{R_H}} 
+	\label{eqn:momenpfr}.
+\end{equation}
+\noindent where $\tau_w$ is the wall shear the can be determined from fraction factor, $f$ as:
+\begin{equation}
+	\tau_w = \frac{1}{2}\rho u^2 f 
+	\label{eqn:wallshearpfr}.
+\end{equation}
+
+The friction factor, $f$ can be calculated with a good accuracy for the entire range of Reynolds number, Re, from laminar to turbulent flow using the explicit formula given by \citet{haaland1983simple}:
+
+\begin{equation}
+	\frac{1}{f^{1/2}} = -1.8 \mathrm{log}
+	\left(
+		\frac{6.9}{Re}+
+		\left[ \frac{\epsilon/D_H}{3.7} \right]^{1.11}
+	\right)
+	\label{eqn:fpfr},
+\end{equation}
+\noindent where $\epsilon$ is the roughness of reactor wall.
+$\mathrm{R_H}$ and $\mathrm{D_H}$ are hydraulic radius and diameter, respectively that can be determined from cross-section geometry of reactor as:
+
+\begin{equation}
+	D_H = 4 R_H = \frac{4 A_c}{P_c}
+	\label{eqn:RDHpfr},
+\end{equation}
+\noindent $A_c$ and $P_c$ are cross-sectional area and wetted perimeter of the reactor.
 The species equation can be expressed as:
 \begin{equation}
 	\frac{d Y_k}{d z}=\frac{1}{\rho u}\left[\left(\dot{\omega}_k+\dot{s}_k\right) W_k-Y_k \sum_i \dot{s}_i W_i\right]
@@ -1033,7 +1063,7 @@ Here, four different PAH growth models are used to describe the conversion of PA
 
 \begin{equation}
 	\beta_{dim_{jk}}=
-	2.2 \cdot Av \cdot d^2_{r} \sqrt{\frac{8 \pi k_B T}{m_{r}}}
+	2.2 \cdot \cdot d^2_{r} \sqrt{\frac{8 \pi k_B T}{m_{r}}}
 	\label{eqn:betadim}
 \end{equation}
 
@@ -1118,7 +1148,7 @@ The irreversible dimerization is based on the collision-based clustering/polymer
 }
 Similarly, the adsorption of each PAH molecule on soot particles is described by the irreversible collision of soot and $\mathrm{PAH_j}$ as:
 \reaction[react:irrevdimads]{
-	$\mathrm{PAH_j}$ + Soot ->[k_{f,ads_j}] $\mathrm{Soot-PAH}$
+	$\mathrm{PAH_j}$ + Soot ->[k_{f,ads_j}] $\mathrm{Soot-PAH_j}$
 }
 The forward rate of dimerization, $\mathrm{k_{f,dim_j}}$ and adsorption, $k_{f,ads_j}$ in Reactions \eqref{react:irrevdiminc} and \eqref{react:irrevdimads} are calculated from Equations \eqref{eqn:betadim} and \eqref{eqn:betahmads}, respectively.
 
@@ -1129,8 +1159,8 @@ The forward rate of dimerization, $\mathrm{k_{f,dim_j}}$ and adsorption, $k_{f,a
 \end{equation}
 
 \begin{equation}
-	k^i_{f,ads}=
-	\gamma_{ads}\cdot\beta^i_{jk,ads}\cdot Av
+	k^i_{f,ads_j}=
+	\gamma_{ads_j}\cdot\beta^i_{j,ads}\cdot Av
 	\label{eqn:kfads},
 \end{equation}
 
@@ -1234,9 +1264,9 @@ where $\mathrm{p^{''}}=0.1$ accounts for the probability of PAH-PAH collisions i
 \end{equation}
 \noindent where $\mathrm{a=0.115}$ (obtained from pyrere dimerization data~\cite{sabbah2010exploring}) and b=1.8 \cite{kholghy2018reactive}, c=933420~j/kg, and d=34053~j/mol~\cite{kholghy2018reactive}. 
 
-The rate of chemical bond formation, $\mathrm{k_{REAC}}$ is defined in the Arrhenius form~\cite{naseri2022simulating} as
+The rate of chemical bond formation, $\mathrm{k_{reac}}$ is defined in the Arrhenius form~\cite{naseri2022simulating} as
 \begin{equation}
-	k_{c,dim} = 5\times10^6\cdot e^{(-96232/RT)}
+	k_{reac} = 5\times10^6\cdot e^{(-96232/RT)}
 	\label{eqn:kc_reacdim}.
 \end{equation}
 
@@ -1536,7 +1566,7 @@ The rate of removal of PAHs and release of $\mathrm{H_2}$ due to inception and P
 \end{equation}
 
 \subsection{E-Bridge Formation}
-The E-Bridge Formation was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with dehydrogenation of PAH monomers, often pyrene, the monomer radicals and continues with of sequential addition of the radicals to PAHs that form dimers, trimers and largers polymers until the PAH structure reaches the mass threshold and the clustering process becomes irreversible. Here, a modified version of EBridge formation model is used where dimers are considered as incipient soot, and monomer radical are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
+The E-Bridge Formation was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with dehydrogenation of PAH monomers, often pyrene, which forms the monomer radicals and continues with of sequential addition of the radicals to PAHs that form dimers, trimers and larger polymers until the PAH structure reaches the mass threshold and the clustering process becomes irreversible. Here, a modified version of EBridge formation model is used where dimers are considered as incipient soot, and monomer radical are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
 
 \reaction[reac:dehyd_ebri]{
 	PAH_j + H <-->[k_{f,d_{j}}][k_{r,d_{j}}] $\mathrm{\dot{PAH}_j}$ + H2,
@@ -1553,7 +1583,7 @@ The E-Bridge Formation was originally proposed by \citet{frenklach2020mechanism}
 	$\mathrm{\dot{PAH}_j}$ + Soot ->[k_{ads_j}] Soot-PAH_{j},
 }
 
-The rate constants of Reactions~\eqref{reac:dehyd_ebri}\&\eqref{reac:hyd_ebri} are listed in Table~\citep{tab:Ebridge} while those of dimer production and adsorption are calculated based on Equations~\eqref{eqn:betadim}\&\eqref{eqn:betahmads}, respectively. For both steps, it is assumed the all collisions are successful i.e. 100\% collision efficiency for radical-monomer and radical-soot.
+The rate constants of Reactions~\eqref{reac:dehyd_ebri}\&\eqref{reac:hyd_ebri} are listed in Table~\ref{tab:Ebridge} while those of dimer production and adsorption are calculated based on Equations~\eqref{eqn:betadim}\&\eqref{eqn:betahmads}, respectively. For both steps, it is assumed the all collisions are successful i.e. 100\% collision efficiency for radical-monomer and radical-soot.
 
 \begin{equation}
 	k_{inc_j}=

@@ -1,134 +1,58 @@
-\section{Shock-tubes}
+\section{Soot yield and morphology during methane pyrolysis in shock-tubes}
 
-In this section, we focus on simulation of soot formation in shock-tubes using the constant volume reactor of omnisoot, and compare species mole fraction and soot yield and morphology (if available) with benchmark measurements. Figure~\ref{fig:shocktubeschem} (left pane) illustrates the schematics of a shock-tube along with the idealized wave diagram. Shock-tubes are typically designed as a several meter long cylindrical tube separated by thin diaphragm into a smaller driver section filled a high pressure inert gas, and a longer driven section with diluted reactants. When the diaphragm is ruptured, the first shock wave propagates through the reactant mixture. The front shock compresses the reactants adiabatically raising the temperature and pressure throughout the shock-tube from $\mathrm{T_1}$, $\mathrm{P_1}$ to $\mathrm{T_2}$, $\mathrm{P_2}$. The passage of the reflected shock from the end wall heats up the reactants for the second time reaching $\mathrm{T_5}$, $\mathrm{P_5}$. Figure~\ref{fig:shocktubeschem} (right pane) shows the first and second jump in pressure due to the front and reflected shocks, respectively, and the variation in soot volume fraction during the pyrolysis of 0.03\% benzene in Ar. The reflected shock creates a nearly still mixture with a constant temperature and pressure (as shown in left pane of Figure~\ref{fig:shocktubeschem}) which provides an ideal condition for kinetic studies and rate constant investigations~\citep{kee2017chemically}. Therefore, the use of a shock tube provides a unique opportunity for investigating the kinetics of soot formation from fuels and at various temperatures, pressures and concentrations.
+In this section, we focus on simulation of soot formation in shock-tubes using the constant volume reactor of omnisoot, and compare species mole fraction and soot yield and morphology with benchmark measurements. 
+Methane (CH4) pyrolysis in plasma reactors is an emerging alternative production method with distinct advantages over flame-based methods~\citep{fulcheri2023energy} in terms of emissions and process control~\citep{cho2004conversion}. Achieving specific grades of CB for different target applications requires a good control over CB properties such as its morphology (quantified by primary particle, $d_p$ and mobility diameter, $d_m$), composition (elemental carbon to hydrogen ratio), specific surface area (inversely proportional to $d_p$) and internal nanostructure (composed of aligned graphitic shell and disordered core). However, this is challenging because of the complexity of CB inception and mass growth processes and its coupling with gas phase chemistry, dependence on local temperature and pressure, and short time scales of CB inception and growth~\citep{violi2005relative}. Therefore, robust particle dynamics models coupled with detailed chemical mechanisms are essential to better understand methane-to-CB conversion process under different feedstock compositions, and temperature and pressure time-histories.
 
-However, the processes investigated in shock tubes are limited to short residence times usually 1-3 ms, so they can only be used to study early stages of soot formation such as inception and surface growth, and not for processes occurring at longer residence times such as coagulation and carbonization. Note that the residence time is calculated after the passage of reflected shock. There is a delay in the increase of volume fraction known as induction time, $\mathrm{\tau_{ind}}$. There has been a lot of research in the literature focused on induction time (similarly on ignition delay time) in shock tubes~\citep{fussey1978shock}, but it is not the focus of this work. Instead, here we mainly investigate the species concentrations and soot characteristics during the pyrolysis of hydrocarbons, especially methane, at atmospheric and higher pressure which can be used for the design and optimization of carbon black in plasma reactors~\citep{fulcheri2023energy}. 
-
-\subsection{Methane pyrolysis data of \citet{agafonov2016unified}}
-
-First, the pyrolysis of 5\% and 10\% $\mathrm{CH_4}$ diluted with Ar is investigated for the post-shock temperature range of 1800-3000 K and the pressure range of 4.7-7.1 bar. We assume the pressure linearly increase by temperature across the simulation cases. The obtained soot yields by were compared with the soot yield measured by \citet{agafonov2016unified} using a dual-beam absorption–emission technique. \citet{agafonov2016unified} reported yield$\times$E(m) at $\mathrm{\lambda}$=632~nm, and yield data was retrieved using E(m)=0.37 suggested therein. 
-
-
-
-
-% run the shock-tube with other mechanisms and include the results in the Appendix
+While methane combustion has been extensively studied~\citep{wang2013pah} due to the need for a detailed chemical description of natural gas combustion, the formation of carbonaceous particles such as soot and CB from methane pyrolysis are not well understood yet. Significant differences exist between reaction mechanisms in prediction of CH4 and intermediate species such as $\mathrm{C_2H_2}$, and $\mathrm{C_2H_4}$ in flame and reactors~\citep{wang2013pah}. These uncertainties are amplified for polycyclic aromatic hydrocarbons (PAH) that are known as main precursors because of their low concentrations and complexity of pathways. Moreover, the exact pathways of CB inception and surface growth have not been identified yet. 
+Methane flames have been studied to estimate the inception mass flux at low-pressure with equivalence ratio of 1.95 in a near-sooting condition~\citep{desgroux2017comparative}. Similarly, methane flames have been used to study the effect of H2 on addition on inception flux, and pressure on particle morphology~\citep{amin2020morphology}. Although flame data is available, there is a lack of such datasets in shock tubes. Kinetic studies and measurements of soot inception and growth have certain advantages in shock tubes over flames due to the uniform and instant heating of the mixture behind the reflected shock to the desired temperature and pressure as well as the absence of complicating factors such as diffusion and mixing. The shock-wave propagation and reflection creates nearly isothermal and isobaric conditions create an ideal environment for kinetic studies of pyrolysis. pathways and soot inception and growth. However, these conditions are limited to short residence times usually 1-3 ms, so they can only be used to study early stages of soot formation such as inception and surface growth, and not for processes occurring at longer residence times such as coagulation, graphitization and carbonization.
 
 \begin{figure}[!htbp]
 	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/schematics.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-	\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/pfv_sample_shocktube.pdf}
-	\end{subfigure}
-	\caption{The schematics of a shock-tube and the idealized shockwave diagram(left pane reprinted from ~\citet{kee2017chemically}) and the variation of soot volume fraction measured by the extinction record at 633 nm and the pressure profile behind the reflected shock wave in a mixture 0.03\% benzene in Ar at T = 1890 K(right pane reprinted from ~\citet{karasevich1994soot})}
-	\label{fig:shocktubeschem}
+	\includegraphics[height=80mm, ]{Figures/Results/Shocktube/shockwavestages.jpg}
+	\caption{Different stages of shock wave propagation during shock-tube test from (a) before rupture of diaphragm leading to (b) propagation of incident shock towards the end of shock-tube and (c) its reflection from the end wall that increases pressure and temperature of test gas (Reprinted from Ref.~\citep{HansonGroupShockTube}}
+	\label{fig:shockwave}
 \end{figure}
 
-Figure~\ref{fig:shocktubeyield} depicts soot yield (SY) at t=1.5 ms for 5\% and 10\% $\mathrm{CH_4}$ over the temperature range of 1800-3000 K using MPBM and SPBM and different inception model and Caltech~\citep{blanquart2009chemical} mechanism. Note that, the simulations were also performed using ABF~\citep{appel2000kinetic} and KAUST~\cite{wang2013pah} mechanisms, and the results were included in Appendix\hl{****}. The soot yield predictions exhibit a close agreement with measurements~\citep{agafonov2016unified} considering the uncertainties in residence time from experiments. The model also successfully captures the bell-shape dependence of soot yield on temperature that has been observed in a variety of hydrocarbons in shock tube~\citep{kellerer1996soot,knorre1996soot}. The particle dynamics model has minimal effect on the predicted soot yield. In the vicinity of peak soot yield, SPBM results in slightly lower yield than MPBM, but they are indistinguishable in the rest of the temperature range. 
+Different stages of shock-wave propagation is illustrated in Fig.\ref{fig:shockwave}. A shock tube consists of a driver and a driven section separated by a single-use diaphragm in between. The driver section contains usually an inert gas with a low molecular weight such as He, and the driven section is filled with the studied test gas. The driver section is pressurized to the desired pressure until the rupture of the diaphragm that puts the two gas regions with a large pressure difference in direct contact. This creates a shock wave that propagates through the driven section causing a pressure and temperature jump in the test gas. 
 
-%The minor difference between MPBM and SPBM is due to the short residence time (t=1.5 ms) where inception and surface growth are dominant leading to low polydispersity and relatively small agglomerates. 
-In \%5 $\mathrm{CH_4}$, the SY peak temperature obtained from the model is slightly shifted towards higher temperatures (2300 K$<T_{peak}<$2400 K) compared to the measurements $T_{peak}=$2200 K. There are noticeable differences in the behavior of PAH growth model depending on the shock-tube initial temperature. When T$<$2100 K, Reactive Dimerization and EBridge Formation have the highest and lowest soot yield, respectively with Dimer Coalescence predicting soot yields that always falls between Reactive and Irreversible Dimerization. However, The soot yield of EBridge Formation rapidly rises with temperature and exceeds that of Reactive Dimerization and stays higher for the rest of temperature range.
-
-The SY noticeably increases for higher initial $\mathrm{CH_4}$ mole fraction of \%10 because more PAH and $\mathrm{C_2H_2}$ are formed leading to stronger carbon conversion rate to soot via inception and surface growth. The peak SY obtained from the model occurs in a higher temperature range 2600-2700 K compared to \%5 $\mathrm{CH_4}$. Soot yield trends can be better understood by examining carbon mass fraction of species directly contributing to soot mass. Figure~\ref{fig:shocktubeAAAA} depicts the bell-shape distribution of the carbon mass fraction of soot precursors (A2, A2R5, A3, and A4) over the studied temperature range. In low (T=1800 K) and high (T=2300 K) end of distribution, a low amount of precursors are formed resulting in low inception rates, particle number concentration and surface growth sites that reduces the soot yield. Additionally, \%10$\mathrm{CH_4}$ has a wider spread with peaks at higher temperature compared to \%10$\mathrm{CH_4}$ which explains the shift in peak yield temperature in Figure~\ref{fig:shocktubeyield}. The effect of particle dynamics model is only noticeable in Reactive Dimerization where SPBM results in higher precursor CMF (lower consumption) due to its lower PAH adsorption rates. %Should discuss why the difference only appears in RD not the others
+After reaching the end wall, the shock wave reflects back towards the driver end of the shock tube resulting in a secondary compression and heating of the mixture, and ultimately stagnating the test gas. In nearly 10 $\mathrm{\mu}$s, this shock-heating process can bring the test gas from room-temperature to temperatures upwards of 10,000 K, and pressures more than 1000 atm.
 
 
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\begin{tikzpicture}
-			\draw (0, 0) node[inner sep=0] 	{\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/5CH4/carbon_yield.pdf}};
-			\draw (2.44, 0.68) node {\tiny{\cite{agafonov2016unified}}};
-		\end{tikzpicture}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-	\begin{tikzpicture}
-		\draw (0, 0) node[inner sep=0] 	{\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/carbon_yield.pdf}};
-		\draw (0.29, -0.33) node {\tiny{\cite{agafonov2016unified}}};
-	\end{tikzpicture}
-	\end{subfigure}
-	\caption{The temperature dependence of soot yield during pyrolysis of 5\%~$\mathrm{CH_4}$-Ar (left pane) and 10\%~$\mathrm{CH_4}$-Ar (right pane) at $\mathrm{P}$ = 4.5–6.7 bar obtained using Caltech mechanism and different inception models compared with measurements at 1.5ms~\cite{agafonov2016unified} where the absorption funtion of E(m)=0.37 is used to estimate soot yield.}
-	\label{fig:shocktubeyield} 
-\end{figure}
 
+%Figure~\ref{fig:shocktubeschem} (left pane) illustrates the schematics of a shock-tube along with the idealized wave diagram. Shock-tubes are typically designed as a several meter long cylindrical tube separated by thin diaphragm into a smaller driver section filled a high pressure inert gas, and a longer driven section with diluted reactants. When the diaphragm is ruptured, the first shock wave propagates through the reactant mixture. The front shock compresses the reactants adiabatically raising the temperature and pressure throughout the shock-tube from $\mathrm{T_1}$, $\mathrm{P_1}$ to $\mathrm{T_2}$, $\mathrm{P_2}$. The passage of the reflected shock from the end wall heats up the reactants for the second time reaching $\mathrm{T_5}$, $\mathrm{P_5}$. Figure~\ref{fig:shocktubeschem} (right pane) shows the first and second jump in pressure due to the front and reflected shocks, respectively, and the variation in soot volume fraction during the pyrolysis of 0.03\% benzene in Ar. The reflected shock creates a nearly still mixture with a constant temperature and pressure (as shown in left pane of Figure~\ref{fig:shocktubeschem}) which provides an ideal condition for kinetic studies and rate constant investigations~\citep{kee2017chemically}. Therefore, the use of a shock tube provides a unique opportunity for investigating the kinetics of soot formation from fuels and at various temperatures, pressures and concentrations.
 
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/5CH4/AAAA.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/AAAA.pdf}
-	\end{subfigure}
-	\caption{The temperature dependence of carbon mass fraction of soot precursors (A2, A2R5, A3, and A4) combined during pyrolysis of 5\%~$\mathrm{CH_4}$-Ar (left pane) and 10\%~$\mathrm{CH_4}$-Ar (right pane) at $\mathrm{P}$ = 4.5–6.7 bar obtained using Caltech mechanism and different inception models at t=1.5 ms}
-	\label{fig:shocktubeAAAA} 
-\end{figure}
+%\begin{figure}[!htbp]
+%	\centering
+%	\begin{subfigure}[t]{0.4\textwidth}
+%		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/schematics.pdf}
+%	\end{subfigure}
+%	\begin{subfigure}[t]{0.4\textwidth}
+%		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/pfv_sample_shocktube.pdf}
+%	\end{subfigure}
+%	\caption{The schematics of a shock-tube and the idealized shockwave diagram(left pane reprinted from ~\citet{kee2017chemically}) and the variation of soot volume fraction measured by the extinction record at 633 nm and the pressure profile behind the reflected shock wave in a mixture 0.03\% benzene in Ar at T = 1890 K(right pane reprinted from ~\citet{karasevich1994soot})}
+%	\label{fig:shocktubeschem}
+%\end{figure}
 
-EBridge Formation exhibits a similar behavior in \%10 $\mathrm{CH_4}$ simulations where it starts with the lowest SY at T$<$2500 K and then quickly increases reaching its peak at 100\% which is significantly larger that other PAH growth models. The remarkable drop in carbon mass fraction of precursors with EBridge Formation corresponds to \%100 yield meaning that all gaseous carbon including the precursors are directed towards soot particles.The higher precursor CMF with Irreversible Dimerization near the peak yield temperature region (2200-2400 K for \%5 $\mathrm{CH_4}$ and 2600-2800 K for \%10 $\mathrm{CH_4}$) indicates less consumption of precursors via inception and PAH adsorption.
+The passage of reflected shock, referred to as region 5 with $\mathrm{T_5}$ and $\mathrm{P_5}$, is reference for calculation of residence time and the starting point for simulations. The delay in appearance of soot (often quantified by a threshold for LII or extinction signals) is know as induction time, $\mathrm{\tau_{ind}}$. There has been a lot of research in the literature focused on induction time (similarly on ignition delay time) in shock tubes~\citep{fussey1978shock}, but it is not the focus of this work. Instead, we mainly focus on  species concentrations and soot characteristics during the pyrolysis of methane, at atmospheric and higher pressure which can be used for the design and optimization of carbon black in plasma reactors~\citep{fulcheri2023energy}. 
 
-Figure~\ref{fig:shocktubeC2H2} shows the CMF of $\mathrm{C_2H_2}$ that has an overall increasing trend in the temperature range, but it reaches a plateau for \%5 $\mathrm{CH_4}$. There is also a remarkable drop in $\mathrm{C_2H_2}$ CMF in 2600-2800 K due to strong mass growth rate of soot particles that drains $\mathrm{C_2H_2}$ from the gas mixture leading to high soot yield $\approxeq 100\%$. 
-
-
-\begin{figure}[!htbp]
-	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/5CH4/C2H2.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/C2H2.pdf}
-	\end{subfigure}
-	\caption{The temperature dependence of carbon mass fraction of $\mathrm{C_2H_2}$ during pyrolysis of 5\%~$\mathrm{CH_4}$-Ar (left pane) and 10\%~$\mathrm{CH_4}$-Ar (right pane) at $\mathrm{P}$ = 4.5–6.7 bar obtained using Caltech mechanism and different inception models at t=1.5 ms}
-	\label{fig:shocktubeC2H2} 
-\end{figure}
-
-Although soot yield, and precursor and acetylene CMF are not sensitive to particle dynamics model, there is a significant difference in agglomerate morphology between SPBM and MPBM predictions. Fig.~\ref{fig:shocktubenp} shows the average number of primary particles per agglomerate, which is larger for SPBM by the maximum factor of 5 for EBridge Formation and Dimer Coalescence in 10\%~$\mathrm{CH_4}$. SPBM predicts larger agglomerates due to accounting for polydispersity of particles that results in higher overall collision rate and faster growth by coagulation. $\mathrm{n_p}$ follows a bell-shape trend similar to soot yield (Fig.~\ref{fig:shocktubeyield}). The $\mathrm{n_p}$ values and the difference between the particle dynamics models reaches their maximum in 2200-2400 K for \%5 $\mathrm{CH_4}$ and 2600-2800 K for \%10 $\mathrm{CH_4}$ because of a stronger inception flux leading to larger number concentration of particles and higher coagulation rate. $\mathrm{n_p}$ is larger for Dimer Coalescence and EBridge Formation reaching the maximum of nearly 100 and 1000 in \%5 and \%10 $\mathrm{CH_4}$, respectively using SPBM. The effect of particle dynamics is minimum for Reactive and Irreversible Dimerization at 5\%~$\mathrm{CH_4}$ over the whole temperature range. 
-
-Fig.\ref{fig:shocktubesigma} shows the standard geometric deviation of mobility diameter, $\mathrm{\sigma_{g}}$ obtained by SPBM that reaches the maximum of 5 and 10 for \%5 and \%10 $\mathrm{CH_4}$, respectively indicating a significant degree of polydispersity in the generated particles at t=1.5ms.
-
-%plot sigma in time to see how it changes and why the sigma values are so large + compare sigma with values from the flame
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/5CH4/n_p.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/n_p.pdf}
-	\end{subfigure}
-	\caption{The temperature dependence of average number of primary particle per agglomerate, $\mathrm{n_p}$ during pyrolysis of 5\%~$\mathrm{CH_4}$-Ar (left pane) and 10\%~$\mathrm{CH_4}$-Ar (right pane) at $\mathrm{P}$ = 4.5–6.7 bar obtained using Caltech mechanism and different inception models at t=1.5 ms}
-	\label{fig:shocktubenp} 
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/5CH4/sigma.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.4\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/sigma.pdf}
-	\end{subfigure}
-	\caption{The time variation of standard geometric deviation of mobility diameter, $\mathrm{\sigma_{g}}$ during pyrolysis of 5\%~$\mathrm{CH_4}$-Ar (left pane) and 10\%~$\mathrm{CH_4}$-Ar (right pane) at $\mathrm{P}$ = 4.5–6.7 bar obtained using Caltech mechanism and different inception models at t=1.5 ms}
-\label{fig:shocktubesigma} 
-\end{figure}
-
-The $\mathrm{\sigma_{g}}$ values from the SMPS measurements of soot particles at t$\approx$=45ms in a benchmark burner-stabilized premixed are close to 1.1, which is significantly lower than values observed here. So, the evolution of $\mathrm{\sigma_{g}}$ in the studied shock tube is examined in an extended time frame up to 4 msf for 10\%~$\mathrm{CH_4}$ at T=2500 and 2700 K. As shown in Fig.\ref{fig:shocktubesigmatime}, for all PAH growth models $\mathrm{\sigma_{g}}$ rises in the beginning due to simultaneous inception and coagulation that increases polydispersity and rapidly drops and approaches 1.5 before t=3ms when coagulation becomes dominant and inception weaken due to consumption of precursors by PAH adsorption and HACA.
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\textwidth]{Figures/Results/Shocktube/Agafonov2016/10CH4/sigma_time.pdf}
-	\caption{The temperature dependence of standard geometric deviation of mobility diameter, $\mathrm{\sigma_{g}}$ during pyrolysis of 10\%~$\mathrm{CH_4}$-Ar at T=2500 K (left pane) and T=2700 K (right pane)}
-	\label{fig:shocktubesigmatime} 
-\end{figure}
 %----------------------------------------------------------------
 %
 % STANFORD SHOKCTUBE DATA 30% CH4
 %
 %----------------------------------------------------------------
 
-\subsection{Methane pyrolysis data of Stanford (Hanson Group)}
+\subsection{Experimental setup and data collection}
 
-The next set of shock tube data comes from experiments on $\mathrm{CH_4}$ pyrolysis conducted by Ronald Hanson Group at Stanford University. The data has not been published yet (at the time of writing the document) and were provided through the collaboration with Monolith Materials and Stanford University.
+The experiments on $\mathrm{CH_4}$ pyrolysis were conducted by Hanson Research Group at Stanford University. The data has not been published yet (at the time of writing the document) and were provided through the collaboration with Monolith Materials and Stanford University.
+
+Mole fraction time histories of methane (CH4), acetylene (C2H2), and ethylene (C2H4) were captured using continuous wave (CW) laser absorption at 3.365 $\mu$m, 2.998 $\mu$m, and 10.532 $\mu$m, respectively~\citep{pinkowski2019multi, cassady2020thermal, stranic2014laser}. Soot volume fraction was measured using laser light extinction at $\lambda$=633 nm and 1064 nm with absorption function E(m) of 0.174 and 0.203~\citep{lee1981optical}, respectively. Additionally, soot samples were collected onto imaging stubs mounted in the shock-tube end-wall. A schematic of the experimental setup for laser diagnostics in the shock tube is shown in Fig.~\ref{fig:shocktubelaserlayout}. Samples were extracted from the interior surface of the shock tube endwall after each experiment to allow for imaging and analysis of the particulates. TEM images were recorded with a FEI Tecnai G2 F20 X-TWIN microscope and Gatan SC200 camera for the test case of $\mathrm{P_5}$=4.5 atm and $\mathrm{T_5}$=2217 K.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{Figures/Results/Shocktube/laserdiagnostics.pdf}
+	\caption{Layout of the laser diagnostics and shock-tube setup. Spatial and spectral filtering is employed to ensure high-quality absorbance measurements to infer species mole fractions and soot volume fraction. Soot samples are collected at the shock-tube endwall. All lasers are aligned in a plane 1 cm from the endwall}
+	\label{fig:shocktubelaserlayout} 
+\end{figure}
 
 The first data set includes eight measurements with the fuel loading of 30\% $\mathrm{CH_4}$-Ar at P=4$\pm$0.5 atm in the temperature range of 1800-2500 K. Table~\ref{tab:shocktubest_CH4_30} lists the process conditions including pressure, temperature and composition of all data points of 30\% $\mathrm{CH_4}$ pyrolysis.
 
@@ -368,7 +292,9 @@ We applied K-means clustering (KMC)~\citep{sipkens2021using} and otsu thresholdi
 \end{table}
 
 
-Table~\ref{fig:shocktubest_aggseg_compare} reports the arithmetic mean and median of mobility and primary particle diameter detected by atems from TEM images. The computed $d_m$ and $d_p$ will be compared with soot sampled from various sources. Soot morphology is mainly governed by coagulation leading to self-similar structures in which $d_m$ scales with $d_p$ and $n_p$. Following that principle, a power-law derived from DEM simulation in flame conditions~\citep{Kelesidis2017} was introduced in Sec.~\ref{sec:sootmorphology}. Here, we compare the ratio of mobility to primary particle diameter $d_m/d_p$ with $d_m/d_p=n_p^{0.45}$ (Eq.~\ref{eqn:d_m}). \citet{olfert2019universal} analyzed soot particles from flares~\citep{kazemimanesh2019size}, inverted burners~\citep{dastanpour2017variation}, compression ignition engines~\citep{graves2015characterization} and other sources to support the external mixing hypothesis and related agglomerate size characterized by $d_m$ to $d_p$ using the following power-law:
+Table~\ref{fig:shocktubest_aggseg_compare} reports the arithmetic mean and median of mobility and primary particle diameter detected by atems from TEM images. The computed $d_m$ and $d_p$ will be compared with soot sampled from various sources. Soot morphology is mainly governed by coagulation leading to self-similar structures in which $d_m$ scales with $d_p$ and $n_p$. 
+%Following that principle, a power-law derived from DEM simulation in flame conditions~\citep{Kelesidis2017} was introduced in Sec.~\ref{sec:sootmorphology}. Here, we compare the ratio of mobility to primary particle diameter $d_m/d_p$ with $d_m/d_p=n_p^{0.45}$ (Eq.~\ref{eqn:d_m}). 
+\citet{olfert2019universal} analyzed soot particles from flares~\citep{kazemimanesh2019size}, inverted burners~\citep{dastanpour2017variation}, compression ignition engines~\citep{graves2015characterization} and other sources to support the external mixing hypothesis and related agglomerate size characterized by $d_m$ to $d_p$ using the following power-law:
 
 \begin{equation}
 	d_{p} = d_{p,100} 
@@ -378,17 +304,14 @@ Table~\ref{fig:shocktubest_aggseg_compare} reports the arithmetic mean and media
 	\label{eqn:usf}
 \end{equation}
 
-\noindent where $d_{p,100}$ is the average primary particle diameter for a 100 nm aggregate, and $D_{\mathrm{TEM}}$ is the exponent. Both quantities were obtained by fitting Eq.~\eqref{eqn:usf} to soot sampled from different sources. the left pane of Fig~\ref{fig:shocktube_TEM_powerlaws} demonstrates the ratio of mobility to primary particle diameter, $d_m/d_p$ from TEM images analyzed by atems compared with the DEM derived power-law (Eq.~\eqref{eqn:d_m}). In the right pane of the same Figure, the scatter plot of $d_p$ against $d_m$ is compared with power-law curves of Eq.~\eqref{eqn:usf} using two sets of prefactor and exponent values, i) $D_{\mathrm{TEM}}$=0.32, $d_{\mathrm{p,100}}$=20.6 nm, and ii) $D_{\mathrm{TEM}}$=0.39, $d_{\mathrm{p,100}}$=20.2 nm taken from average values reported in summary of fit parameters in Table 1 of \citet{olfert2019universal}. Both power-laws show a good agreement with quantities obtained from TEM images with DEM power-law reaching the maximum different of 35\% indicating that $d_p$ and $d_m$ computed by atems can be good representative of soot agglomerates with minimal agglomerate overlap.
+\noindent where $d_{p,100}$ is the average primary particle diameter for a 100 nm aggregate, and $D_{\mathrm{TEM}}$ is the exponent. Both quantities were obtained by fitting Eq.~\eqref{eqn:usf} to soot sampled from different sources. the left pane of Fig~\ref{fig:shocktube_TEM_powerlaws} demonstrates the scatter plot of $d_p$ against $d_m$ is compared with power-law curves of Eq.~\eqref{eqn:usf} using two sets of prefactor and exponent values, i) $D_{\mathrm{TEM}}$=0.32, $d_{\mathrm{p,100}}$=20.6 nm, and ii) $D_{\mathrm{TEM}}$=0.39, $d_{\mathrm{p,100}}$=20.2 nm taken from average values reported in summary of fit parameters in Table 1 of \citet{olfert2019universal}. The power-law show a good agreement with quantities that $d_p$ and $d_m$ computed by atems can be good representative of soot agglomerates with minimal agglomerate overlap.
 
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.32\textwidth}
-		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Stanford/TEM/dm_scalelaw.pdf}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.32\textwidth}
 		\includegraphics[width=1\textwidth]{Figures/Results/Shocktube/Stanford/TEM/dmdp_scalelaw.pdf}
 	\end{subfigure}
-	\caption{The ratio of mobility to primary particle diameter $d_m/d_p$ from TEM image obtained by atems~\citep{sipkens2021using} (symbols) compared with the DEM derived power law $d_m/d_p=n_p^{0.45}$~\citep{Kelesidis2017} (left pane) and the $d_m$ as a function of $d_p$ compared with power law in Eq.~\eqref{eqn:usf} (right pane)} 
+	\caption{The $d_m$ as a function of $d_p$ from TEM image obtained by atems~\citep{sipkens2021using} (symbols) compared with the power law in Eq.~\eqref{eqn:usf}} 
 	\label{fig:shocktube_TEM_powerlaws} 
 \end{figure}
 
