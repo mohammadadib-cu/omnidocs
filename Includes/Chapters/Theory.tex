@@ -1,19 +1,21 @@
 \chapter{Theoretical Model}
-In this chapter, the mathematical basis of \textit{omnisoot} is explained in top-to-bottom hierarchical order. The highest level is the reactors that include the transport equations of gas mixture and "soot variables" for different reactors that relies on the source terms due to soot formation. These source terms are handled by the particle dynamics model that mainly addresses particle size distribution (PSD), morphology and coagulation rate. The "PAH growth model" computes the inception and adsorption based on PAHs designated as precursors, and returns them to the particle dynamics model. Similarly, the "surface reaction" model obtains the surface growth and oxidation rate by HACA schemes and passes them to the particle dynamics model. 
+In this chapter, the mathematical basis for \textit{omnisoot} is explained in the top-to-bottom hierarchical order. The highest level is the reactors and flames that include the transport equations of gas mixture and "soot variables". Soot formation source terms are handled by the particle dynamics model that mainly addresses particle size distribution (PSD), morphology and coagulation rate. The "PAH growth model" computes the contribution of inception and adsorption to source terms based on PAHs designated as precursors. Similarly, the "surface reactions" model obtains the surface growth and oxidation rate by HACA mechanism and passes them to the particle dynamics model. 
 
 \section{Assumptions and conventions}
 Here, the main conventions and assumptions used in the derivation of the mathematical model are listed below.
 
 \begin{enumerate}
+\item The ideal gas law is used to calculated physical, transport, and chemical properties of gas mixture.
+	
 \item $\mathrm{\dot{s}_k}$ denotes that rate production/consumption of $k_{th}$ species due to soot formation. It is positive when the species is released to gas mixture.
 
-\item Each soot agglomerate consist of spherical monodisperse primary particles that are in point contact.
+\item Each soot agglomerate consist of spherical monodisperse primary particles in point contact.
 
 \item The word \textit{``particle"} refers to soot both in spherical and agglomerate shape. 
 
 \item The density of soot is assumed constant at the value of 1800 $\mathrm{kg/m^3}$. This density represents an average between particles with large C/H ratio ($\mathrm{\rho=1600 kg/m^3}$) and small C/H ratios ($\mathrm{\rho=2000 kg/m^3}$)~\citep{jensen2007measurement}.
 
-\item The incipient soot particles are 2~nm in diameter, so no particles could exist with a primary particle diameter smaller than 2~nm. The number of carbon atoms in the incipient soot particle is calculated from the mass of a sphere with the diameter of 2~nm in assuming pure carbon content.
+\item The incipient soot particles are 2~nm in diameter, so no particles could exist with a primary particle diameter smaller than 2~nm. The number of carbon atoms in the incipient soot particle is calculated from the mass of a sphere with the diameter of 2~nm assuming pure carbon content.
 \begin{equation}
 	\begin{split}
 	d_{p,min}&=2~\mathrm{nm} \\
@@ -21,7 +23,7 @@ Here, the main conventions and assumptions used in the derivation of the mathema
 	\label{eqn:dp_min}.
 	\end{split}
 \end{equation}
-\item The calculation of PAH adsorption and soot oxidation requires ``\textit{soot concentration}" which is defined as number density of soot agglomerates per unit volume of gas. The number density of agglomerates,  $\mathrm{N_{agg}}$, are tracked per unit mass of gas mixture i.e. $\mathrm{\#/kg_{gas}}$. So, soot concentration can be calculated by multiplying agglomerate number density by gas density as:
+\item The calculation of PAH adsorption and soot oxidation requires ``\textit{soot concentration}" which is defined as the number of soot agglomerates per unit volume of gas. The number density of agglomerates,  $\mathrm{N_{agg}}$, are tracked per unit mass of gas mixture i.e. $\mathrm{\#/kg_{gas}}$. So, soot concentration can be calculated by multiplying agglomerate number density by gas density as:
 \begin{equation}
 	[\mathrm{soot}] = \rho\cdot \mathrm{N_{agg}}
 	\label{eqn:sootconcen}.
@@ -29,22 +31,24 @@ Here, the main conventions and assumptions used in the derivation of the mathema
 
 \item The specific heat, internal energy and enthalpy of soot are approximated by those of pure graphite, and employed to close the energy balance in the system~\cite{mcbride1993coefficients}.
 
-\item Soot particles and gas are in thermal equilibrium during all the studied processes, and there is no temperature gradient within each agglomerate.
+\item Soot particles and gas are in thermal equilibrium during studied processes.
+
+\item There is no temperature gradient within each agglomerate.
 
 \item \textit{Soot variable} refers to the features/properties of soot particles tracked by the particle dynamics model and used in the soot transport equations.
 
 \item \textit{PAH growth} is a unit of the soot model with a set of pathways that determine the rate of inception and adsorption from PAHs in the gas mixture.
 
-\item \textit{surface reactions} is a unit of the soot model that describes the addition of acetylene to soot surface, and removal of carbon via oxidation by OH and O2 in the HACA scheme.
+\item \textit{Surface reactions} is a unit of the soot model that describes the addition of acetylene to soot surface, and removal of carbon via oxidation by OH and $\mathrm{O_2}$ in the HACA scheme.
 
 \item The superscript \textit{i} denotes section number of a soot variable or property derived from variables. In the case of the monodisperse model, the section number can be ignored because it is equivalent to the sectional model with one section.
 
-\item The morphological parameters and diffusion coefficient of particles are common between particle dynamics models, so they are explained as two separate sections.
+\item The computation of morphological parameters ($d_p$, $d_m$, $d_g$, and $n_p$) and diffusion coefficient are done similarly by both particle dynamics models, so they are explained separately in standalone sections.
 
 \end{enumerate}
 
 \section{Flames}
-This research focuses on flames that can be described by the axisymmetric stagnation flow assumption that reduces the laminar 3D steady-state Navier-Stokes equations in the cylindrical coordinates to one-dimensional domain in r-z plane. A similar approach is applied to the energy and species conservation. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, surface growth and oxidation as well as the formation and sensible energy of soot.
+This research focuses on axisymmetric stagnation flames that reduces the laminar 3D steady-state equations in the cylindrical coordinates (r-z-$\mathrm{\theta}$ system) to one-dimensional domain in r-z plane. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, surface growth and oxidation as well as the formation and sensible energy of soot.
 
 \noindent Continuity:
 \begin{equation}
@@ -101,7 +105,7 @@ This research focuses on flames that can be described by the axisymmetric stagna
 	\label{eqn:diffflux},
 \end{equation}
 
-The details of calculation of mixture-averaged diffusive fluxes can be found in the documentation of \verb| GasTransport::getMixDiffCoeffs()|\footnote[1]{https://cantera.org/documentation/docs-3.0/doxygen/html/d8/d58/classCantera\_1\_1GasTransport.html} in Cantera~\citep{cantera}. Generic soot variables are treated similar to species, and their transport equations can be written as:
+The details of calculation of mixture-averaged diffusive fluxes can be found in the documentation of \verb| GasTransport::getMixDiffCoeffs()|\footnote[1]{https://cantera.org/documentation/docs-3.0/doxygen/html/d8/d58/classCantera\_1\_1GasTransport.html} in Cantera~\citep{cantera}. Soot variables are treated similar to species, and their transport equations can be written as:
 \begin{equation}
 	\rho u\frac{\partial \psi}{\partial z} = 
 	-\frac{\partial}{\partial z}
@@ -111,16 +115,18 @@ The details of calculation of mixture-averaged diffusive fluxes can be found in 
 	+ S_{\psi} 
 	\label{eqn:flame_soot},
 \end{equation}
-
+\noindent where $\psi$ is a generic soot variable that represents any of tracked soot variables.
 
 \section{Reactors}
-Zero-dimensional reactors are ideal representation of reactive systems typical in industrial applications. The strong mixing in the volume/cross-section allows description of thermal/chemical/hydrodynamic properties of the mixture with a single data-point that evolves in time. This section entails the equations that describes the conservation of mass, momentum (if applicable), species, energy, and soot based on ideal gas assumption for gaseous mixture in three different types of reactors.
+Zero-dimensional reactors are ideal representation of reactive systems typical in industrial applications. The strong mixing in the volume/cross-section allows description of thermal/chemical/hydrodynamic properties of mixture with a single variable that evolves in time. This section entails the conservation equations of mass, momentum (if applicable), species, energy, and soot for three reactor models.
+
 \subsection{Constant Volume Reactor}
-This reactor assumes that the volume of the system does not change during the process. In the absence of soot, this leads to gas with constant density. However, soot formation converts part of gaseous species to solid particles thereby affecting its volume and density. Note that, continuity, species and energy transport equations only track gas mixture properties. Figure~\ref{fig:constuvcv} illustrates the control volume over the gas mixture targeted by mass and energy balance equations. Any mass converted to solid soot particles leaves the control volume. Mass and energy passe through the control surface around solid particles by soot formation processes and variations in the temperature of the particles. Reactor volume is shared between gas and solid particles.
+This reactor assumes that the volume of system does not change during the process. In the absence of soot, this leads to gas with constant density. However, soot formation converts part of gaseous species to solid particles thereby affecting its volume and density. Note that, continuity, species and energy transport equations only track gas mixture properties. Figure~\ref{fig:constuvcv} illustrates the control volume over the gas mixture targeted by mass and energy balance equations. Any mass converted to solid soot particles leaves the control volume. Mass and energy passes through the control surface around solid particles by soot formation processes. Reactor volume is the sum of volume of gas mixture and solid particles.
+
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[height=40mm, ]{Figures/Theory/ConstUV.pdf}
-	\caption{The schematics of the control volume considered for the constant volume reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles.}
+	\includegraphics[height=50mm, ]{Figures/Theory/ConstUV.pdf}
+	\caption{The schematics of control volume considered for the constant volume reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles.}
 	\label{fig:constuvcv}
 \end{figure}
  
@@ -136,9 +142,6 @@ Similarly, the species equation for species $k$ is expressed as:
 \begin{equation}
 	\frac{dY_k}{dt}
 	=
-	\frac{{\dot{m}}_{in}}{\rho V\left(1-\varphi\right)}
-	\left( Y_k^\ast-Y_k \right)
-	+
 	\frac{1}{\rho}
 	\left(
 		{\dot{\omega}}_k
@@ -149,7 +152,7 @@ Similarly, the species equation for species $k$ is expressed as:
 	\label{eqn:speciesconstuv}.
 \end{equation}
 
-The energy balance for the constant volume reactor considering an external heat source of $\mathrm{\dot{Q}}$ can be simplified to the equation that describes the temperature variations.
+The energy balance for the gas mixture can be simplified to the rate change of temperature. An external heat source of $\mathrm{\dot{Q}}$ is considered to account for possible heat loss/gain of the reactor.
 \begin{equation}
 	\frac{d T}{d t}=
 	\frac{1}{\rho (1-\varphi) c_v+\rho_{soot}\varphi c_{v,soot}}
@@ -173,7 +176,7 @@ The transport equation for a generic soot variable, $\psi$ can be written as:
 \end{equation}
 
 \subsection{Perfectly Stirred Reactor}
-In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of $Y^\ast$ and temperature of $T^\ast$, instantaneously mixes and homogeneously reactes with the mixture resident inside the reactor to reach a spatially uniform temperature and composition described by a single $T$, and $Y$. It is assumed that temperature, composition and soot properties of the outflow are the same as the reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR. $\mathrm{\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates, respectively. Under no-soot conditions, the inlet and outlet mass flow rates are equal, but the gas mixture loses mass by soot formation, so $\mathrm{\dot{m}_{out}}$ is slightly less than $\mathrm{\dot{m}_{in}}$. The pressure of the reactor is assumed to stay constant during the process~\citep{kee2017chemically}. The nominal residence time of gas mixture in the reactor is defined as:
+In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of $Y^\ast$ and temperature of $T^\ast$, instantaneously mixes and homogeneously reacts with the mixture resident inside the reactor. The reacting gas reaches a spatially uniform temperature and composition described by $T$, and $Y$. It is assumed that temperature, composition and soot properties of the outflow are the same as reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR. $\mathrm{\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates, respectively. Under no-soot conditions, the inlet and outlet mass flow rates are equal, but the gas mixture loses mass by soot formation, so $\mathrm{\dot{m}_{out}}$ is slightly less than $\mathrm{\dot{m}_{in}}$. The pressure of reactor is assumed to stay constant during the process~\citep{kee2017chemically}. The nominal residence time of gas mixture in the reactor is defined as:
 
 \begin{equation}
 	\tau = \frac{\rho V}{\dot{m}_{in}}
@@ -184,8 +187,8 @@ In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[height=40mm, ]{Figures/Theory/PSR.pdf}
-	\caption{The schematics of the control volume considered for the perfectly stirred reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles. The inlet flow brings species and enthalpy into the control volume and the outlow discharges them. The gas mass flow rate reduces due to soot formation.}
+	\includegraphics[height=50mm, ]{Figures/Theory/PSR.pdf}
+	\caption{The schematics of control volume considered for the perfectly stirred reactor that encompasses the gas mixture and excludes the soot particles. Mass and energy are transferred between gas and soot particles. The inlet flow brings species and enthalpy into the control volume and the outlow discharges them. The outflow  mass flow is less inflow mass flow due to soot formation.}
 	\label{fig:psrcv}
 \end{figure}
 
@@ -199,7 +202,7 @@ The conservation of mass can be written for PSR by considering the mass flux of 
 	\label{eqn:contpsr}.
 \end{equation}
 
-The density is not determined by solving the continuity equation, but rather from ideal gas law and assuming a constant pressure and the composition from solving the species transport equations
+The density is not determined by solving the continuity equation, but rather from ideal gas law and assuming a constant pressure and the composition from solving the species transport equations as:
 
 \begin{equation}
 	\frac{d Y_k}{d t}
@@ -253,15 +256,14 @@ The soot transport equations can also be expressed as:
 \end{equation}
 
 \subsection{Plug Flow Reactor}
-The plug flow reactor (PFR) is based on a channel or duct with a constant cross-sectional area where a steady-state one-dimensional flow changes temperature, composition, and soot properties along the channel. There is no spatial gradient over the cross-section due to strong mixing, and  diffusion along the channel is negligible. The pressure is assumed constant along the reactor.
+The plug flow reactor (PFR) is an ideal representation of a channel or duct with a constant cross-sectional area where a steady-state one-dimensional flow changes temperature, composition, and soot properties along the channel. There is no spatial gradient over the cross-section due to strong mixing. Diffusion along the channel is negligible. The pressure is assumed constant along the reactor.
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[height=40mm, ]{Figures/Theory/PFR.pdf}
-	\caption{The schematics of the control volume for a differential element along PFR that includes the gas mixture and excludes the soot particles considering wall heat transfer. Mass and energy are transferred between gas and soot.}
+	\includegraphics[height=50mm, ]{Figures/Theory/PFR.pdf}
+	\caption{The schematics of control volume for a differential element along PFR that includes the gas mixture and excludes the soot particles considering wall heat transfer. Mass and energy are transferred between gas and soot.}
 	\label{fig:pfrcv}
 \end{figure}
 
- 
 
 The continuity equation for PFR is written as:
 \begin{equation}
@@ -334,18 +336,17 @@ The soot transport equations can also be written as:
 
 
 \section{Particle Dynamics}
-Population balance models rely on the Eulerian description of particles where bulk properties of particle population such as number density, mass or surface area are treated as continuous quantities and tracked by solving scalar transport equations. These methods are computationally cheaper compared with mesoscale models such as DEM, and can be easily interfaced with chemical kinetics in CFD solvers to simulate soot formation in turbulent configurations. Here, we use two particle dynamics models: a monodisperse population balance model (MPBM) based on four variables leading to 4 transport equations in total, and fixed sectional population balance model (SPBM) tracking three variables per section. The total number of transport equations in the sectional model is determined by the number of sections and number of equations solved per section. The first two/three variables in the MPBM/SPBM enables description of number, mass, and evolving fractal-like morphology of soot agglomerates that are necessary to accurately predict collision frequency of agglomerates~\citep{mulholland1988cluster} as well as oxidation and surface growth rates~\citep{kelesidis2019estimating}. The last variable tracks the number of hydrogen atoms in agglomerates that allows the model to capture the soot composition, thereby its maturity~\citep{kholghy2016core}, and surface reactivity~\citep{blanquart2009analyzing}.  
+Population balance models rely on the Eulerian description of particles where bulk properties of particle population such as number density, mass or surface area are treated as continuous quantities and tracked by solving scalar transport equations. These methods are computationally cheaper compared with mesoscale models such as DEM, and can be easily interfaced with chemical kinetics in CFD solvers to simulate soot formation in turbulent configurations. Here, we use two particle dynamics models: a monodisperse population balance model (MPBM) based on four variables leading to 4 transport equations in total, and a fixed sectional population balance model (SPBM) tracking three variables per section. The total number of transport equations in the sectional model is determined by the number of sections and number of equations solved per section. The first two/three variables in the MPBM/SPBM enables description of number, mass, and evolving fractal-like morphology of soot agglomerates that are necessary to accurately predict collision frequency of agglomerates~\citep{mulholland1988cluster} as well as oxidation and surface growth rates~\citep{kelesidis2019estimating}. The last variable tracks the number of hydrogen atoms in agglomerates that allows the model to capture the soot composition, thereby its maturity~\citep{kholghy2016core}, and surface reactivity~\citep{blanquart2009analyzing}.  
 The tracked variables are used to address particle dynamics that includes (i) reconstructing particles morphology by determining characteristic diameters from tracked soot variables, (ii) calculating collision frequency and coagulation source term, (iii) combining the contribution of inception, PAH adsorption, surface growth and oxidation into source terms.
 First, common features of both particle dynamics models are reviewed. As mentioned before, any parameter with superscript i denotes the section number, which can be ignored/dropped for the MPBM that only has one section. For example, $\mathrm{d^i_m}$ can be replaced with $\mathrm{d_m}$.
 %Here, we use "Monodisperse" and "Sectional" population balance models to account for "particle dynamics". They track large-scale bulk features of the particle population such as number concentration and mass as opposed to the mesoscale methods such as DEM that track particles individually. This makes them computationally cheaper compared with mesoscale models such as DEM. The population balance models are coupled with gas chemistry by two buffer sub-units, "surface reactions" that account for surfaced growth and oxidation via HACA scheme and "PAH growth models" that entails the reaction pathways for inception and adsorption of PAH precursors. The surface reactions to describe soot formation steps from inception, growth, and agglomeration to oxidation.
 
 \subsection{Soot Morphology}
 \label{sec:sootmorphology}
-The evolving fractal-like structure of agglomerates are quantified by their mobility diameter normalized by primary particle, dm/dp, and gyration, dm/dg, diameters can be described with power laws derived from mesoscale
-simulations 
-Incipient soot is initially a sphere formed of PAHs with constant density that grows in size by surface reactions and forms agglomerates by coagulation. The collision frequency of particles depends on their evolving fractal structure because they have larger cross-sectional area compared with mass-equivalent spheres~\citep{mulholland1988cluster}. Some simplifying assumptions are made to reconstruct the particle morphology from tracked variables. The primary particles of each agglomerate are similar enough that can be described by mean size and composition. They also stay in point contact during surface growth and agglomeration i.e. the necking is ignored. A universal fractal dimension,
-$\mathrm{D_f=1.9}$ is used for agglomerates larger than the sphere~\citep{ball1984finite}.
-The evolving morphology of soot agglomerates by their mobility diameter normalized by primary particle, $\mathrm{d_m/d_p}$, and gyration, $\mathrm{d_m/d_g}$, diameters that are related to the number of primary particles using power-laws derived from DEM simulations~\citep{Kelesidis2017} Mobility and gyration diameters are the diameter of a sphere with the same translational and rotational properties of the agglomerate, respectively. The employed power-laws have been shown to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} illustrates the schematics of sample soot agglomerates with 12 primary particles and depicted $\mathrm{d_p}$, $\mathrm{d_m}$, and $\mathrm{d_g}$.  
+The evolving fractal-like structure of agglomerates is quantified by their mobility diameter normalized by primary particle, $d_m/d_p$, and gyration, $d_m/d_g$, diameters that can be described with power-laws derived from mesoscale simulations.
+Incipient soot is initially a sphere formed of PAHs with constant density that grows in size by surface reactions and forms agglomerates by coagulation. The collision frequency of particles depends on their evolving fractal-like structure~\citep{mulholland1988cluster}. Some simplifying assumptions are made to reconstruct the particle morphology from tracked variables. The primary particles of each agglomerate are similar enough that can be described by mean size and composition. They also stay in point contact during surface growth and agglomeration i.e. the necking is ignored. A universal fractal dimension,
+$\mathrm{D_f=1.9}$ is used for agglomerates larger than sphere~\citep{ball1984finite}.
+Mobility and gyration diameters are the diameter of a sphere with the same translational and rotational properties of the agglomerate, respectively. The employed power-laws have been shown to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} illustrates the schematics of a soot agglomerates with 12 primary particles and depicted $\mathrm{d_p}$, $\mathrm{d_m}$, and $\mathrm{d_g}$.  
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=60mm, ]{Figures/Morphology.pdf}
@@ -353,21 +354,21 @@ The evolving morphology of soot agglomerates by their mobility diameter normaliz
 	\label{fig:Morphology}
 \end{figure} 
 
-$\mathrm{n_p}$ is the number of primary particles in each agglomerate that can be obtained by dividing the number density of primary particles by that of agglomerates of that section,
+$\mathrm{n^i_p}$ is the number of primary particles per agglomerate for $\mathrm{i^{th}}$ section that can be obtained by dividing the number density of primary particles by the the number density of agglomerates of that section as:
 
 \begin{equation}
 	n^i_p = \frac{N^i_{pri}}{N^i_{agg}}
 	\label{eqn:n_p}.
 \end{equation}
 
-Primary particle diameter, $\mathrm{d_p}$, can be obtained from total carbon and number density of primary particles using
+Primary particle diameter, $\mathrm{d^i_p}$, can be obtained from total carbon content and number density of primary particles using
 
 \begin{equation}
 	d^i_p = \left(\frac{6}{\pi} \frac{C^i_{tot}\cdot W_{carbon}}{\rho_{soot}} \frac{1}{N^i_{pri}\cdot Av} \right)^{1/3}
 	\label{eqn:d_p}.
 \end{equation}
 
-The DEM-derived power-laws~\citep{Kelesidis2017} relate $\mathrm{d_m}$ and $\mathrm{d_g}$ to $\mathrm{d_p}$ and $\mathrm{n_p}$ as
+The DEM-derived power-laws~\citep{Kelesidis2017} relate ${d^i_m}$ and ${d^i_g}$ to ${d^i_p}$ and ${n^i_p}$ as
 
 \begin{equation}
 	d^i_{m} = d^i_p\cdot {n^i_p}^{0.45}
@@ -385,16 +386,14 @@ The DEM-derived power-laws~\citep{Kelesidis2017} relate $\mathrm{d_m}$ and $\mat
 	\label{eqn:d_g}
 \end{equation}
 
-The collision diameter, $\mathrm{d^i_c}$ is the maximum of $\mathrm{d^i_{m}}$, $\mathrm{d^i_{g}}$:
+The collision diameter, ${d^i_c}$ is the maximum of ${d^i_{m}}$, ${d^i_{g}}$:
 
 \begin{equation}
 	d^i_c = \mathrm{max}\left(d^i_m, d^i_g\right)
 	\label{eqn:d_c}
 \end{equation}
 
-$\mathrm{d^i_{m}}$, $\mathrm{d^i_{g}}$, $\mathrm{d^i_{c}}$ are used to calculate the source terms due to the surface growth, oxidation, PAH adsorption and coagulation. 
-
-The volume equivalent diameter, $d^i_v$, is the diameter of the sphere with the same mass as agglomerate, and it is obtained as:
+${d^i_{m}}$, ${d^i_{g}}$, ${d^i_{c}}$ are used to calculate the source terms due to the surface growth, oxidation, PAH adsorption and coagulation. The volume equivalent diameter, $d^i_v$, is the diameter of the sphere with the same mass as agglomerate, and it is obtained as:
 \begin{equation}
 	d^i_v = d^i_p \cdot {n^i_p}^{1/3}
 	\label{eqn:d_v}
@@ -407,7 +406,7 @@ The primary particle surface area is calculated from $\mathrm{d^i_p}$ assuming s
 \end{equation}
 $A^i_{tot}$ (for each section) is defined as the total surface area of soot particles per unit mass of gas mixture obtained as
 \begin{equation}
-	A^i_{tot} = N_{pri}Av\cdot A^i_{p}
+	A^i_{tot} = N^i_{pri}\cdot Av\cdot A^i_{p}
 	\label{eqn:Atot}.
 \end{equation}
 
@@ -416,17 +415,17 @@ $A^i_{tot}$ (for each section) is defined as the total surface area of soot part
 The diffusion coefficient of soot particle, $D^i$, is calculated as
 
 \begin{equation}
-	D^i = \frac{k_B T}{f}
+	D^i = \frac{k_B T}{f^i}
 	\label{eqn:diff},
 \end{equation}
-\noindent where $f$ is the friction factor of particles in gas,
+\noindent where $f^i$ is the friction factor of particles in gas,
 
 \begin{equation}
 	f^i = \frac{3\pi\mu d^i_m}{C^i(d^i_m)}
 	\label{eqn:fraction},
 \end{equation}
 
-\noindent where $\mathrm{C^i}$ is the Cunningham function that corrects the friction factor given a diameter in the continuum regime for transition and free molecular regimes as: 
+\noindent where ${C^i}$ is the Cunningham function that corrects the friction factor given a diameter in the continuum regime for transition and free molecular regimes as: 
 \begin{equation}
 	C^i(d) = 1+\frac{2\lambda}{d}
 	\left(
@@ -439,7 +438,7 @@ The diffusion coefficient of soot particle, $D^i$, is calculated as
 	\lambda = \frac{\mu}{\rho}\sqrt{\frac{\pi W_{gas}}{2k_B Av T}}
 	\label{eqn:lambda}.
 \end{equation}
-Note that, $\lambda$ is a property of the gas mixture that does not depend on particle morphology and size section. The mean velocity, $\mathrm{c^i}$ and mean stop distance of particles, $\mathrm{\lambda^i_a}$ can be calculated as:
+Note that, $\lambda$ is a property of the gas mixture that does not depend on particle morphology and size section. The mean velocity, ${c^i}$ and mean stop distance of particles, ${\lambda^i_a}$ can be calculated as:
 
 \begin{equation}
 	c^i = \sqrt{\frac{8k_B T}{\pi m^i_{agg}}}
@@ -477,7 +476,7 @@ The composition of soot is characterized by their elemental carbon to hydrogen r
 	\label{eqn:CtoH}.
 \end{equation}
 
-The carbon content of each agglomerate is a predefined parameter in the SPBM, but it can be calculated by dividing $\mathrm{C_{tot}}$ by $\mathrm{N_{agg}}$ for the MPBM. The hydrogen content of each agglomerate is calculated for both particle dynamics models as:
+The carbon content of each agglomerate is a predefined parameter in the SPBM (depending on the section the agglomerate is placed), but it can be calculated from dividing ${C_{tot}}$ by ${N_{agg}}$ for the MPBM. The hydrogen content of each agglomerate is calculated for both particle dynamics models as:
 
 \begin{equation}
 	H^i_{agg}
@@ -502,7 +501,7 @@ where $\mathrm{\beta}$ is the collision frequency of agglomerates for the free m
 	\label{eqn:betahmmono},
 \end{equation}
 \begin{equation}
-	\beta_{fm} = 4\sqrt{\frac{\pi k_b T}{m_{agg}}} d^2_g
+	\beta_{fm} = 4\sqrt{\frac{\pi k_b T}{m_{agg}}} d^2_c
 	\label{eqn:betafmmono},
 \end{equation}
 \begin{equation}
@@ -540,16 +539,16 @@ The source terms of tracked variables combines the effect of the inception, PAH 
 	S_{H_{tot}} = I_{H_{tot},inc}+I_{H_{tot},gr}+I_{H_{tot},ads}+I_{H_{tot},ox}
 	\label{eqn:S_H_tot}.
 \end{equation}
-The partial source terms in Equations denoted by $\mathrm{I}$ are determined by PAH growth and surface reaction model explained in Sections~\ref{sec:pahgrowmodel} and~\ref{sec:surfreacmodel}, respectively.
+The partial source terms in Equations~\ref{eqn:S_N_agg}-\ref{eqn:S_H_tot} denoted by $\mathrm{I}$ are determined by PAH growth and surface reaction model explained in Sections~\ref{sec:pahgrowmodel} and~\ref{sec:surfreacmodel}, respectively.
 
 \subsection{Sectional Population Balance Model}
-A SPBM with the fixed pivot is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles are divided into discrete sections that include agglomerates of the same mass. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of the first section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation. The mass of sections is determined by a geometric progression with a scale factor equal to the mass of the incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of section is approximated by the carbon content of agglomerates in moles as:
+A SPBM with the fixed pivot is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles are divided into discrete sections each of which includes agglomerates of the same mass. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of first section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation. The mass of sections is determined by a geometric progression with a scale factor equal to the mass of incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of each section is approximated by the carbon content of agglomerates in moles as:
 \begin{equation}
-	C^i_{agg} = \frac{n_{c,min}}{Av}\cdot SF^{i-1}
+	C^i_{agg} = \frac{n_{c,min}}{Av}\cdot SF^{(i-1)}
 	\label{eqn:Caggsec}.
 \end{equation}
-So, the mass of hydrogen is ignored in the placement of agglomerates in the sections.
-The total number density of agglomerates, $\mathrm{N^i_{agg} [mol/kg]}$, and primary particles, $\mathrm{N^i_{pri} [mol/kg]}$ are tracked for each section. Morphological parameters are determined for each section according to the equations in Section\ref{sec:sootmorphology}.
+\noindent where (i-1) represents the exponent of SF. The mass of hydrogen is ignored in the placement of agglomerates in the sections.
+The total number density of agglomerates, $\mathrm{N^i_{agg} [mol/kg]}$, and primary particles, $\mathrm{N^i_{pri} [mol/kg]}$ are tracked for each section. Morphological parameters are determined for each section according to the equations in Section~\ref{sec:sootmorphology}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -560,7 +559,7 @@ The total number density of agglomerates, $\mathrm{N^i_{agg} [mol/kg]}$, and pri
 
 \subsubsection{Coagulation}
 \label{sec:sectcoag}
-In SPBM approach, collisions between particles from every two sections are considered. The new particles formed by coagulation are placed in a upper section with the mass equal to sum of particles involved in the collision. When the mass of yielded particle lies between two consecutive sections, the particles are divided among these sections proportional to their mass. One possible scenario is that the mass of the newly formed particle is greater than the last section, thus leaving tracked mass range. Losing mass is a potential problem with the fixed pivot sectional model, which can be avoided by selecting proper number of sections and spacing factor to ensure the last sections stay empty during the simulation.
+In SPBM approach, collisions between particles from every two sections are considered. The new particles formed by coagulation are placed in a upper section with the mass equal to sum of mass of particles involved in the collision. When the mass of yielded particle lies between two consecutive sections, the particles are divided among these sections proportional to their mass. One possible scenario is that the mass of the newly formed particle is greater than the last section, thus leaving tracked mass range. Losing mass is a potential problem with the fixed pivot sectional model, which can be avoided by selecting proper number of sections and spacing factor to ensure the last sections stay empty during the simulation.
 
 The collision frequency between sections j and k can be obtained from the harmonic mean of the values in the continuum and free molecular regimes as:
 
@@ -608,7 +607,7 @@ The collision frequency can also be determined from the Fuchs interpolation simi
 	\right]^{-1}
 	\label{eqn:betafuchssect},
 \end{equation}
-\noindent where $\mathrm{\delta^{jk}_r}$ and $\mathrm{\bar{c}^{jk}_r}$ are the mean square root of mean distance and velocity of particles, respectively.
+\noindent where ${\delta^{jk}_r}$ and ${\bar{c}^{jk}_r}$ are the mean square root of mean distance and velocity of particles, respectively.
 
 \begin{equation}
  	\delta^{jk}_r=
@@ -626,7 +625,7 @@ The collision frequency can also be determined from the Fuchs interpolation simi
 	\label{eqn:sqrtmeanvel}.
 \end{equation}
 
-Coagulation redistributes the total number of agglomerates and primary particles as well as hydrogen atoms among the sections. The partial coagulation source terms for $\mathrm{N^i_{agg}}$, $\mathrm{N^i_{pri}}$ and $\mathrm{H^i_{tot}}$ can be calculated as:
+Coagulation redistributes the total number of agglomerates and primary particles as well as hydrogen atoms among the sections. The partial coagulation source terms for ${N^i_{agg}}$, ${N^i_{pri}}$ and ${H^i_{tot}}$ can be calculated as:
 
 \begin{equation}
 	I^i_{N_{agg}}
@@ -669,7 +668,7 @@ Coagulation redistributes the total number of agglomerates and primary particles
 	\sum_{k=1}^{n_{sec}}\beta^{im}N^m_{agg}
 	\label{eqn:IcoagHtotsect}.
 \end{equation}
-\noindent where $\mathrm{\delta_{jk}}$ is the Kronecker delta defined as:
+\noindent where ${\delta_{jk}}$ is the Kronecker delta defined as:
 
 \begin{equation}
 	\delta_{jk}=
@@ -682,7 +681,7 @@ Coagulation redistributes the total number of agglomerates and primary particles
 	\label{eqn:deltakronecker}
 \end{equation}
 
-In Equation\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly formed agglomerates to the two consecutive section in order to conserves mass during coagulation~\citep{park2005aerosol}.
+In Equation~\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly formed agglomerates to the two consecutive section in order to conserves mass during coagulation~\citep{park2005aerosol}.
 
 \begin{equation}
 	\eta_{ijk}=
@@ -702,7 +701,7 @@ In Equation\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly formed
 	\right.
 	\label{eqn:etacoag}
 \end{equation}
-\noindent where $\mathrm{C^{jk}_{agg}=C^{j}_{agg}+C^{k}_{agg}}$. Similarly, $\eta_{p,ijk}$ in Equation~\eqref{eqn:IcoagNprisect} and $\eta_{h,ijk}$ in Equation~\eqref{eqn:IcoagHtotsect} adjust the number primary particles and hydrogen atoms added to consecutive sections based on their mass.
+\noindent where ${C^{jk}_{agg}=C^{j}_{agg}+C^{k}_{agg}}$. Similarly, $\eta_{p,ijk}$ in Equation~\eqref{eqn:IcoagNprisect} and $\eta_{h,ijk}$ in Equation~\eqref{eqn:IcoagHtotsect} adjust the number primary particles and hydrogen atoms added to consecutive sections based on their mass, respectively.
 
 \begin{equation}
 	\eta_{p,ijk}=
@@ -723,7 +722,7 @@ In Equation\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly formed
 \end{equation}
 
 \subsubsection{Source terms}
-The source terms are split into four part showing the contribution of different soot formation and evolution factors. The effect of surface growth and PAH adsorption are combined because they are similar mass gaining mechanisms.
+The source terms are split into four parts showing the contribution of different soot formation and evolution factors. The effect of surface growth and PAH adsorption are combined (denoted by the subscript gr,ads) because they are similar mass-gaining mechanisms.
 
 \begin{equation}
 	S_{N_{agg}} = 
@@ -752,7 +751,7 @@ The source terms are split into four part showing the contribution of different 
 	\label{eqn:S_Htotsect}.
 \end{equation}
 
-Inception introduces equal number of agglomerates and primary particles as well as hydrogen to the first section.
+Inception introduces equal number of agglomerates and primary particles to the first section.
 
 \begin{equation}
 	\begin{aligned}
@@ -778,7 +777,7 @@ Inception introduces equal number of agglomerates and primary particles as well 
 	\label{eqn:S_Htot_incsect}
 \end{equation}
 
-Surface growth and PAH adsorption increase the (carbon) mass and hydrogen content of agglomerates, and transfer them to upper sections. The removal rate of agglomerates ($\mathrm{N^i_{agg}}$) from the origin section due to surface growth and PAH adsorption must be equal to the addition rate of agglomerates to the target section to conserve the mass, and it is calculated by dividing the mass growth rate by the difference of the mass of the adjacent sections.
+Surface growth and PAH adsorption increase the (carbon) mass and hydrogen content of agglomerates, and transfer them to upper sections. The removal rate of agglomerates ($\mathrm{N^i_{agg}}$) from the original section due to surface growth and PAH adsorption must be equal to the addition rate of agglomerates to the target section to conserve the mass, and it is calculated by dividing the mass growth rate by the difference of the mass of the adjacent sections.
 
 \begin{equation}
 	\left(S_{N_{agg}}\right)_{gr, ads}=
@@ -801,7 +800,7 @@ Surface growth and PAH adsorption increase the (carbon) mass and hydrogen conten
 	\label{eqn:S_Nagg_gradssect}
 \end{equation}
 
-As agglomerates migrate up/down through sections, they carry the number of primary particles as well as hydrogen atoms, so the transfer rate of agglomerates is multiplied by $\mathrm{n^i_p}$ and $\mathrm{H^i_{agg}}$, respectively. 
+As agglomerates move up/down through sections, they carry the number of primary particles as well as hydrogen atoms, so the transfer rate of agglomerates is multiplied by $\mathrm{n^i_p}$ and $\mathrm{H^i_{agg}}$, respectively. 
 
 \begin{equation}
 	\left(S_{N_{pri}}\right)_{gr, ads}=
@@ -933,18 +932,18 @@ Similarly, the agglomerates lose (carbon) mass by oxidation, and descend to the 
 
 \section{Surface reactions model}
 \label{sec:surfreacmodel}
-The heterogeneous surface reactions are described by hydrogen-abstraction-acetylene-addition (HACA) mechanism~\citep{frenklach1991detailed, appel2000kinetic}. The soot growth in HACA scheme is based on a sequential process similar to PAH growth. The hydrogenated arm-chair sites ($\mathrm{C_{soot}-H}$) on the edge of aromatic rings are dehydrogenated ($\mathrm{C_{soot\mbox{\textdegree}}}$)  that can form bond with  $\mathrm{C_2H_2}$ adding an additional aromatic ring with hydrogenated site. These sites can also be attacked by $\mathrm{O_2}$ or $\mathrm{OH}$. The elementary reactions that describe this sequential process are listed in Table~\ref{tab:HACA}
-The rate of mass growth by HACA is obtained from reaction of $\mathrm{C_2H_2}$ with dehydrogenated sites as:
+The heterogeneous surface reactions are described by hydrogen-abstraction-acetylene-addition (HACA) mechanism~\citep{frenklach1991detailed, appel2000kinetic}. The soot growth in HACA scheme is based on a sequential process similar to PAH growth. The hydrogenated arm-chair sites ($\mathrm{C_{soot}-H}$) on the edge of aromatic rings are dehydrogenated by H abstraction forming $\mathrm{C_{soot\mbox{\textdegree}}}$ that bonds with $\mathrm{C_2H_2}$ resulting in an additional aromatic ring with hydrogenated site. These sites can also be attacked by $\mathrm{O_2}$ or $\mathrm{OH}$. The elementary reactions that describe this sequential process are listed in Table~\ref{tab:HACA}
+The rate of mass growth by HACA is obtained from the reaction of $\mathrm{C_2H_2}$ with dehydrogenated sites as:
 
 \begin{equation}
 	\omega^i_{gr} = \alpha^i k_{f4} [\mathrm{C_2H_2}][\mathrm{C_{soot\mbox{\textdegree}}}]
 	\label{eqn:hacaRate}.
 \end{equation}
 
-\noindent where $\mathrm{k_{f4}}$ denotes the forward rate of $\mathrm{4^{th}}$ reaction in Table~\ref{tab:HACA}, and $\mathrm{[C^i_{soot\mbox{\textdegree}}]}$ is obtained by multiplying the surface density of dehydrogenated sites, $\mathrm{\chi_{soot\mbox{\textdegree}}}$ with total surface area of soot (per unit of mass of gas mixture) as:
+\noindent where ${k_{f4}}$ denotes the forward rate of Reaction~\ref{reac:haca4} in Table~\ref{tab:HACA}, and $\mathrm{[C^i_{soot\mbox{\textdegree}}]}$ is obtained by multiplying the surface density of dehydrogenated sites, $\mathrm{\chi_{soot\mbox{\textdegree}}}$ with total surface area of soot (per unit of mass of gas mixture) as:
 
 \begin{equation}
-	[\mathrm{C^i_{soot\mbox{\textdegree}}}] = \frac{\rho}{Av}A^i_{tot}\cdot\chi^i_{soot\mbox{\textdegree}}
+	[\mathrm{C^i_{soot\mbox{\textdegree}}}] = \frac{\rho}{Av}A^i_{tot}\cdot\chi_{soot\mbox{\textdegree}}
 	\label{eqn:csoot0}.
 \end{equation}
 
@@ -956,9 +955,9 @@ $\mathrm{\chi_{soot\mbox{\textdegree}}}$ is calculated by assuming the steady-st
 	{k_{r1}[\mathrm{H_2}]+k_{r2}[\mathrm{H_2O}]+k_{f3}[\mathrm{H}]+k_{f4}[\mathrm{C_2H_2}]+k_{f5}[\mathrm{O_2}]+k_{f1}[\mathrm{H}]+k_{f2}[\mathrm{OH}]} \chi_{soot_{CH}}
 	\label{eqn:chisoot0},
 \end{equation}
-\noindent where $\mathrm{\chi_{soot_{CH}}}$ is the surface density of hydrogenated sites estimated based on the assumption that soot surface is covered with stacks of benzene rings~\citep{appel2000kinetic}. Considering the stack spacing of 3.15$\mathrm{\AA}$ and 2 C–H bonds per benzene ring length, the surface density of hydrogenated sites, $\chi_{{soot}-H}$, is calculated to be $\mathrm{0.23}  \mathrm{site/\AA^2}=2.3\times10^{19} \mathrm{site/m^2}$, which give the maximum theoretical limit of the reaction sites.
+\noindent where $\mathrm{\chi_{soot_{CH}}}$ is the surface density of hydrogenated sites estimated based on the assumption that soot surface is covered with stacks of benzene rings~\citep{appel2000kinetic}. Considering the stack spacing of 3.15$\mathrm{\AA}$ and 2 C–H bonds per benzene ring length, the surface density of hydrogenated sites, $\chi_{{soot}-H}$, is calculated to be $0.23\:\mathrm{site/\AA^2}=2.3\times10^{19} \mathrm{site/m^2}$, which gives the maximum theoretical limit of the reaction sites.
 
-In Equation~\eqref{eqn:hacaRate}, $\alpha$ is the surface reactivity factor between 0 and 1 that represents the decline of reaction sites from the theoretical limit due to particle aging, growth and maturity~\citep{haynes1982surface, harris1985chemical}, and it has been observed to depend on temperature time history~\cite{homann1985formation, dasch1985decay}. The value of $\alpha$ has been described using constant target-specific values as well as empirical equations based on particle size and flame temperature. \citet{blanquart2009joint} related $\mathrm{\alpha}$ to the number of surface hydrogen atoms on the soot particles. A detailed review of these can be found in the chapter 4 of \citep{veshkini2015understanding}.  Here, the empirical equations proposed by \citet{appel2000kinetic} is used to calculate $\mathrm{\alpha}$:
+In Equation~\eqref{eqn:hacaRate}, $\alpha$ is the surface reactivity factor between 0 and 1 that represents the decline of reaction sites from the theoretical limit due to particle aging, growth and maturity~\citep{haynes1982surface, harris1985chemical}, and it has been observed to depend on temperature time history~\cite{homann1985formation, dasch1985decay}. The value of $\alpha$ has been described using constant target-specific values as well as empirical equations based on particle size and flame temperature. A detailed review of these can be found in the chapter 4 of \citep{veshkini2015understanding}.  Here, the empirical equations proposed by \citet{appel2000kinetic} is used to calculate $\mathrm{\alpha}$:
 \begin{equation}
 	\alpha^i = \tanh 
 	\left(
@@ -969,7 +968,14 @@ In Equation~\eqref{eqn:hacaRate}, $\alpha$ is the surface reactivity factor betw
 	\label{eqn:alpha}.
 \end{equation}
 
-The contribution of HACA to growth source terms can be computed from HACA rate considering the number of carbon atoms in $\mathrm{C_2H_2}$ and number of arm-chair and zig-zag hydrogenated sites on soot particle~\cite{blanquart2009analyzing} using
+Alternatively, \citet{blanquart2009joint} related $\mathrm{\alpha}$ to the number of surface hydrogen atoms on the soot particles.
+
+\begin{equation}
+	\alpha^i = \frac{H^i_{tot}}{C^i_{tot}}
+	\label{eqn:alpha_htoc}.
+\end{equation}
+
+The contribution of HACA to growth source terms can be computed from HACA rates considering the number of carbon atoms in $\mathrm{C_2H_2}$ and number of arm-chair and zig-zag hydrogenated sites on soot particle~\cite{blanquart2009analyzing} using
 
 \begin{equation}
 	I^i_{C_{tot},gr} = 2\omega^i_{gr}/\rho
@@ -1003,14 +1009,14 @@ The rate of release of H radicals into the gas mixture due to surface growth is:
 		\hline
 		No. & Reaction & \hspace{0.1cm} & A~$\mathrm{\left[ \frac{m^3}{mol\cdot s} \right]}$ & n & $\mathrm{\frac{E}{R} [K]}$  \\
 		\hline
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot-H} + H <--> C_{soot\textdegree} + H_2}  & f & $4.17\times 10^7$ & 0 & 6542.52 \\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca1} & \ce{C_{soot-H} + H <--> C_{soot\textdegree} + H_2}  & f & $4.17\times 10^7$ & 0 & 6542.52 \\
 		& & r & $3.9\times 10^6$ & 0 & 5535.98 \\
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot-H} + OH <--> C_{soot\textdegree} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca2} & \ce{C_{soot-H} + OH <--> C_{soot\textdegree} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
 		&  & r & 3.68$\times 10^2$ & 1.139 & 8605.94 \\
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot\textdegree} + H -> C_{soot} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot\textdegree} + C_2H_2 -> C_{soot-H}} & f & 80 & 1.56 & 1912.43\\
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot\textdegree} + O_2 -> 2CO} & f & 2.2 $\times 10^6$ & 0 & 3774.53\\
-		\stepcounter{reaction}\thetag{\thereaction} & \ce{C_{soot}-H + OH -> CO + \frac{1}{2} H_2} & f & $1.3\times 10^7$ & 0 & 0\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca3} & \ce{C_{soot\textdegree} + H -> C_{soot} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca4} & \ce{C_{soot\textdegree} + C_2H_2 -> C_{soot-H}} & f & 80 & 1.56 & 1912.43\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca5} & \ce{C_{soot\textdegree} + O_2 -> 2CO} & f & 2.2 $\times 10^6$ & 0 & 3774.53\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca6} & \ce{C_{soot}-H + OH -> CO + \frac{1}{2} H_2} & f & $1.3\times 10^7$ & 0 & 0\\
 		\hline
 	\end{tabular}
 \end{table}
@@ -1024,7 +1030,7 @@ The carbons on the surface of soot are oxidized via reaction with $\mathrm{O_2}$
 \end{equation}
 
 \begin{equation}
-	\omega^i_{ox,OH} = \alpha^i k_{f6} [\mathrm{OH}]N^i_{agg} \rho
+	\omega^i_{ox,OH} = \alpha^i k_{f6} [\mathrm{OH}][soot^i]
 	\label{eqn:hacaOHRate}.
 \end{equation}
 
@@ -1059,15 +1065,15 @@ We assume that oxidation does not change the number of surface hydrogen atoms. T
 
 \section{PAH growth models}
 \label{sec:pahgrowmodel}
-Here, four different PAH growth models are used to describe the conversion of PAHs to incipient particles and their adsorption on existing agglomerates. All models are collision-based consisting of different pathways with single- or multi-step reactions. The collision frequency of gaseous species including PAH molecules and polymers depend on their mass and diameter, and it is obtained as:
+Here, four different PAH growth models are used to describe the conversion of PAHs to incipient particles and their adsorption on existing agglomerates. As mentioned before, the soot inception and surface growth is not fully understood yet, but there is substantial evidence to support the collision of PAHs as a key step in inception and surface growth~\citep{zhao2003measurement, abid2009quantitative, happold2009soot}. So, global inception models have been developed based PAH collision consisting of different pathways with single- or multi-step reactions. The collision frequency of gaseous species including PAH molecules and polymers depend on their mass and diameter, and it is obtained as:
 
 \begin{equation}
 	\beta_{dim_{jk}}=
-	2.2 \cdot \cdot d^2_{r} \sqrt{\frac{8 \pi k_B T}{m_{r}}}
+	2.2 \cdot d^2_{r} \sqrt{\frac{8 \pi k_B T}{m_{r}}}
 	\label{eqn:betadim}
 \end{equation}
 
-where $\mathrm{d_{r}}$ and $\mathrm{m_{r}}$ are reduced diameter and mass for two PAH molecul, respectively.
+where $\mathrm{d_{r}}$ and $\mathrm{m_{r}}$ are reduced diameter and mass for two PAH molecules, respectively.
 
 \begin{equation}
 	d_{r}=
@@ -1089,7 +1095,7 @@ The mass of each PAH molecule is obtained from its molecular weight as:
 	\label{eqn:mPAH}
 \end{equation}
 
-The diameter of PAH is calculated from the mass and the density.
+The diameter of PAH is calculated from its mass and density.
 
 \begin{equation}
 	d_{PAH_j}=
@@ -1104,7 +1110,7 @@ The density of a PAH molecule is estimated using the relation proposed by \citet
 \begin{equation}
 	\rho_{PAH_j}= 
 	171943.5197
-	\frac{W_{C}n_{C,PAH_j}+W_{H}n_{H,PAH_j}}
+	\frac{W_{carbon}\cdot n_{C,PAH_j}+W_{hydrogen}\cdot n_{H,PAH_j}}
 	{n_{C,PAH_j}+n_{H,PAH_j}}
 	\label{eqn:rhoPAH}
 \end{equation}
@@ -1138,10 +1144,10 @@ The collision frequency of $\mathrm{PAH_j}$ and soot agglomerates in each sectio
 		\left(d_g+d_{PAH_j}\right)
 	\label{eqn:betacontads}
 \end{equation}
-
+where $C^i$ is the Cunningham function calculated as Equation~\ref{eqn:cun}.
 \subsection{Irreversible Dimerization}
 
-The irreversible dimerization is based on the collision-based clustering/polymerization PAHs that form dimers, trimers, and tetramers until the polymer mass reaches a threshold that can be considered a solid particle. For practical purposes, dimer is usually considered as a incipient particle that grows by surface growth and coagulation. A single-step irreversible collision of two similar PAHs forms a new dimer as:
+The irreversible dimerization is based on the irrversible collision of PAHs leading to their clustering/polymerization that forms dimers, trimers, and tetramers until the polymer mass reaches a threshold that can be considered a solid particle. For practical purposes, dimer is usually considered as a incipient particle that grows by surface growth and coagulation. A single-step irreversible collision of two similar PAHs forms a new dimer as:
 
 \reaction[react:irrevdiminc]{
 	$\mathrm{PAH_j}$ + $\mathrm{PAH_j}$ ->[k_{f,dim_j}] $\mathrm{Dimer_j}$
@@ -1150,7 +1156,7 @@ Similarly, the adsorption of each PAH molecule on soot particles is described by
 \reaction[react:irrevdimads]{
 	$\mathrm{PAH_j}$ + Soot ->[k_{f,ads_j}] $\mathrm{Soot-PAH_j}$
 }
-The forward rate of dimerization, $\mathrm{k_{f,dim_j}}$ and adsorption, $k_{f,ads_j}$ in Reactions \eqref{react:irrevdiminc} and \eqref{react:irrevdimads} are calculated from Equations \eqref{eqn:betadim} and \eqref{eqn:betahmads}, respectively.
+The forward rate of dimerization, ${k_{f,dim_j}}$ and adsorption, $k_{f,ads_j}$ in Reactions~\eqref{react:irrevdiminc} and \eqref{react:irrevdimads} are calculated from Equations \eqref{eqn:betadim} and \eqref{eqn:betahmads}, respectively.
 
 \begin{equation}
 	k_{f,dim_j}=
@@ -1164,7 +1170,7 @@ The forward rate of dimerization, $\mathrm{k_{f,dim_j}}$ and adsorption, $k_{f,a
 	\label{eqn:kfads},
 \end{equation}
 
-where $\mathrm{\gamma_{inc}}$ and $\mathrm{\gamma_{ads}}$ are collision efficiencies for dimerization and adsorption, respectively. Their value vary in [$\mathrm{10^{-7}}$, 1] range, and usually selected to match the predicted soot mass with the experimental data. Here, $\mathrm{\gamma_{inc}}=10^{-4}$ and $\mathrm{\gamma_{ads}=10^{-3}}$. The rate of dimerization and adsorption from $\mathrm{PAH_j}$ are calculated accordingly as:
+where $\mathrm{\gamma_{inc}}$ and $\mathrm{\gamma_{ads}}$ are the collision efficiencies for dimerization and adsorption, respectively. Their value vary in [$\mathrm{10^{-7}}$, 1] range, and usually chosen to match the predicted soot mass with the experimental data. Here, $\mathrm{\gamma_{inc}}=10^{-4}$ and $\mathrm{\gamma_{ads}=10^{-3}}$. The rate of dimerization and adsorption from $\mathrm{PAH_j}$ are calculated accordingly as:
 \begin{equation}
 	w_{dim_j} = k_{f,dim_{jj}} [PAH_j] [PAH_j]
 \end{equation}
@@ -1185,7 +1191,7 @@ The partial source terms for inception are calculated as:
 \end{equation}
 The rate of PAH adsorption for each section is obtained as:
 \begin{equation}
-	w^i_{ads_j} = k^i_{f,ads_{j}} [Soot] [PAH_j]
+	w^i_{ads_j} = k^i_{f,ads_{j}} [\mathrm{soot}] [PAH_j]
 	\label{eqn:adsrate_irrevdim}
 \end{equation}
 The contribution of PAH adsorption to the source terms are expressed as:
@@ -1225,7 +1231,7 @@ During the adsorption process one $\mathrm{H_2}$ is released to the gas mixture.
 
 
 \subsection{Reactive Dimerization}
-The design of this approach is similar to irreversible dimerization with two main differences: The first step of dimerization and adsorption is reversible forming physically bonded dimers followed by a irreversible carbonization that leads to chemical bond formation in dimers \citep{kholghy2018reactive}. This approach allows formation of homo- and heterodimers. The dimerization of $\mathrm{PAH_j}$ and $\mathrm{PAH_k}$ is described as:
+This model is built on Irreversible Dimerization with two main differences: The first step of dimerization and adsorption is reversible forming physically bonded dimers followed by a irreversible carbonization that leads to chemical bond formation in dimers \citep{kholghy2018reactive}. This approach allows formation of homo- and heterodimers. The dimerization of $\mathrm{PAH_j}$ and $\mathrm{PAH_k}$ is described as:
 \reaction[reac:phydim_reacdim]{
 	PAH_j + PAH_k <-->[k_{f,dim_{jk}}][k_{r,dim_{jk}}] Dimer^*_{ij},
 }
@@ -1240,7 +1246,7 @@ The design of this approach is similar to irreversible dimerization with two mai
 	\label{eqn:kfphydim_reacdim},
 \end{equation}
 
-where $\mathrm{p^{''}}=0.1$ accounts for the probability of PAH-PAH collisions in “FACE” configuration that results in successful van der Waals formation~\citep{miller1984intermolecular}. The reverse rate of physical dimerization, $\mathrm{k_{r,dim_{jk}}}$ is obtained from the dimerization equilibrium constant~\citep{miller1991kinetics} as:
+where ${p^{''}}=0.1$ accounts for the probability of PAH-PAH collisions in “FACE” configuration that results in successful vdW bond formation~\citep{miller1984intermolecular}. The reverse rate of physical dimerization, ${k_{r,dim_{jk}}}$ is obtained from the dimerization equilibrium constant~\citep{miller1991kinetics} as:
 	
 \begin{equation}
 	\mathrm{log}_{10}K_{eq}=
@@ -1262,7 +1268,7 @@ where $\mathrm{p^{''}}=0.1$ accounts for the probability of PAH-PAH collisions i
 	W_{jk} = \frac{W_j\cdot W_k}{W_j+W_k}
 	\label{eqn:Wjk_reacdim},
 \end{equation}
-\noindent where $\mathrm{a=0.115}$ (obtained from pyrere dimerization data~\cite{sabbah2010exploring}) and b=1.8 \cite{kholghy2018reactive}, c=933420~j/kg, and d=34053~j/mol~\cite{kholghy2018reactive}. 
+\noindent where ${a=0.115}$ (obtained from pyrere dimerization data~\cite{sabbah2010exploring}) and b=1.8 \cite{kholghy2018reactive}, c=933420~j/kg, and d=34053~j/mol~\cite{kholghy2018reactive}. 
 
 The rate of chemical bond formation, $\mathrm{k_{reac}}$ is defined in the Arrhenius form~\cite{naseri2022simulating} as
 \begin{equation}
@@ -1270,7 +1276,7 @@ The rate of chemical bond formation, $\mathrm{k_{reac}}$ is defined in the Arrhe
 	\label{eqn:kc_reacdim}.
 \end{equation}
 
-Assuming a steady state condition for the physical dimers, $\mathrm{\partial [Dimer^*_{jk}]/\partial t=0}$, the rate of formation of the chemically-bonded dimer can be obtained as
+Assuming a steady state condition for the physical dimers, $\mathrm{\partial [Dimer^*_{jk}]/\partial t=0}$, the rate of formation of chemically-bonded dimers can be obtained as
 
 \begin{equation}
 	\omega_{dim_{jk}} = k_{reac}\frac{k_{f,dim_{jk}}[\mathrm{PAH_j}][\mathrm{PAH_k}]}
@@ -1337,13 +1343,13 @@ The forward rate of PAH-soot collision is calculated from Equation~\eqref{eqn:be
 	\label{eqn:epsilonads_reacdim},
 \end{equation}
 
-a, b, c, d values are the same as inception. Computing $\mathrm{\epsilon_{soot,j}}$ also requires "equivalent soot molecular weight", $\mathrm{W_{soot}}$ for section i, which is estimated from carbon mass of each agglomerate as:
+a, b, c, d values are the same as those used in inception. Computing ${\epsilon_{soot,j}}$ also requires "equivalent soot molecular weight", ${W_{soot}}$ for section i, which is estimated from carbon mass of each agglomerate as:
 
 \begin{equation}
-	MW^i_{soot}=\frac{C^i_{tot}W_{carbon}}{N^i_{agg}} 
+	W^i_{soot}=\frac{C^i_{tot}W_{carbon}}{N^i_{agg}} 
 \end{equation}
 
-The rate constant of carbonization of $\mathrm{Soot-PAH^*_j}$ is defined as in the Arrhenius form similar to inception (Equation~\eqref{kc_reacdim}). The prefactor is adjusted based on matching the numercial PSD~\citep{naseri2022simulating} with measurements in the ethylene pyrolysis in flow reactor~\cite{araki2021effects}. 
+The rate constant of carbonization of $\mathrm{Soot-PAH^*_j}$ is defined as in the Arrhenius form similar to inception (Equation~\eqref{eqn:kc_reacdim}). The prefactor is adjusted based on matching the numercial PSD~\citep{naseri2022simulating} with measurements in the ethylene pyrolysis in a flow reactor~\cite{araki2021effects}. 
 
 \begin{equation}
 	k_{c,dim} = 2\times10^{10}\cdot e^{(-96232/RT)}
@@ -1351,7 +1357,7 @@ The rate constant of carbonization of $\mathrm{Soot-PAH^*_j}$ is defined as in t
 \end{equation}
 
 
-The total adsorption rate can be calculated assuming a steady-state concentration for physically adsorbed PAH on soot, $\mathrm{\partial{[{Soot-PAH^*}]}/\partial t = 0}$, similar to inception rate (Equation~\eqref{eqn:ropdimer}) as\\
+The total adsorption rate can be calculated assuming a steady-state concentration for physically adsorbed PAH on soot, $\mathrm{\partial{[{Soot-PAH^*}]}/\partial t = 0}$ calculated in a similar way to inception flux (Equation~\eqref{eqn:chemdimer_reacdim}) as\\
 
 \begin{equation}
 	\omega^i_{ads_j} = k_{c,ads}\frac{k_{f,ads_j}[\mathrm{Soot}][\mathrm{PAH_j}]}{k_{r,ads_j}+k_{c,ads_j}}
@@ -1434,7 +1440,7 @@ Dimer coalescence model is a multi-step irreversible model proposed by \citet{bl
 	\label{eqn:gamma_dimcoal},
 \end{equation} 
 
-\citet{blanquart2009joint} estimated the constant $\mathrm{C_{N,j}}$ by comparing the profiles of several PAH species with experimental measurements in a single premixed benzene flame~\citep{tregrossi1999combustion}, and provided a efficiency values for various PAHs that are listed in Table~\ref{tab:gammalist_dimcoal}. The rate dimer of coalescence is expressed as:
+\citet{blanquart2009joint} estimated the constant ${C_{N,j}}$ by comparing the profiles of several PAH species with experimental measurements in a single premixed benzene flame~\citep{tregrossi1999combustion}, and provided a efficiency values for various PAHs that are listed in Table~\ref{tab:gammalist_dimcoal}. The rate of dimer collision is expressed as:
 
 \begin{equation}
 	w_{dim_j} = k_{inc_{j}} [\mathrm{Dimer_j}] [\mathrm{Dimer_j}]
@@ -1444,10 +1450,10 @@ Dimer coalescence model is a multi-step irreversible model proposed by \citet{bl
 Similarly, the rate of adsorption of dimers on soot particles is obtained as:
 
 \begin{equation}
-	w^i_{ads_j} = k^i_{ads_{j}} [\mathrm{Soot}]^i [\mathrm{Dimer_j}]
+	w^i_{ads_j} = k^i_{ads_{j}} [\mathrm{soot}]^i [\mathrm{Dimer_j}]
 \end{equation}
 
-Assuming fast dimer consumption leads to the steady-state concentration of the dimer that can be determined by solving a quadratic equation as:
+Assuming fast dimer consumption leads to the steady-state concentration of dimers that can be determined by solving a quadratic equation as:
 \begin{equation}
 	a_{inc_j}[\mathrm{dimer}]^2+b_{ads_j}[\mathrm{dimer}]=\omega_{dim,j}
 	\label{eqn:quad_dimcoal}
@@ -1472,15 +1478,15 @@ Assuming fast dimer consumption leads to the steady-state concentration of the d
 	\label{eqn:delta_dimcoal}
 \end{equation}
 
-where $\mathrm{a_{inc_j} = k_{inc_{j}}}$ and $\mathrm{b_{ads_j}}$ is calculated by summing the adsorption rate of dimer for all sections and dividing it by the dimer concentration.
+where ${a_{inc_j} = k_{inc_{j}}}$ and ${b_{ads_j}}$ is calculated by summing the adsorption rate of dimer for all sections and dividing it by the dimer concentration.
 
 \begin{equation}
-	\mathrm{b_{ads_j}} = \sum_{i=1}^{n_sec} k^i_{ads_{j}} [\mathrm{Soot}]^i
+	\mathrm{b_{ads_j}} = \sum_{i=1}^{n_sec} k^i_{ads_{j}} [\mathrm{soot}]^i
 \end{equation}
 
 \renewcommand{\arraystretch}{1.5}
 \begin{table}
-	\caption{The dimerization efficiency, $\mathrm{\gamma_{dim_j}}$, for different PAH in dimer coalescence model\citep{blanquart2009analyzing}}
+	\caption{The dimerization efficiency, $\mathrm{\gamma_{dim_j}}$, for different PAH in dimer coalescence model~\citep{blanquart2009analyzing}}
 	\label{tab:gammalist_dimcoal}
 	\centering
 	\begin{tabular}{l l l l}
@@ -1499,7 +1505,7 @@ where $\mathrm{a_{inc_j} = k_{inc_{j}}}$ and $\mathrm{b_{ads_j}}$ is calculated 
 	\end{tabular}
 \end{table}
 
-After determining the concentration of each dimer, the contribution of inception and PAH adsorption to source terms of tracked soot variables can be calculated similar to previous inception models.
+After determining the concentration of each dimer, the contribution of inception and PAH adsorption to source terms of tracked soot variables can be calculated similar to previous inception models considering the number of carbon and hydrogen atoms involved in the process.
 
 \begin{equation}
 	I_{N,{inc}} = \frac{1}{\rho}
@@ -1566,7 +1572,7 @@ The rate of removal of PAHs and release of $\mathrm{H_2}$ due to inception and P
 \end{equation}
 
 \subsection{E-Bridge Formation}
-The E-Bridge Formation was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with dehydrogenation of PAH monomers, often pyrene, which forms the monomer radicals and continues with of sequential addition of the radicals to PAHs that form dimers, trimers and larger polymers until the PAH structure reaches the mass threshold and the clustering process becomes irreversible. Here, a modified version of EBridge formation model is used where dimers are considered as incipient soot, and monomer radical are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
+The E-Bridge Formation was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with dehydrogenation of PAH monomers, often pyrene, which forms the monomer radicals and continues with of sequential addition of the radicals to PAHs that form dimers, trimers and larger polymers until the PAH structure reaches the mass threshold and the clustering process becomes irreversible. Here, a modified version of EBridge Formation model is used where dimers are considered as incipient soot, and monomer radical are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
 
 \reaction[reac:dehyd_ebri]{
 	PAH_j + H <-->[k_{f,d_{j}}][k_{r,d_{j}}] $\mathrm{\dot{PAH}_j}$ + H2,
@@ -1746,7 +1752,7 @@ The rate of removal of each PAH involved in soot inception and PAH adsorption an
 
 \section{Gas scrubbing rates}
 
-The rate of production/destruction of species involved in soot formation must be taken into account to preserve the mass and energy balance in reactive system. In order to do that, the production rate of gaseous species calculated by Cantera must be corrected for the rate of release/consumption due to PAH growth and surface reaction models. PAHs participate in inception and PAH adsorption processes.
+The rate of production/destruction of species involved in soot formation must be taken into account to preserve the mass and energy balance in reactive systems. In order to do that, the production rate of gaseous species calculated by Cantera must be corrected for the rate of release/consumption due to PAH growth and surface reaction models.
 
 \begin{equation}
 	\left(
