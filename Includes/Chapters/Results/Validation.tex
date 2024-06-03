@@ -16,7 +16,7 @@ a cubic cell with the constant temperature of 298 K and pressure of 1 atm~\citep
 \subsection{Coagulation}
 This test case was designed and conducted to validate the coagulation sub-unit of both particle dynamics models, MPBM and SPBM, by comparing the results of omnisoot with those of DEM~\citep{kholghy2021surface}. The constant volume reactor was used for this test case, but it will be applicable to other reactors and flame models as long as the particle residence time matches with the values obtained by DEM. An adiabatic reactor with the volume of $1 \mathrm{m^3}$ is initialized with $2.6261\times10^{18}$ spherical particles that are 2 nm in diameter. The initial conditions are indicated in Table~\ref{tab:simcond_coagtest}. The particles are allowed to coagulate in the free molecular regime and grow in size while inception, PAH adsorption and surface growth are disabled. Figure~\ref{fig:coagvalid_Nd} demonstrates the number density of agglomerates ($\mathrm{N_{agg}}$) and primary particles ($\mathrm{N_{pri}}$), and mobility ($\mathrm{d_m}$) and gyration ($\mathrm{d_m}$) diameters of particle obtained by omnisoot that are in good agreement with DEM results. $\mathrm{N_{pri}}$ is conserved during coagulation resulting in identical flat lines for both particle dynamics models, but $\mathrm{N_{agg}}$ declines over time with the higher decay rate for SPBM because it accounts for the polydispersity of agglomerates that results in larger collision frequency compared to MPBM. Stronger collision rate leads to agglomerates with larger the mobility and gyrations diameters.
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/Results/Validation/Coagulation/coagulation_scheme.pdf}
 	\caption{The schematic of agglomeration process in the coagulation test cases where initially spherical particle collide and form agglomerate}
@@ -36,14 +36,14 @@ MPBM model does resolve PSD based on the assumption that at high concentrations 
 		Composition & $\mathrm{CH_4}$:0.425, $\mathrm{O_2}$:0.435, $\mathrm{N_2}$:0.14\\
 		T & 1830 K\\
 		P & 1 atm \\
-		$\mathrm{N^1_{agg}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$ \\ 
-		$\mathrm{N^1_{pri}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$\\
-		$\mathrm{d^1_{p}}$ & 2 nm \\
+		${N^1_{agg}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$ \\ 
+		${N^1_{pri}}$ & $3.514\times10^{-5} \mathrm{mol/kg}$\\
+		${d^1_{p}}$ & 2 nm \\
 		\hline
 	\end{tabular}
 \end{table}
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.4\textwidth}
 		\centering
@@ -58,25 +58,46 @@ MPBM model does resolve PSD based on the assumption that at high concentrations 
 \end{figure}
 
 
-\begin{figure}[!htbp]
+%\begin{figure}[H]
+%	\centering
+%	\begin{subfigure}[t]{0.4\textwidth}
+%		\centering
+%		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/sigmag.pdf}
+%	\end{subfigure}
+%	\begin{subfigure}[t]{0.4\textwidth}
+%		\centering
+%		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/PSD.pdf}
+%	\end{subfigure}
+%	\caption{The standard deviation of mobility diameter, $\mathrm{\sigma_g}$ obtained with SPBM in close agreement with DEM results~\citep{kholghy2021surface} (left pane) that reaches $\mathrm{\sigma_{g,fm}=2.03}$ characteristic of the free molecular regime~\citep{vemury1995self}; the particle size distribution (normalized number concentration of agglomerates is plotted against non-dimensional volume in the right pane) at different residence times that overlaps after initial transient phase marking the attainment of self-preserving size distribution}
+%	\label{fig:coagvalid_sigmapsd}
+%\end{figure}
+
+
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.4\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/sigmag.pdf}
+		\begin{tikzpicture}
+			\draw (0, 0) node[inner sep=0] 	{\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/sigmag.pdf}};
+			\draw (2.48, -1.05) node {\scriptsize{\cite{kholghy2021surface}}};
+		\end{tikzpicture}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.4\textwidth}
-		\centering
-		\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/PSD.pdf}
+		\begin{tikzpicture}
+			\draw (0, 0) node[inner sep=0] 	{\includegraphics[width=1\textwidth]{Figures/Results/Validation/Coagulation/PSD.pdf}};
+			\draw (1.1, -1.34) node {\scriptsize{\cite{goudeli2015coagulation}}};
+		\end{tikzpicture}
 	\end{subfigure}
-	\caption{The standard deviation of mobility diameter, $\mathrm{\sigma_g}$ obtained with SPBM in close agreement with DEM results~\citep{kholghy2021surface} (left pane) that reaches $\mathrm{\sigma_{g,fm}=2.03}$ characteristic of the free molecular regime~\citep{vemury1995self}; the particle size distribution (normalized number concentration of agglomerates is plotted against non-dimensional volume in the right pane) at different residence times that overlaps after initial transient phase marking the attainment of self-preserving size distribution}
-	\label{fig:coagvalid_sigmapsd}
+	\caption{The standard deviation of mobility diameter, $\mathrm{\sigma_g}$ obtained with SPBM in close agreement with DEM results~\citep{kholghy2021surface} (left pane) that reaches $\mathrm{\sigma_{g,fm}=2.03}$ characteristic of the free molecular regime~\citep{vemury1995self}; the particle size distribution (normalized number concentration of agglomerates is plotted against non-dimensional volume in the right pane) at different residence times that overlaps after initial transient phase marking the attainment of self-preserving size distribution in good agreement with DEM results~\citep{goudeli2015coagulation}}
+	\label{fig:coagvalid_sigmapsd} 
 \end{figure}
+
+
 
 \subsection{Constant Volume Reactor}
 The pyrolysis of 30\% $\mathrm{CH_4}$ diluted in $\mathrm{N_2}$ with the initial temperature and pressure of 2455 K and 3.47 atm, respectively, was simulated using the constant volume reactor model in the residence time of 40 ms. The simulation was performed for 8 cases. The combination of available PAH growth and particle dynamics models leads to eight different cases that were simulated to ensure the conservation of mass and energy. Here, we focus on the total elemental balance of carbon and hydrogen because they are involved in soot processes. %The validity of models are evaluated based on relative error based on the initial mass and energy of gas. 
 Figure~\ref{fig:constuvvalid} demonstrates the relative error of total carbon, hydrogen and energy of system for different PAH growth and particle dynamics models in the constant volume that falls below $\mathrm{10^{-10}}$ for all parameters confirming the validity of model in satisfying the mass and energy balance in the constant volume reactor using all models. 
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Results/Validation/ConstUV/relerr_constuv.pdf}
 	\caption{The relative error of total carbon (red line) and hydrogen (green line) mass, and total internal energy residual of gas and soot (blue line) plotted against residence time during pyrolysis of 30\% $\mathrm{CH_4}$-$\mathrm{N_2}$ at 2455 K and 3.47 atm in the constant volume reactor simulated using reactive dimerization, dimer coalescence, e-bridge formation and irreversible dimerization along with MPBM (solid line) and SPBM (dashed line)}
@@ -89,7 +110,7 @@ Methane pyrolysis in an adiabatic flow reactor is used to check elemental carbon
 
 
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Results/Validation/PFR/relerr_pfr.pdf}
 	\caption{The relative error of total carbon (red line) and hydrogen (green line) mass, and total internal energy residual of gas and soot (blue line) plotted against reactor length (cm) in the adiabatic flow reactor during pyrolysis of 30\% $\mathrm{CH_4}$-$\mathrm{N_2}$ at 2100 K and 1 atm simulated using reactive dimerization , dimer coalescence, e-bridge formation and irreversible dimerization along with MPBM (solid line) and SPBM (dashed line)}
