@@ -2,49 +2,88 @@
 \nomenclature[a]{CFD}{Computational Fluid Dynamics}
 \nomenclature[a]{SPBM}{Sectional Population Balance Model}
 \nomenclature[a]{DEM}{Discrete Element Modelling}
-\nomenclature[a]{HACA}{Hydrogen abstraction carbon addition}
+\nomenclature[a]{HACA}{H-abstraction-$\mathrm{C_2H_2}$/Carbon-addition}
 
-\nomenclature[c]{$k_B$}{Boltzmann constant \nomunit{$1.3806488 \times 10^{-23}$ \si{\metre^2 \kg \per \second^2-K}}}
+\nomenclature[c]{$k_B$}{Boltzmann constant \nomunit{$1.3806488 \times 10^{-23}$ \si{J \per K}}}
 \nomenclature[c]{$Av$}{Avogadro's number\nomunit{6.02214076 $\times 10^{23}$ \si{1 / mol}}}
+\nomenclature[c]{$R$}{Global gas constant\nomunit{8.314 \si{\joule / mol}}}
+
+\nomenclature[e]{$h$}{Entalpy\nomunit{\si{J\per\kg}}}
+\nomenclature[e]{$e$}{Internal energy\nomunit{\si{J\per\kg}}}
+
+\nomenclature[e]{$c_p$}{Heat capacity at constant pressure\nomunit{\si{J\per\kg\kelvin}}}
+\nomenclature[e]{$c_v$}{Heat capacity at constant volume\nomunit{\si{J\per\kg\kelvin}}}
+\nomenclature[e]{$c_{soot}$}{Heat capacity of soot\nomunit{\si{J\per\kg\kelvin}}}
+
+
+\nomenclature[e]{$u$}{Velocity\nomunit{\si{\meter\per\second}}}
+
+\nomenclature[e]{$V$}{Volume\nomunit{\si{\meter\cubed}}}
+
+\nomenclature[e]{$p$}{Pressure\nomunit{\si{\pascal}}}
+
+\nomenclature[e]{$P_c$}{Wetted perimeter of the flow reactor\nomunit{\si{\meter}}}
+
+\nomenclature[e]{$A$}{Surface area\nomunit{\si{\meter\squared}}}
+
+\nomenclature[e]{$k_{dep}$}{Deposition velocity\nomunit{\si{\meter\per\second}}}
 
 \nomenclature[e]{$N_{agg}$}{Number density of agglomerates\nomunit{\si{mol\per\kg}}}
 \nomenclature[e]{$N_{pri}$}{Number density of primary particles\nomunit{\si{mol\per\kg}}}
-\nomenclature[e]{$C_{tot}$}{Totla carbon content of soot particles (per section)\nomunit{\si{mol\per\kg}}}
-\nomenclature[e]{$H_{tot}$}{Totla hydrogen content of soot particles (per section)\nomunit{\si{mol\per\kg}}}
+\nomenclature[e]{$C_{tot}$}{Total carbon content of soot particles (per section)\nomunit{\si{mol\per\kg}}}
+\nomenclature[e]{$H_{tot}$}{Total hydrogen content of soot particles (per section)\nomunit{\si{mol\per\kg}}}
+
+\nomenclature[e]{$E(m)$}{Absorption function of soot\nomunit{\si{-}}}
 
 \nomenclature[e]{$T$}{Temperature\nomunit{K}}
-\nomenclature[e]{$I$}{Source terms for soot variables\nomunit{\si{\mol\per\kilogram\per\second}}}
-\nomenclature[e]{$d$}{diameter\nomunit{m}}
-\nomenclature[e]{$m$}{mass\nomunit{\si{\kilogram}}}
-\nomenclature[e]{$W$}{Molecular weight\nomunit{kg}}
+\nomenclature[e]{$I$}{Partial source terms for soot variables\nomunit{\si{\mol\per\kilogram\per\second}}}
+\nomenclature[e]{$S$}{Source terms for soot variables\nomunit{\si{\mol\per\kilogram\per\second}}}
+\nomenclature[e]{$d$}{Diameter\nomunit{m}}
+\nomenclature[e]{$m$}{Mass\nomunit{\si{\kilogram}}}
+\nomenclature[e]{$W$}{Molecular weight\nomunit{kg/mol}}
 \nomenclature[e]{$n_p$}{Number of primary particles of per agglomerate}
 \nomenclature[e]{$d_p$}{Primary particle diameter \nomunit{\si{\metre}}}
 \nomenclature[e]{$d_m$}{Mobility diameter \nomunit{\si{\metre}}}
 \nomenclature[e]{$d_g$}{Gyration diameter \nomunit{\si{\metre}}}
 \nomenclature[e]{$d_c$}{Collision diameter \nomunit{\si{\metre}}}
-\nomenclature[e]{$k$}{reaction rate constant \nomunit{\si{\meter\cubed\per\mol\per\second}}}
+\nomenclature[e]{$k$}{Reaction rate constant \nomunit{\si{\meter\cubed\per\mol\per\second}}}
 \nomenclature[e]{$D$}{Diffusion coefficient of particles \nomunit{\si{\meter\squared\per\second}}}
 \nomenclature[e]{$SF$}{Sectional spacing factor \nomunit{\si{-}}}
 %\nomenclature[g]{$\beta$}{Collision frequency\nomunit{\metre}}
 \nomenclature[e]{$f$}{Friction factor \nomunit{\si{-}}}
-\nomenclature[e]{$R_H$}{Duct hydraulic radius \nomunit{\si{-}}}
-\nomenclature[e]{$D_H$}{Duct hydraulic diameter \nomunit{\si{-}}}
+\nomenclature[e]{$R_H$}{Duct hydraulic radius \nomunit{\si{\meter}}}
+\nomenclature[e]{$D_H$}{Duct hydraulic diameter \nomunit{\si{\meter}}}
 \nomenclature[e]{$Kn$}{Knudsen number \nomunit{\si{-}}}
+\nomenclature[e]{$f_v$}{Soot volume fraction based on gas volume\nomunit{\si{\metre\cubed\per\metre\cubed}}}
+\nomenclature[e]{$Y$}{Mass fraction of gaseous species\nomunit{\si{-}}}
+\nomenclature[e]{$Re$}{Reynolds number\nomunit{\si{-}}}
+\nomenclature[e]{$Sc$}{Schmidt number\nomunit{\si{-}}}
+\nomenclature[e]{$Sh$}{Sherwood number\nomunit{\si{-}}}
 
-\nomenclature[g]{$\rho$}{Gas density\nomunit{\si{\kg\per\metre^3}}}
-\nomenclature[g]{$\varphi$}{Soot volume fraction\nomunit{\si{\metre\cubed\per\metre\cubed}}}
-\nomenclature[g]{$\rho_{soot}$}{Soot density\nomunit{\si{\kg\per\metre^3}}}
-\nomenclature[g]{$\nu$}{Gas kinematic viscosity\nomunit{\si{\metre^2\per\second}}}
+
+
+\nomenclature[g]{$\rho$}{Density\nomunit{\si{\kg\per\metre^3}}}
+\nomenclature[g]{$\varphi$}{Soot volume fraction based on reactor volume\nomunit{\si{\kg\per\metre^3}}}
+
+%\nomenclature[g]{$\rho_{soot}$}{Soot density\nomunit{\si{\kg\per\metre^3}}}
+\nomenclature[g]{$\mu$}{Gas dynamic viscosity\nomunit{\si{\pascal\second}}}
 \nomenclature[g]{$\beta$}{Collision frequency\nomunit{\si{\metre^3\per\second}}}
+\nomenclature[g]{$\zeta$}{Collision efficiency\nomunit{\si{-}}}
 \nomenclature[g]{$\lambda$}{Mean free path\nomunit{\si{\metre}}}
 \nomenclature[g]{$\lambda_a$}{Mean stopping distance of particles\nomunit{\si{\metre}}}
 \nomenclature[g]{$\delta_a$}{Mean distance of particles\nomunit{\si{\metre}}}
+\nomenclature[g]{$\omega$}{The rate of production of gaseous species\nomunit{\si{mol\per\metre\cubed\second}}}
+\nomenclature[g]{$\tau_w$}{Wall shear stress\nomunit{\si{\pascal}}}
+\nomenclature[g]{$\tau_{psr}$}{Nominal residence time of perfectly stirred reactor\nomunit{\si{\pascal}}}
+\nomenclature[g]{$\epsilon$}{Wall roughness\nomunit{\si{\meter}}}
+
+\nomenclature[g]{$\eta_{inc}$}{Inception adjustment factor\nomunit{\si{-}}}
+\nomenclature[g]{$\eta_{ads}$}{PAH adsorption adjustment factor\nomunit{\si{-}}}
+
 %\nomenclature[g]{$\omega$}{The rate of production/consumption of species \nomunit{\si{mol/$\mathrm{m^3}-s$}}}
 
 \nomenclature[u]{agg}{Agglomerate}
 \nomenclature[u]{pri}{Primary particle}
-\nomenclature[u]{m}{Mobility}
-\nomenclature[u]{g}{Gyration}
 \nomenclature[u]{fm}{Free molecular}
 \nomenclature[u]{cont}{Continuum}
 \nomenclature[u]{inc}{Inception}
@@ -52,9 +91,9 @@
 \nomenclature[u]{ox}{Oxidation}
 \nomenclature[u]{coag}{Coagulation}
 \nomenclature[u]{ads}{Adsorption}
-\nomenclature[u]{f}{forward}
-\nomenclature[u]{r}{reverse}
-\nomenclature[u]{reac}{reactive}
+\nomenclature[u]{f}{Forward}
+\nomenclature[u]{r}{Reverse}
+\nomenclature[u]{reac}{Reactive}
 
 %\nomenclature[s]{t}{top}
 

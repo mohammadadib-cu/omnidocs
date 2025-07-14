@@ -1,52 +1,3 @@
-\chapter{Theoretical Model}
-In this chapter, the mathematical basis for \textit{omnisoot} is explained in the top-to-bottom hierarchical order. The highest level is the reactors and flames that include the transport equations of gas mixture and "soot variables". Soot formation source terms are handled by the particle dynamics model that mainly addresses particle size distribution (PSD), morphology and coagulation rate. The "PAH growth model" computes the contribution of inception and adsorption to source terms based on PAHs designated as precursors. Similarly, the "surface reactions" model obtains the surface growth and oxidation rate by HACA mechanism and passes them to the particle dynamics model. 
-
-\section{Assumptions and conventions}
-Here, the main conventions and assumptions used in the derivation of the mathematical model are listed below.
-
-\begin{enumerate}
-\item The ideal gas law is used to calculated physical, transport, and chemical properties of gas mixture.
-	
-\item $\mathrm{\dot{s}_k}$ denotes that rate production/consumption of $k_{th}$ species due to soot formation. It is positive when the species is released to gas mixture.
-
-\item Each soot agglomerate consist of spherical monodisperse primary particles in point contact.
-
-\item The word \textit{``particle"} refers to soot both in spherical and agglomerate shape. 
-
-\item The density of soot is assumed constant at the value of 1800 $\mathrm{kg/m^3}$. This density represents an average between particles with small C/H ratio ($\mathrm{\rho=1600 kg/m^3}$) and large C/H ratios ($\mathrm{\rho=2000 kg/m^3}$)~\citep{jensen2007measurement}.
-
-\item The incipient soot particles are 2~nm in diameter, so no particles could exist with a primary particle diameter smaller than 2~nm. The number of carbon atoms in the incipient soot particle is calculated from the mass of a sphere with the diameter of 2~nm assuming pure carbon content.
-\begin{equation}
-	\begin{split}
-	d_{p,min}&=2~\mathrm{nm} \\
-	n_{c,min}& =\frac{\pi}{6}\rho_{soot}d^3_{p,min}\frac{1}{MW_c}\approx378
-	\label{eqn:dp_min}.
-	\end{split}
-\end{equation}
-\item The calculation of PAH adsorption and soot oxidation requires ``\textit{soot concentration}" which is defined as the number of soot agglomerates per unit volume of gas. The number density of agglomerates,  $\mathrm{N_{agg}}$, are tracked per unit mass of gas mixture i.e. $\mathrm{\#/kg_{gas}}$. So, soot concentration can be calculated by multiplying agglomerate number density by gas density as:
-\begin{equation}
-	[\mathrm{soot}] = \rho\cdot \mathrm{N_{agg}}
-	\label{eqn:sootconcen}.
-\end{equation}
-
-\item The specific heat, internal energy and enthalpy of soot are approximated by those of pure graphite, and employed to close the energy balance in the system~\cite{mcbride1993coefficients}.
-
-\item Soot particles and gas are in thermal equilibrium during studied processes.
-
-\item There is no temperature gradient within each agglomerate.
-
-\item \textit{Soot variable} refers to the features/properties of soot particles tracked by the particle dynamics model and used in the soot transport equations.
-
-\item \textit{PAH growth} is a unit of the soot model with a set of pathways that determine the rate of inception and adsorption from PAHs in the gas mixture.
-
-\item \textit{Surface reactions} is a unit of the soot model that describes the addition of acetylene to soot surface, and removal of carbon via oxidation by OH and $\mathrm{O_2}$ in the HACA scheme.
-
-\item The superscript \textit{i} denotes section number of a soot variable or property derived from variables. In the case of the monodisperse model, the section number can be ignored because it is equivalent to the sectional model with one section.
-
-\item The computation of morphological parameters ($d_p$, $d_m$, $d_g$, and $n_p$) and diffusion coefficient are done similarly by both particle dynamics models, so they are explained separately in standalone sections.
-
-\end{enumerate}
-
 \section{Flames}
 This research focuses on axisymmetric stagnation flames that reduces the laminar 3D steady-state equations in the cylindrical coordinates (r-z-$\mathrm{\theta}$ system) to one-dimensional domain in r-z plane. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, surface growth and oxidation as well as the formation and sensible energy of soot.
 
@@ -108,14 +59,22 @@ This research focuses on axisymmetric stagnation flames that reduces the laminar
 The details of calculation of mixture-averaged diffusive fluxes can be found in the documentation of \verb| GasTransport::getMixDiffCoeffs()|\footnote[1]{https://cantera.org/documentation/docs-3.0/doxygen/html/d8/d58/classCantera\_1\_1GasTransport.html} in Cantera~\citep{cantera}. Soot variables are treated similar to species, and their transport equations can be written as:
 \begin{equation}
 	\rho u\frac{\partial \psi}{\partial z} = 
-	-\frac{\partial}{\partial z}
+	\frac{\partial}{\partial z}
 	\left(
+		\rho
 		D\frac{\partial \psi}{\partial z}
+	\right)
+	+
+	\frac{\partial}{\partial z}
+	\left(
+		K_{th}
+		\frac{\mu}{T}
+		\frac{\partial T}{\partial z}
 	\right)
 	+ S_{\psi} 
 	\label{eqn:flame_soot},
 \end{equation}
-\noindent where $\psi$ is a generic soot variable that represents any of tracked soot variables.
+\noindent where $\psi$ is a generic soot variable that represents any of tracked soot variables, $D$ the diffusion coefficient of particles defined in Eq.~\eqref{eqn:diff}, and $\mathrm{K_{th}}$ the thermophoresis constant.
 
 \section{Reactors}
 Zero-dimensional reactors are ideal representation of reactive systems typical in industrial applications. The strong mixing in the volume/cross-section allows description of thermal/chemical/hydrodynamic properties of mixture with a single variable that evolves in time. This section entails the conservation equations of mass, momentum (if applicable), species, energy, and soot for three reactor models.
@@ -176,12 +135,20 @@ The transport equation for a generic soot variable, $\psi$ can be written as:
 \end{equation}
 
 \subsection{Perfectly Stirred Reactor}
-In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of $Y^\ast$ and temperature of $T^\ast$, instantaneously mixes and homogeneously reacts with the mixture resident inside the reactor. The reacting gas reaches a spatially uniform temperature and composition described by $T$, and $Y$. It is assumed that temperature, composition and soot properties of the outflow are the same as reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR. $\mathrm{\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates, respectively. Under no-soot conditions, the inlet and outlet mass flow rates are equal, but the gas mixture loses mass by soot formation, so $\mathrm{\dot{m}_{out}}$ is slightly less than $\mathrm{\dot{m}_{in}}$. The pressure of reactor is assumed to stay constant during the process~\citep{kee2017chemically}. The nominal residence time of gas mixture in the reactor is defined as:
+In the perfectly stirred reactor (PSR) model, gas enters with a known mass flow rate of $\dot{m_{in}}$, composition of $Y_{in}$ and temperature of $T_{in}$. Then, it instantaneously mixes and homogeneously reacts with the mixture resident inside the reactor. The reacting gas reaches a spatially uniform temperature and composition described by $T$, and $Y$. It is assumed that temperature, composition and soot properties of the outflow are the same as those inside the reactor. Figure~\ref{fig:psrcv} illustrates the schematics of PSR where ${\dot{m}_{in}}$ and $\mathrm{\dot{m}_{out}}$ refer to inflow and outflow gas mass flow rates only, respectively, and $V$ is the volume confined within the reactor boundaries that are assumed to be fixed. 
+
+Steady-state solution to PSR is often of interest. In that case, the time derivative terms in governing equations become zero, so the system of ordinary differential equations are reduced to a set of coupled nonlinear algebraic equations. Solving this system of equations requires a sophisticated implementation to account for non-linearity and mulitple solutions. A practical alternative is simulating PSR as a time-dependent constant volume reactor with specified in- and outflow that is started from an initial state and advanced in time until the solution is converged. This approach has already be implemented and tested in Cantera~\citep{cantera} for a reacting gas with no soot formation. The mean residence time of gas mixture in the reactor is defined as the ratio of mass inside the reactor to the inflow mass flow rate:
 
 \begin{equation}
 	\tau = \frac{\rho V}{\dot{m}_{in}}
 	\label{eqn:taupsr}.
 \end{equation} 
+
+
+Under no-soot conditions, the steady-state values of inlet and outlet mass flow rates become equal. However, the gas mixture loses mass to solid phase by soot formation, so the final value of ${\dot{m}_{out}}$ is less than that of $\mathrm{\dot{m}_{in}}$. 
+%The pressure of reactor is assumed to stay constant during the process~\citep{kee2017chemically}. 
+
+
 
  
 
@@ -192,7 +159,7 @@ In this reactor, gas enters with a mass flow rate $\dot{m_{in}}$, composition of
 	\label{fig:psrcv}
 \end{figure}
 
-The conservation of mass can be written for PSR by considering the mass flux of in- and outflow, and the removal of mass due to soot generation as:
+The conservation of mass equation can be used to determine PSR by considering the mass flux of in- and outflow, and the removal of mass due to soot generation as:
 
 \begin{equation}
 	\frac{d m}{d t}
@@ -202,16 +169,28 @@ The conservation of mass can be written for PSR by considering the mass flux of 
 	\label{eqn:contpsr}.
 \end{equation}
 
-The density is not determined by solving the continuity equation, but rather from ideal gas law and assuming a constant pressure and the composition from solving the species transport equations as:
+The outlet gas mass flow rate, $\dot{m}_{out}$ is calculated from inlet mass flow rate, $\dot{m}_{in}$ and a small correction determined by pressure differences as:
+
+\begin{equation}
+	\dot{m}_{out}
+	=
+	\dot{m}_{in}
+	+ K_v (P_1 - P_2)
+	\label{eqn:mdotoutpsr},
+\end{equation}
+
+\noindent where $K_v$ proportionality constant is set to $10^{-2}$ by default. Its value does not change the steady-state solution of the equations, but it controls transient solution and may help or hinder the convergence.
+The density is determined by solving the continuity equation, and the pressure is calculated from ideal gas law using the composition from solving the species transport equations as:
 
 \begin{equation}
 	\frac{d Y_k}{d t}
 	=
-	\frac{1}{\tau}
+	\frac{\dot{m}_in}{\rho V (1-\varphi)}
 	\left( Y^*_k-Y_k \right)+
 	\frac{1}{\rho}\left[\left(\dot{\omega}_k+\dot{s}_k\right) W_k-Y_k \sum_i \dot{s}_i W_i\right]
 	\label{eqn:speciespsr}.
 \end{equation}
+
 
 The energy equation for this reactor is written as:
 \begin{equation}
@@ -246,8 +225,7 @@ The soot transport equations can also be expressed as:
 \begin{equation}
 	\frac{d\psi}{dt}
 	=
-	\frac{{\dot{m}}_{in}}{\rho V
-	\left(1-\varphi\right)}
+	\frac{\dot{m}_in}{\rho V (1-\varphi)}
 	\left(\psi^\ast-\psi\right)
 	+
 	S_{\psi}
@@ -490,12 +468,12 @@ The MPBM used in this research tracks the number density of primary particles (N
 
 \subsubsection{Coagulation}
 \label{sec:monocoag}
-Coagulation is the process during which solid and hard soot particles collide and attach at point of contact leading to larger agglomerates. This process conserves the soot mass and composition and number density of primary particles, so coagulation only affects $\mathrm{N_{agg}}$. $\mathrm{I^N_{coag}}$ accounts for the decay rate of $\mathrm{N_{agg}}$ by the binary collision of soot particles by
+Coagulation is the process during which solid and hard soot particles collide and attach at point of contact leading to larger agglomerates. This process conserves the soot mass and composition and number density of primary particles, so coagulation only affects $\mathrm{N_{agg}}$. ${I^N_{coag}}$ accounts for the decay rate of $\mathrm{N_{agg}}$ by the binary collision of soot particles by
 \begin{equation}
 	I_{coag} = -\frac{1}{2}\beta N^2_{agg}
 	\label{eqn:Icoag},
 \end{equation}
-where $\mathrm{\beta}$ is the collision frequency of agglomerates for the free molecular ($\mathrm{Kn>10}$) to continuum regime ($\mathrm{Kn<0.1}$). The value of $\mathrm{\beta}$ in the transition regime ($\mathrm{0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum ($\mathrm{\beta_{cont}}$) and free molecular ($\mathrm{\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of polydispersity~\citep{kelesidis2021self} as:
+where ${\beta}$ is the collision frequency of agglomerates for the free molecular ($\mathrm{Kn>10}$) to continuum regime (${Kn<0.1}$). The value of ${\beta}$ in the transition regime (${0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum (${\beta_{cont}}$) and free molecular (${\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of polydispersity~\citep{kelesidis2021self} as:
 \begin{equation}
 	\beta = 1.82\frac{\beta_{fm}\beta_{cont}}{\beta_{fm}+\beta_{cont}}
 	\label{eqn:betahmmono},
@@ -1013,10 +991,10 @@ The rate of release of H radicals into the gas mixture due to surface growth is:
 		& & r & $3.9\times 10^6$ & 0 & 5535.98 \\
 		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca2} & \ce{C_{soot-H} + OH <--> C_{soot\textdegree} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
 		&  & r & 3.68$\times 10^2$ & 1.139 & 8605.94 \\
-		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca3} & \ce{C_{soot\textdegree} + H -> C_{soot} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca3} & \ce{C_{soot\textdegree} + H -> C_{soot-H}} & f & $10^4$ & 0.734 & 719.68\\
 		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca4} & \ce{C_{soot\textdegree} + C_2H_2 -> C_{soot-H}} & f & 80 & 1.56 & 1912.43\\
 		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca5} & \ce{C_{soot\textdegree} + O_2 -> 2CO} & f & 2.2 $\times 10^6$ & 0 & 3774.53\\
-		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca6} & \ce{C_{soot}-H + OH -> CO + \frac{1}{2} H_2} & f & $1.3\times 10^7$ & 0 & 0\\
+		\stepcounter{reaction}\thetag{\thereaction}\label{reac:haca6} & \ce{C_{soot-H} + OH -> CO + \frac{1}{2} H_2} & f & $1.3\times 10^{-7}$ & 0 & 0\\
 		\hline
 	\end{tabular}
 \end{table}

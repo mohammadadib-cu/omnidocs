@@ -1,0 +1,140 @@
+
+\section{Gas scrubbing rates}
+
+The rate of production/destruction of species involved in soot formation must be taken into account to preserve the mass and energy balance in reactive systems. In order to do that, the production rate of gaseous species calculated by Cantera must be corrected for the rate of release/consumption due to PAH growth and surface reaction models.
+
+\begin{equation}
+	\left(
+		\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\right)_{tot}
+	= 
+	\left(
+		\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+		\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\right)_{inc}
+	+
+	\left(
+		\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\right)_{ads}
+	\label{eqn:PAHscrub_total}.
+\end{equation}
+
+$\mathrm{H_2}$ is released to the gas mixture due to inception, PAH adsorption as well as oxidation.
+
+\begin{equation}
+	\left(
+	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\right)_{inc}
+	+
+	\left(
+	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\right)_{ads}
+	+
+	\left(
+	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\right)_{ox}
+	\label{eqn:H2scrub_total}.
+\end{equation}
+
+Surface growth consumes $\mathrm{C_2H_2}$ and adds $\mathrm{H_2}$ to the gas mixture.
+
+\begin{equation}
+	\left(
+	\frac{d\left[{\mathrm{C_2H_2}}\right]}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{C_2H_2}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{C_2H_2}}\right]}{dt}
+	\right)_{gr}
+	\label{eqn:C2H2scrub_total}.
+\end{equation}
+
+
+\begin{equation}
+	\left(
+	\frac{d\left[{\mathrm{H}}\right]}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{H}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{H}}\right]}{dt}
+	\right)_{gr}
+	\label{eqn:Hscrub_total}.
+\end{equation}
+
+Oxidation uses $\mathrm{O_2}$ and $\mathrm{OH}$ to remove carbon from soot particles and generates $\mathrm{H_2}$ and $\mathrm{CO}$.
+
+\begin{equation}
+	\left(
+		\frac{
+			d\left[
+				\mathrm{CO}
+			\right]
+		}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{CO}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{CO}}\right]}{dt}
+	\right)_{ox}
+	\label{eqn:COscrub_total}.
+\end{equation}
+
+\begin{equation}
+	\left(
+	\frac{
+		d\left[
+		\mathrm{O2}
+		\right]
+	}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{O2}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{O2}}\right]}{dt}
+	\right)_{ox}
+	\label{eqn:O2scrub_total}.
+\end{equation}
+
+\begin{equation}
+	\left(
+	\frac{
+		d\left[
+		\mathrm{OH}
+		\right]
+	}{dt}
+	\right)_{tot}
+	= 
+	\left(
+	\frac{d\left[{\mathrm{OH}}\right]}{dt}
+	\right)_{gas}
+	+
+	\left(
+	\frac{d\left[{\mathrm{OH}}\right]}{dt}
+	\right)_{ox}
+	\label{eqn:OHscrub_total}.
+\end{equation}

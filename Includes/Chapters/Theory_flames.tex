@@ -1,0 +1,77 @@
+\section{Flames}
+This research focuses on axisymmetric stagnation flames that reduces the laminar 3D steady-state equations in the cylindrical coordinates (r-z-$\mathrm{\theta}$ system) to one-dimensional domain in r-z plane. The derivation of flow equations for a reacting gas is explained in detail in Section 7.2 of \citep{kee2017chemically}. Here, the modified version of equations is provided that takes into account the mass and momentum of particles, the removal/release of species due to soot inception, surface growth and oxidation as well as the formation and sensible energy of soot.
+
+\noindent Continuity:
+\begin{equation}
+	\frac{\partial \rho u}{\partial z} = 2\rho V - \sum_j \dot{s}_j W_j
+	\label{eqn:flame_cont},
+\end{equation}
+
+\noindent Radial Momentum:
+\begin{equation}
+	\rho u\frac{\partial V}{\partial z} + \rho V^2=-\Lambda +
+	\frac{\partial}{\partial z}
+	\left(
+		\mu \frac{\partial V}{\partial z}
+	\right)
+	\label{eqn:flame_momen},
+\end{equation}
+\noindent Energy:
+\begin{equation}
+	\left[
+		(1-\varphi)\rho c_p
+		+\varphi\rho_{soot} c_{p,soot}
+	\right] u
+	\frac{\partial T}{\partial z} = 	\frac{\partial}{\partial z}
+	\left(
+	K \frac{\partial T}{\partial z}
+	\right)
+	-\sum_{k}^{n_{sp}} J_k \frac{\partial h_k}{\partial z}
+	-\sum_{k}^{n_{sp}} h_k W_k
+	\left(
+		\omega_k+\dot{s}_k
+	\right)
+	\label{eqn:flame_energy},
+\end{equation}
+\noindent Species:
+\begin{equation}
+	\rho u\frac{\partial Y_k}{\partial z} = 
+	-\frac{\partial J_k}{\partial z}
+	+ W_j 
+	\left(
+	\omega_k+\dot{s}_k
+	\right)
+	\label{eqn:flame_species},
+\end{equation}
+\noindent where $\mathrm{V=v/r}$ is the scaled radial velocity, and $\mathrm{\Lambda}$ is the pressure eigenvalue. $\mathrm{J_k}$ denotes the diffusive flux of species $\mathrm{k}$ that is usually calculated using mixture averaged formulation.
+
+\begin{equation}
+	J^*_K = -\rho \frac{W_k}{W_T}D^{'}_{km}
+	\frac{\partial X_k}{\partial z}
+	\label{eqn:diffflux_star},
+\end{equation}
+
+\begin{equation}
+	J_K = J^*_K - Y_k \sum_{l=1}^{n_{sp}} J^*_l
+	\label{eqn:diffflux},
+\end{equation}
+
+The details of calculation of mixture-averaged diffusive fluxes can be found in the documentation of \verb| GasTransport::getMixDiffCoeffs()|\footnote[1]{https://cantera.org/documentation/docs-3.0/doxygen/html/d8/d58/classCantera\_1\_1GasTransport.html} in Cantera~\citep{cantera}. Soot variables are treated similar to species, and their transport equations can be written as:
+\begin{equation}
+	\rho u\frac{\partial \psi}{\partial z} = 
+	\frac{\partial}{\partial z}
+	\left(
+		\rho
+		D\frac{\partial \psi}{\partial z}
+	\right)
+	+
+	\frac{\partial}{\partial z}
+	\left(
+		K_{th}
+		\frac{\mu}{T}
+		\frac{\partial T}{\partial z}
+	\right)
+	+ S_{\psi} 
+	\label{eqn:flame_soot},
+\end{equation}
+\noindent where $\psi$ is a generic soot variable that represents any of tracked soot variables, $D$ the diffusion coefficient of particles defined in Eq.~\eqref{eqn:diff}, and $\mathrm{K_{th}}$ the thermophoresis constant.
