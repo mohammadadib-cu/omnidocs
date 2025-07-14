@@ -1,11 +1,12 @@
 
 
 \section{Particle Dynamics}
+\label{sec:particledynamics}
 Population balance models rely on the Eulerian description of particles where average properties of particle population such as number density, mass or surface area are treated as continuous quantities and tracked by solving scalar transport equations. These methods are computationally cheaper compared with mesoscale models such as DEM, and can be easily interfaced with chemical kinetics in CFD solvers to simulate soot formation in laminar and turbulent configurations. Here, we use two particle dynamics models: a monodisperse population balance model (MPBM), which tracks four variables and results in four transport equations, and a fixed sectional population balance model (SPBM), which tracks three variables per section. In the SPBM approach, the total number of transport equations equals the number of tracked variables multiplied by the number of sections. 
 
 Having the total number concentration of agglomerates and primary particles and total carbon content of soot enables the model to describe evolving fractal-like morphology and surface area of soot agglomerates, which is essential to compute their collision frequency~\citep{mulholland1988cluster} as well as oxidation and surface growth rates~\citep{kelesidis2019estimating}. Tracking hydrogen content of soot allows capturing the soot composition, thereby its maturity~\citep{kholghy2016core}, and surface reactivity~\citep{blanquart2009analyzing}.
 
-The common features of implemented particle dynamics models are reviewed in Section~\ref{sec:pdynamiccommon}. The composition (H/C), diffusion coefficient, and morphology of soot particles are calculated in the same manner for MPBM and each section in SPBM. However, particle dynamics models differ in terms of the calculation of coagulation partial source term, $I_{coag}$, and processing of the contributions from inception, surface growth, and coagulation ($I_{\varphi}$) to generate the source terms ($S_{\varphi}$) that are incorporated into the transport equations.
+The common features of implemented particle dynamics models are reviewed in Section~\ref{sec:pdynamiccommon}. The composition (H/C), diffusion coefficient, and morphology of soot particles are calculated in the same manner for MPBM and each section in SPBM. However, particle dynamics models differ in terms of the calculation of coagulation, and the processing of the contributions from inception, surface growth, and coagulation to generate the source terms of soot variables, $S_{\varphi}$, incorporated into the transport equations.
 
 \subsection{Common Features}
 \label{sec:pdynamiccommon}
@@ -13,8 +14,8 @@ The common features of implemented particle dynamics models are reviewed in Sect
 \label{sec:sootmorphology}
 
 The evolving fractal-like structure of agglomerates is quantified by their mobility diameter normalized by primary particle diameter, $d_m/d_p$, and gyration diameter, $d_m/d_g$, that can be described with power-laws derived from mesoscale simulations.
-Incipient soot is initially a sphere formed of PAHs with constant density that grows in size by surface reactions and forms agglomerates by coagulation. The collision frequency of particles depends on their evolving fractal-like structure~\citep{mulholland1988cluster}.
-Mobility and gyration diameters are calculated using power-laws developed to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} shows a schematic of a soot agglomerate composed of 12 primary particles, with ${d_p}$, ${d_m}$, and ${d_g}$ annotated.
+Incipient soot is initially a sphere formed of PAHs that grows in size by surface reactions and forms agglomerates by coagulation. The collision frequency of particles depends on their evolving fractal-like structure~\citep{mulholland1988cluster}.
+Mobility and gyration diameters are calculated using power-laws developed to describe the morphology of soot from premixed~\citep{abid2008evolution}, diffusion~\citep{yon2015simple} flames, and diesel engines~\citep{rissler2013effective}. Figure~\ref{fig:Morphology} shows the schematic of a soot agglomerate composed of 12 primary particles, with ${d_p}$, ${d_m}$, and ${d_g}$ annotated.
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=60mm, ]{Figures/Theory/Morphology.pdf}
@@ -23,14 +24,15 @@ Mobility and gyration diameters are calculated using power-laws developed to des
 \end{figure} 
 
 
-${n^i_p}$ is the number of primary particles per agglomerate of ${i^{th}}$ section that can be obtained by dividing the number concentration of primary particles in ${i^{th}}$ section by that of agglomerates in that section as:
+${n^i_p}$ is the number of primary particles per agglomerate of the ${i^{th}}$ section that can be obtained by dividing the number concentration of primary particles in the ${i^{th}}$ section by that of agglomerates in that section as:
+
 
 \begin{equation}
 	n^i_p = \frac{N^i_{pri}}{N^i_{agg}}
 	\label{eqn:n_p}.
 \end{equation}
 
-Primary particle diameter, ${d^i_p}$, is determined from total carbon content and number density of primary particles using:
+The primary particle diameter, ${d^i_p}$, is determined from the total carbon content and the number density of primary particles using:
 
 \begin{equation}
 	d^i_p = \left(\frac{6}{\pi} \frac{C^i_{tot}\cdot W_{carbon}}{\rho_{soot}} \frac{1}{N^i_{pri}\cdot Av} \right)^{1/3}.
@@ -58,7 +60,7 @@ The DEM-derived power-laws~\citep{Kelesidis2017} relate ${d^i_m}$ and ${d^i_g}$ 
 The collision diameter, ${d^i_c}$, is the maximum of ${d^i_{m}}$ and ${d^i_{g}}$:
 
 \begin{equation}
-	d^i_c = \mathrm{max}\left(d^i_m, d^i_g\right),
+	d^i_c = \mathrm{max}\left(d^i_m, d^i_g\right).
 	\label{eqn:d_c}
 \end{equation}
 
@@ -88,7 +90,7 @@ Mass of each agglomerate, $m^i_{agg}$ is expressed as:
 
 \subsubsection{Soot Composition}
 \label{sec:sootcomp}
-The composition of soot characterized by their elemental carbon to hydrogen ratio (C/H) is a measure of soot maturity and increases from $\mathrm{C/H<2}$ for incipient soot~\citep{ciajolo1998spectroscopic} to $\mathrm{2<C/H<10}$ for nascent soot~\citep{betrancourt2017investigation} and $\mathrm{C/H>20}$ for mature soot~\citep{michelsen2017probing}. The soot agglomerates are assumed to have pure carbon graphitic core~\citep{kholghy2016core} with all hydrogen atoms on the surface~\citep{blanquart2009analyzing}. C/H ratio can be obtained from total carbon and hydrogen content as:
+The composition of soot characterized by their elemental carbon to hydrogen ratio (C/H) is a measure of soot maturity and increases from $\mathrm{C/H<2}$ for incipient soot~\citep{ciajolo1998spectroscopic} to $\mathrm{2<C/H<10}$ for nascent soot~\citep{betrancourt2017investigation} and $\mathrm{C/H>20}$ for mature soot~\citep{michelsen2017probing}. The soot agglomerates are assumed to have pure carbon graphitic core~\citep{kholghy2016core} with all hydrogen atoms on the surface~\citep{blanquart2009analyzing}. C/H ratio can be obtained from the total carbon and the hydrogen content as:
 
 \begin{equation}
 	\left(
@@ -115,7 +117,7 @@ The diffusion coefficient of soot particle, $D^i$, is calculated as:
 	D^i = \frac{k_B T}{f^i}
 	\label{eqn:diff},
 \end{equation}
-\noindent where $f^i$ is the friction factor of particles in gas and is calculated as:
+\noindent where $f^i$ is the friction factor of particles in the gas mixture, and it is calculated as:
 
 \begin{equation}
 	f^i = \frac{3\pi\mu d^i_m}{C^i(d^i_m)},
@@ -126,7 +128,7 @@ The diffusion coefficient of soot particle, $D^i$, is calculated as:
 \begin{equation}
 	C^i(d) = 1+\frac{2\lambda}{d}
 	\left(
-	1.21+0.4\cdot\mathrm{exp}(\frac{-0.78d}{\lambda})
+	1.21+0.4\mathrm{exp}(\frac{-0.78d}{\lambda})
 	\right)
 	\label{eqn:cun},
 \end{equation}
@@ -139,30 +141,114 @@ Note that $\lambda$ is a property of the gas mixture that does not depend on par
 
 
 \subsection{Sectional Population Balance Model}
-A SPBM with the fixed pivot is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles are divided into discrete sections each of which includes agglomerates of the same mass. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of each section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation without breaking into smaller particles (i.e., fragmentation is not considered). Particles attach at point contact without coalescence. The mass of sections is determined by a geometric progression with a scale factor equal to the mass of incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of each section is approximated by the carbon content of agglomerates in moles as:
+A SPBM with fixed pivots is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles is divided into discrete sections each of which includes agglomerates of the same mass. Figure~\ref{fig:sectional} illustrates the interaction between the gas phase and mass sections, as well as the mechanisms by which particles move between sections. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of each section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation without breaking into smaller particles (i.e., fragmentation is not considered). Particles attach at point contact without coalescence. The mass of sections is determined by a geometric progression that has an initial value equal to the mass of incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of each section is approximated by the carbon content of agglomerates in moles as:
+
 \begin{equation}
-	C^i_{agg} = \frac{n_{c,min}}{Av}\cdot SF^{(i-1)}
-	\label{eqn:Caggsec}.
+	C^i_{agg} = \frac{n_{c,min}}{Av}\cdot SF^{(i-1)},
+	\label{eqn:Caggsec}
 \end{equation}
-\noindent where (i-1) represents the exponent of SF. The mass of hydrogen is ignored in the placement of agglomerates in the sections.
-The total number density of agglomerates, ${N^i_{agg} [mol/kg]}$, and primary particles, ${N^i_{pri} [mol/kg]}$ are tracked for each section. Morphological parameters are determined for each section according to the equations in Section~\ref{sec:sootmorphology}.
+\noindent where $(i-1)$ represents the exponent of SF. The mass of hydrogen is ignored in the placement of agglomerates in the sections.
+The total number density of agglomerates, $N^i_{agg}$, and primary particles, ${N^i_{pri}}$, and the hydrogen content, $H_{tot}$, are tracked for each section. The mass of each section is fixed, so $C_{tot}$, for each section can be easily calculated by knowing the number of agglomerates; that is, $C_{tot} = N^i_{agg} \cdot {Av} \cdot C^i_{agg}$. Morphological parameters for each section are determined according to the equations provided in Section~\ref{sec:sootmorphology}.
+
 
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[height=40mm, ]{Figures/Theory/Sectional.pdf}
-	\caption{The illustration of sections of SPBM. The mass of sections grows progressively by the scale factor of SF. Inception introduces new particles to the first section that propagate to the upper section via coagulation and surface growth and return to lower sections by oxidation. Carbon and hydrogen pass from gas to solid phase through inception and surface growth and goes back via oxidation.}
+	\caption{The illustration of sections in SPBM. The mass of sections grows progressively by the scale factor of SF. Inception introduces new particles to the first section that propagate to the upper section via coagulation and surface growth and return to lower sections by oxidation. Carbon and hydrogen pass from gas to solid phase through inception and surface growth and goes back via oxidation.}
 	\label{fig:sectional}
 \end{figure}
  
-New particles formed by coagulation are assigned to an upper section, with a total mass equal to the sum of the masses of the colliding particles. If the mass of resulting particle falls between two consecutive sections, the mass is distributed between them proportionally. In some cases, the mass of the newly formed particle may exceed the upper bound of the last section, causing it to fall outside the tracked mass range. This leads to potential mass loss, which is a known limitation of the fixed pivot sectional model. However, this issue can be mitigated by choosing an appropriate number of sections and a suitable spacing factor to ensure the uppermost sections remain unoccupied during the simulation.
+New particles formed by coagulation are assigned to an upper section, with a total mass equal to the sum of the masses of the colliding particles. If the mass of resulting particle falls between two consecutive sections, the mass is distributed between them proportionally. In some cases, the mass of the newly formed particle may exceed the upper bound of the last section, causing it to fall outside the tracked mass range. This leads to potential mass loss, which is a known limitation of the fixed pivot sectional model~\citep{zhang2010detailed}. However, this issue can be mitigated by choosing an appropriate number of sections and a suitable spacing factor to ensure the uppermost sections remain unoccupied during the simulation. In the SPBM, the source terms of tracked soot variables (which appear in Equations~\ref{eqn:sootconstuv},~\ref{eqn:sootpsr},~and~\ref{eqn:sootpfr}) are split into four parts showing the contribution of inception, surface growth, oxidation and coagulation. The effect of HACA and PAH adsorption are combined (denoted by the subscript \textit{haca,ads}) because they are similar mass-gaining mechanisms. The source terms for section $i$ are given as:
+
+\begin{equation}
+	S^i_{N_{agg}} = 
+	\left(S^i_{N_{agg}}\right)_{inc}
+	+\left(S^i_{N_{agg}}\right)_{haca, ads}
+	+\left(S^i_{N_{agg}}\right)_{ox}
+	+\left(S^i_{N_{agg}}\right)_{coag}
+	\label{eqn:S_Naggsect},
+\end{equation}
+
+\begin{equation}
+	S^i_{N_{pri}} = 
+	\left(S^i_{N_{pri}}\right)_{inc}
+	+\left(S^i_{N_{pri}}\right)_{haca, ads}
+	+\left(S^i_{N_{pri}}\right)_{ox}
+	+\left(S^i_{N_{pri}}\right)_{coag}
+	\label{eqn:S_Nprisect},
+\end{equation}
+
+\begin{equation}
+	S^i_{H_{tot}} = 
+	\left(S^i_{H_{tot}}\right)_{inc}
+	+\left(S^i_{H_{tot}}\right)_{haca, ads}
+	+\left(S^i_{H_{tot}}\right)_{ox}
+	+\left(S^i_{H_{tot}}\right)_{coag}
+	\label{eqn:S_Htotsect}.
+\end{equation}
  
-\subsubsection{Coagulation}
-\label{sec:seccoag}
- 
+\subsubsection{Coagulation Source Term}
+\label{sec:sectcoagsource}
+Coagulation redistributes the total number of agglomerates and primary particles as well as hydrogen atoms among the sections. The partial coagulation source terms for ${N^i_{agg}}$, ${N^i_{pri}}$ and ${H^i_{tot}}$ can be calculated as:
+
+\begin{equation}
+	\left(S^i_{N_{agg}}\right)_{coag}
+	=
+	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
+	\left(
+	1-\frac{\delta_{jk}}{2}
+	\right)
+	\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
+	-
+	N^i_{agg}
+	\sum_{m=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg},
+	\label{eqn:IcoagNaggsect}
+\end{equation}
+
+\begin{equation}
+	\left(S^i_{N_{pri}}\right)_{coag}
+	=
+	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
+	\left(
+	1-\frac{\delta_{jk}}{2}
+	\right)
+	\eta_{p,ijk}\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
+	-
+	N^i_{pri}
+	\sum_{m=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg},
+	\label{eqn:IcoagNprisect}
+\end{equation}
+
+\begin{equation}
+	\left(S^i_{H_{tot}}\right)_{coag}
+	=
+	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
+	\left(
+	1-\frac{\delta_{jk}}{2}
+	\right)
+	\eta_{h,ijk}\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
+	-
+	H^i_{tot}
+	\sum_{m=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg}.
+	\label{eqn:IcoagHtotsect}
+\end{equation}
+\noindent where ${\delta_{jk}}$ is the Kronecker delta defined as:
+
+\begin{equation}
+	\delta_{jk}=
+	\left\{
+	\begin{array}{lr}
+		1, & \text{if } j = k\\
+		0. & \text{if } j \neq k
+	\end{array}
+	\right.
+	\label{eqn:deltakronecker}
+\end{equation}
+
 The collision frequency between sections $j$ and $k$ ($\beta^{jk}$) can be obtained from the harmonic mean of the values in the continuum ($\beta_{cont}^{jk}$) and free molecular ($\beta_{fm}^{jk}$) regimes as:
 
 \begin{equation}
-	\beta^{jk} = 				       \frac{\beta^{jk}_{fm}\beta^{jk}_{cont}}{\beta^{jk}_{fm}
+	\beta^{jk} = 				       \frac{\beta^{jk}_{fm}\cdot\beta^{jk}_{cont}}{\beta^{jk}_{fm}
 		+\beta^{jk}_{cont}}
 	\label{eqn:betahmsect},
 \end{equation}
@@ -250,61 +336,7 @@ The mean velocity, ${c^i}$, and mean stop distance of particles, ${\lambda^i_a}$
 \end{equation}
 
 
-Coagulation redistributes the total number of agglomerates and primary particles as well as hydrogen atoms among the sections. The partial coagulation source terms for ${N^i_{agg}}$, ${N^i_{pri}}$ and ${H^i_{tot}}$ can be calculated as:
 
-\begin{equation}
-	I^i_{N_{agg},coag}
-	=
-	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
-	\left(
-	1-\frac{\delta_{jk}}{2}
-	\right)
-	\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
-	-
-	N^i_{agg}
-	\sum_{k=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg},
-	\label{eqn:IcoagNaggsect}
-\end{equation}
-
-\begin{equation}
-	I^i_{N_{pri},coag}
-	=
-	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
-	\left(
-	1-\frac{\delta_{jk}}{2}
-	\right)
-	\eta_{p,ijk}\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
-	-
-	N^i_{pri}
-	\sum_{k=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg},
-	\label{eqn:IcoagNprisect}
-\end{equation}
-
-\begin{equation}
-	I^i_{H_{tot},coag}
-	=
-	\sum_{k=1}^{n_{sec}}\sum_{j=k}^{n_{sec}}
-	\left(
-	1-\frac{\delta_{jk}}{2}
-	\right)
-	\eta_{h,ijk}\eta_{ijk}\zeta^{jk}\beta^{jk}N^j_{agg}N^k_{agg}
-	-
-	H^i_{tot}
-	\sum_{k=1}^{n_{sec}}\zeta^{im}\beta^{im}N^m_{agg}.
-	\label{eqn:IcoagHtotsect}
-\end{equation}
-\noindent where ${\delta_{jk}}$ is the Kronecker delta defined as:
-
-\begin{equation}
-	\delta_{jk}=
-	\left\{
-	\begin{array}{lr}
-		1, & \text{if } j = k\\
-		0. & \text{if } j \neq k
-	\end{array}
-	\right.
-	\label{eqn:deltakronecker}
-\end{equation}
 
 In Equation~\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly formed agglomerates to the two consecutive sections in order to conserve mass during coagulation~\citep{park2005aerosol}.
 
@@ -312,15 +344,15 @@ In Equation~\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly forme
 	\eta_{ijk}=
 	\left\{
 	\begin{aligned}
-		&\frac{C^{i+1}_{agg}-C^{jk}_{agg}}{C^{i+1}_{agg}+C^i_{agg}},
+		&\frac{C^{i+1}_{agg}-C^{jk}_{agg}}{C^{i+1}_{agg}-C^i_{agg}},
 		&&
 		\text{if } C^i_{agg} \le C^{jk}_{agg} < C^{i+1}_{agg}
 		\\
-		&\frac{C^{i}_{agg}-C^{jk}_{agg}}{C^{i}_{agg}+C^{i-1}_{agg}}, 
+		&\frac{C^{i}_{agg}-C^{jk}_{agg}}{C^{i}_{agg}-C^{i-1}_{agg}}, 
 		&&
 		\text{if } C^{i-1}_{agg} \le C^{jk}_{agg} < C^{i}_{agg}
 		\\
-		&0
+		&0,
 		&&\text{else}
 	\end{aligned}
 	\right.
@@ -333,8 +365,8 @@ In Equation~\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly forme
 	\frac{C^i_{agg}}{C^{jk}_{agg}}
 	\left(
 	n^j_p + n^k_p
-	\right)
-	\label{eqn:etapcoag},
+	\right),
+	\label{eqn:etapcoag}
 \end{equation}
 
 \begin{equation}
@@ -342,12 +374,13 @@ In Equation~\eqref{eqn:IcoagNaggsect}, $\mathrm{\eta_{ijk}}$ assigns newly forme
 	\frac{C^i_{agg}}{C^{jk}_{agg}}
 	\left(
 	H^j_{agg} + H^k_{agg}
-	\right)
-	\label{eqn:etahcoag},
+	\right).
+	\label{eqn:etahcoag}
 \end{equation}
 
 
-In Equation~\eqref{eqn:IcoagNaggsect}, $\zeta^{jk}$ is the coagulation efficiency of soot particles in sections $j$ and $k$. $\zeta^{jk}=1$ means that every collision between two soot particles successfully results in formation of a new agglomerate. However, numerical models~\citep{narsimhan1985brownian} and experimental evidence~\citep{d2005surface} showed that the coagulation efficiency drastically decrease for particles smaller than 10 nm in the free molecular regime (Kn$>>$10) due to their high kinetic energy that exceeds the attractive forces~\citep{wang1991filtration}. The coagulation efficiency of two colliding particles can be described as \cite{narsimhan1985brownian}:
+In Equation~\eqref{eqn:IcoagNaggsect}, $\zeta^{jk}$ is the coagulation efficiency of soot particles in sections $j$ and $k$. A value of $\zeta^{jk} = 1$ indicates that every collision between two soot particles successfully results in the formation of a new agglomerate. However, numerical models~\citep{narsimhan1985brownian} and experimental evidence~\citep{d2005surface} have shown that coagulation efficiency drastically decreases for particles smaller than 10~nm in the free-molecular regime ($\mathrm{Kn}\gg10$), due to their high kinetic energy exceeding the magnitude of attractive forces~\citep{wang1991filtration}. The coagulation efficiency between two colliding particles can be described by~\citep{narsimhan1985brownian}:
+
 
 \begin{equation}
 	\zeta^{ij} = 1 - 
@@ -359,91 +392,75 @@ In Equation~\eqref{eqn:IcoagNaggsect}, $\zeta^{jk}$ is the coagulation efficienc
 \noindent where $\Phi_0$ is the potential well depth, i.e., the minimum interaction energy between two colliding particles. \citet{hou2020coagulation} calculated $\Phi_0$ for soot particles ranging from 1 to 15 nm by considering the attractive and repulsive interactions between constituent carbon and hydrogen atoms, and proposed an equation based on the reduced diameter, $d^{jk}_r$, of colliding particles as:
 
 \begin{equation}
-	\Phi^{ij}_0 = -6.6891\times10^{-23} (d^{jk}_r)^3 + 1.244\times10^{-21} (d^{jk}_r)^2 + 1.1394\times10^{-20} d^{jk}_r - 5.5373\times10^{-21}
+	\Phi^{ij}_0 = -6.6891\times10^{-23} (d^{jk}_r)^3 + 1.1244\times10^{-21} (d^{jk}_r)^2 + 1.1394\times10^{-20} d^{jk}_r - 5.5373\times10^{-21},
 	\label{eqn:coageffphi}
 \end{equation}
 
 \begin{equation}
-	d^{jk}_r = \frac{d^i_c\cdot d^j_c}{d^i_c+d^j_c}
+	d^{jk}_r = \frac{d^i_c\cdot d^j_c}{d^i_c+d^j_c}.
 	\label{eqn:coageffredcueddia}
 \end{equation}
 
-Equation~\eqref{eqn:coageffphi} is valid for $d^{jk}_r$ between 1 and 7 nm, and $\zeta^{ij}$ is assumed as unity for particles with reduced diameter larger than 7 nm.
+Equation~\eqref{eqn:coageffphi} is valid for $d^{jk}_r$ between 1 and 7~nm, and $\zeta^{ij}$ is assumed as unity for particles with a reduced diameter larger than 7~nm.
 
-\subsubsection{Source terms calculations}
 
-The source terms of tracked soot variables (which appear in Equations~\ref{eqn:sootconstuv},~\ref{eqn:sootpsr},~and~\ref{eqn:sootpfr}) are split into four parts showing the contribution of inception, surface growth, oxidation and coagulation. The effect of HACA and PAH adsorption are combined (denoted by the subscript haca,ads) because they are similar mass-gaining mechanisms.
-
-\begin{equation}
-	S^i_{N_{agg}} = 
-	\left(S^i_{N_{agg}}\right)_{inc}
-	+\left(S^i_{N_{agg}}\right)_{haca, ads}
-	+\left(S^i_{N_{agg}}\right)_{ox}
-	+\left(S^i_{N_{agg}}\right)_{coag}
-	\label{eqn:S_Naggsect},
-\end{equation}
-
-\begin{equation}
-	S^i_{N_{pri}} = 
-	\left(S^i_{N_{pri}}\right)_{inc}
-	+\left(S^i_{N_{pri}}\right)_{haca, ads}
-	+\left(S^i_{N_{pri}}\right)_{ox}
-	+\left(S^i_{N_{pri}}\right)_{coag}
-	\label{eqn:S_Nprisect},
-\end{equation}
-
-\begin{equation}
-	S^i_{H_{tot}} = 
-	\left(S^i_{H_{tot}}\right)_{inc}
-	+\left(S^i_{H_{tot}}\right)_{haca, ads}
-	+\left(S^i_{H_{tot}}\right)_{ox}
-	+\left(S^i_{H_{tot}}\right)_{coag}
-	\label{eqn:S_Htotsect}.
-\end{equation}
+\subsubsection{Other Source terms}
+\label{sec:sectothersource}
 
 Inception introduces equal number of agglomerates and primary particles to the first section.
 
 \begin{equation}
+	\left(S^i_{N_{agg}}\right)_{inc} =
+	\left\{
 	\begin{aligned}
-		\left(S^i_{N_{agg}}\right)_{inc} =
-		&\frac{1}{Av}\frac{I_{N, inc}}{C^i_{agg}}, && i=1.
+		&\frac{1}{Av}\frac{I_{N, inc}}{C^i_{agg}}, && \text{if } i=1\\
+		& 0.0                                   , && \text{else}
 	\end{aligned}
+	\right.
 	\label{eqn:S_Nagg_incsect}
 \end{equation}
 
 \begin{equation}
+	\left(S^i_{N_{pri}}\right)_{inc} =
+	\left\{
 	\begin{aligned}
-		\left(S^i_{N_{pri}}\right)_{inc} =
-		&\frac{1}{Av}\frac{I_{N, inc}}{C^i_{agg}}, && i=1.
+		&\frac{1}{Av}\frac{I_{N, inc}}{C^i_{agg}}, && \text{if } i=1\\
+		& 0.0                                   , && \text{else}
 	\end{aligned}
+	\right.
 	\label{eqn:S_Npri_incsect}
 \end{equation}
 
+
 \begin{equation}
+	\left(S^i_{H_{tot}}\right)_{inc} =
+	\left\{
 	\begin{aligned}
-		\left(S^i_{H_{tot}}\right)_{inc} =
-		&I_{H, inc}, && i=1.
+		&I_{H, inc},  && \text{if } i=1\\
+		& 0.0       . && \text{else}
 	\end{aligned}
+	\right.
 	\label{eqn:S_Htot_incsect}
 \end{equation}
 
-Surface growth and PAH adsorption increase the carbon mass and hydrogen content of agglomerates, and transfer them to upper sections. The removal rate of agglomerates from the original section due to surface growth and PAH adsorption must be equal to the addition rate of agglomerates to the target section to conserve the mass, and it is calculated by dividing the mass growth rate by the difference of the mass of the adjacent sections.
+Surface growth and PAH adsorption increase both the carbon mass and hydrogen content of agglomerates, transferring them to higher sections. The rate at which agglomerates are removed from the original section and added to the target section is calculated to ensure mass conservation. Specifically, it is determined by dividing the mass growth rate by the difference in mass of adjacent sections as:
+
 
 \begin{equation}
 	\left(S^i_{N_{agg}}\right)_{haca, ads}=
 	\frac{1}{Av}
 	\left\{
 	\begin{aligned}
-		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}
+		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},haca}}{C^{i}_{agg}-C^{i-1}_{agg}}
-		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}
+		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}},
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
-		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}
+		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}.
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -457,16 +474,16 @@ As agglomerates move up/down through sections, they carry the number of primary 
 	\frac{1}{Av}
 	\left\{
 	\begin{aligned}
-		&-\frac{I^i_{C_{tot},gr}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}
+		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i-1}_p
-		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}n^{i}_p
+		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}n^{i}_p,
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
-		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i-1}_p
+		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i-1}_p,
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -479,18 +496,18 @@ As agglomerates move up/down through sections, they carry the number of primary 
 	\left\{
 	\begin{aligned}
 		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg} 
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads}
+		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
 		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg}
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads}
+		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads},
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads}
+		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads}.
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -506,19 +523,19 @@ Similarly, the agglomerates lose carbon mass by oxidation, and descend to the lo
 	\begin{aligned}
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}}
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}},
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}},
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -532,19 +549,19 @@ Similarly, the agglomerates lose carbon mass by oxidation, and descend to the lo
 	\begin{aligned}
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}n^{i+1}_p
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}}
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}n^{i+1}_p
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i}_p
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i}_p,
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&
 		-
-		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i}_p
+		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}n^{i}_p,
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
@@ -559,56 +576,39 @@ Similarly, the agglomerates lose carbon mass by oxidation, and descend to the lo
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i+1}_{agg}
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}}H^{i}_{agg}
-		+ I^{i}_{H_{tot}, ox}
+		+ I^{i}_{H_{tot}, ox},
 		&&
 		\text{if } i = 1
 		\\
 		&\frac{I^{i+1}_{C_{tot},ox}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i+1}_{agg}
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i}_{agg}
-		+ I^{i}_{H_{tot}, ox}
+		+ I^{i}_{H_{tot}, ox},
 		&&
 		\text{if } 1 < i < n_{sec}
 		\\
 		&
 		-
 		\frac{I^{i}_{C_{tot},ox}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i}_{agg}
-		+ I^{i}_{H_{tot}, ox}
+		+ I^{i}_{H_{tot}, ox}.
 		&&\text{if } i=n_{sec}
 	\end{aligned}
 	\right.
 	\label{eqn:S_Htot_oxsect}
 \end{equation}
 
-The coagulation source terms is equal to the partial source terms of each section.
-
-\begin{equation}
-	\left(S^i_{N_{agg}}\right)_{coag}= I^i_{N_{agg},coag},
-\end{equation}
-
-\begin{equation}
-	\left(S^i_{N_{pri}}\right)_{coag}= I^i_{N_{pri},coag},
-\end{equation}
-
-\begin{equation}
-	\left(S^i_{H_{tot}}\right)_{coag}= I^i_{H_{tot},coag}.
-\end{equation}
 
 \subsection{Monodisperse Population Balance Model}
 \label{sec:mpbm}
-The MPBM used in this study is based on the monodisperse model presented \citep{kholghy2021surface}. It tracks the total number concentration of primary particles ($N_{pri}$) and agglomerates $N_{agg}$, and the total carbon ($C_{tot}$) and hydrogen ($H_{tot}$) content of soot.
-
-%\subsubsection{Coagulation calculations}
-%\label{sec:monocoag}
-The coagulation model follows the same principles as the SPBM, but the calculations are greatly simplified due to the monodispersity assumption. This approach has been shown to achieve accuracy comparable to that of DEM and SPBM when applied with well-justified assumptions~\citep{Kelesidis2017Flame, kelesidis2019estimating}. The rate of decay of agglomerates ($I_{coag}$) is simply described as:
+The MPBM used in this study is based on the monodisperse model presented in \citep{kholghy2021surface}, and it tracks $N_{pri}$, $N_{agg}$, $C_{tot}$ and $H_{tot}$. The coagulation model follows the same principles as the SPBM, but the calculations are greatly simplified due to the monodispersity assumption. This approach has been shown to achieve accuracy comparable to that of DEM and SPBM when applied with well-justified assumptions~\citep{Kelesidis2017Flame, kelesidis2019estimating}. The rate of decay of agglomerates is simply described as:
 
 \begin{equation}
 	I_{coag} = -\frac{1}{2}\zeta\beta N^2_{agg}
 	\label{eqn:Icoag},
 \end{equation}
-where ${\beta}$ is the collision frequency of agglomerates for the free molecular ($\mathrm{Kn>10}$) to continuum regime (${Kn<0.1}$). The value of ${\beta}$ in the transition regime (${0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum (${\beta_{cont}}$) and free molecular (${\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of polydispersity~\citep{kelesidis2021self} as:
+where $\zeta$ is the collision efficiency of agglomerates calculated using Equation~\eqref{eqn:coageff}, and ${\beta}$ is the collision frequency of agglomerates for the free-molecular ($\mathrm{Kn>10}$) to continuum regimes (${Kn<0.1}$). The value of ${\beta}$ in the transition regime (${0.1<Kn<10}$) can be calculated from the harmonic mean of the continuum (${\beta_{cont}}$) and free-molecular (${\beta_{fm}}$) regime values. Additionally, an enhancement factor of \%82 is applied to take into account the effect of polydispersity~\citep{kelesidis2021self} as:
 \begin{equation}
-	\beta = 1.82\frac{\beta_{fm}\beta_{cont}}{\beta_{fm}+\beta_{cont}}
+	\beta = 1.82\frac{\beta_{fm}\cdot\beta_{cont}}{\beta_{fm}+\beta_{cont}}
 	\label{eqn:betahmmono},
 \end{equation}
 \begin{equation}
@@ -616,7 +616,7 @@ where ${\beta}$ is the collision frequency of agglomerates for the free molecula
 	\label{eqn:betafmmono},
 \end{equation}
 \begin{equation}
-	\beta_{cont} = 8\pi d_c D,
+	\beta_{cont} = 8\pi d_m D,
 	\label{eqn:betacontmono}
 \end{equation}
 \noindent where $d_c$, $D$, and $m_{agg}$ are calculated using Equations~\eqref{eqn:d_c},~\eqref{eqn:diff},~and~\eqref{eqn:m_agg}, respectively.
@@ -625,12 +625,12 @@ Alternatively, $\mathrm{\beta}$ can be obtained using Fuchs interpolation~\citep
 \begin{equation}
 	\beta = \beta_{cont}
 	\left(
-		\frac{d_c}{d_c+2\sqrt{2}\delta} +
-		\frac{8D}{\sqrt{2}c d_c}
+	\frac{d_c}{d_c+2\sqrt{2}\delta} +
+	\frac{8D}{\sqrt{2}c d_c}
 	\right)^{-1},
 	\label{eqn:betafuchsmono}
 \end{equation}
-\noindent where $c$ (mean velocity of particles) and $\delta$ (mean stop distance of particles) are calculated using Equations~\eqref{eqn:meanvel}~and~\eqref{eqn:meandist}. In Equation~\eqref{eqn:Icoag}, $\zeta$ is calculated using Equation~\eqref{eqn:coageff}. The source terms of tracked variables combines the effect of the inception, surface growth, oxidation and coagulation.
+\noindent where $c$ (mean velocity of particles) and $\delta$ (mean stop distance of particles) are calculated using Equations~\eqref{eqn:meanvel}~and~\eqref{eqn:meandist}. The source terms of tracked variables combines the effect of the inception, surface growth, oxidation and coagulation.
 
 \begin{equation}
 	S_{N_{agg}} = \frac{I_{N,inc}}{n_{c,min}}+I_{coag},
@@ -641,11 +641,12 @@ Alternatively, $\mathrm{\beta}$ can be obtained using Fuchs interpolation~\citep
 	\label{eqn:S_N_pri}
 \end{equation}
 \begin{equation}
-	S_{C_{tot}} = I_{C_{tot},inc}+I_{C_{tot},haca}+I_{C_{tot},ads}+I_{C_{tot},ox},
+	S_{C_{tot}} = I_{C_{tot},inc}+I_{C_{tot},haca}+I_{C_{tot},ads} - I_{C_{tot},ox},
 	\label{eqn:S_C_tot}
 \end{equation}
 \begin{equation}
-	S_{H_{tot}} = I_{H_{tot},inc}+I_{H_{tot},haca}+I_{H_{tot},ads}+I_{H_{tot},ox}.
+	S_{H_{tot}} = I_{H_{tot},inc}+I_{H_{tot},haca}+I_{H_{tot},ads} - I_{H_{tot},ox}.
 	\label{eqn:S_H_tot}
 \end{equation}
+
 

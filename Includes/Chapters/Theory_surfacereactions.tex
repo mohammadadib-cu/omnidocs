@@ -1,17 +1,17 @@
-\section{Surface Reactions model}
+\section{Surface reactions model}
 \label{sec:surfreacmodel}
-The heterogeneous surface reactions are described by HACA. The soot growth in HACA scheme is based on a sequential process similar to PAH growth. The hydrogenated arm-chair sites ($\mathrm{C_{soot}-H}$) on the edge of aromatic rings are dehydrogenated by H abstraction forming $\mathrm{C_{soot\mbox{\textdegree}}}$ that bonds with $\mathrm{C_2H_2}$ resulting in an additional aromatic ring with hydrogenated site. These sites can also be attacked by $\mathrm{O_2}$ or $\mathrm{OH}$ leading to removal of carbon from soot particles by oxidation. The elementary reactions that describe this sequential process are listed in Table~\ref{tab:HACA}.
+Heterogeneous surface reactions are described by HACA. The soot growth in HACA scheme is based on a sequential process similar to PAH growth. The hydrogenated armchair sites ($\mathrm{C_{soot}-H}$) on the edge of aromatic rings are dehydrogenated by H abstraction forming $\mathrm{C_{soot\mbox{\textdegree}}}$ that bonds with $\mathrm{C_2H_2}$ resulting in an additional aromatic ring with hydrogenated sites. These sites can also be attacked by $\mathrm{O_2}$ or $\mathrm{OH}$ leading to removal of carbon from soot particles by oxidation. The elementary reactions that describe this sequential process are listed in Table~\ref{tab:HACA}.
 The rate of mass growth by HACA is obtained from the reaction of $\mathrm{C_2H_2}$ with dehydrogenated sites as:
 
 \begin{equation}
-	\omega^i_{gr} = \alpha^i k_{f4} [\mathrm{C_2H_2}][\mathrm{C_{soot\mbox{\textdegree}}}]
+	\omega^i_{gr} = \alpha^i k_{f4} [\mathrm{C_2H_2}][\mathrm{C}^i_\mathrm{soot\mbox{\textdegree}}]
 	\label{eqn:hacaRate},
 \end{equation}
 
-\noindent  where ${k_{f4}}$ denotes the forward rate of Reaction~\eqref{reac:haca4} in Table~\ref{tab:HACA}, and $\mathrm{[C^i_{soot\mbox{\textdegree}}]}$ is obtained by multiplying the surface density of dehydrogenated sites, $\mathrm{\chi_{soot\mbox{\textdegree}}}$ with total surface area of soot (per unit of mass of gas mixture) as:
+\noindent  where ${k_{f4}}$ denotes the forward rate of Reaction~\eqref{reac:haca4} in Table~\ref{tab:HACA}, and $\mathrm{[C^i_{soot\mbox{\textdegree}}]}$ is obtained by multiplying the surface density of dehydrogenated sites, $\mathrm{C}^i_\mathrm{soot\mbox{\textdegree}}$ by the total surface area of soot (per unit of mass of gas mixture) of each section as:
 
 \begin{equation}
-	[\mathrm{C^i_{soot\mbox{\textdegree}}}] = \frac{\rho}{Av}A^i_{tot}\cdot\chi_{soot\mbox{\textdegree}}
+	[\mathrm{C}^i_\mathrm{soot\mbox{\textdegree}}] = \frac{\rho}{Av}A^i_{tot}\cdot\chi_{soot\mbox{\textdegree}}
 	\label{eqn:csoot0},
 \end{equation}
 
@@ -23,20 +23,20 @@ The rate of mass growth by HACA is obtained from the reaction of $\mathrm{C_2H_2
 	{k_{r1}[\mathrm{H_2}]+k_{r2}[\mathrm{H_2O}]+k_{f3}[\mathrm{H}]+k_{f4}[\mathrm{C_2H_2}]+k_{f5}[\mathrm{O_2}]} \chi_{soot-{H}},
 	\label{eqn:chisoot0}
 \end{equation}
-\noindent where ${\chi_{soot-{H}}}$ is the surface density of hydrogenated sites estimated based on the assumption that soot ``surface is assumed to be composed of outwardlooking PAH edges with PAH molecular moieties assembled into turbostratic structures"~\citep{frenklach2019new}. Considering the layer spacing of 3.15$\mathrm{\AA}$ and 2 C–H bonds per benzene ring length, the surface density of hydrogenated sites, $\chi_{{soot}-H}$, is calculated to be $0.23\:\mathrm{site/\AA^2}=2.3\times10^{19}$ $ \mathrm{site/m^2}$, which gives the maximum theoretical limit of the reaction sites.
+\noindent where ${\chi_{soot-{H}}}$ is the surface density of hydrogenated sites estimated based on the assumption that soot ``surface is assumed to be composed of outwardlooking PAH edges with PAH molecular moieties assembled into turbostratic structures"~\citep{frenklach2019new}. Considering the layer spacing of 3.15$\mathrm{\AA}$ and two C–H bonds per benzene ring length, $\chi_{{soot}-H}$ is calculated to be $0.23\:\mathrm{site/\AA^2}=2.3\times10^{19}$ $ \mathrm{site/m^2}$, which gives the maximum theoretical limit of the reaction sites.
 
-In Equation~\eqref{eqn:hacaRate}, $\alpha$ is the surface reactivity factor between 0 and 1 that represents the decline of reaction sites from the theoretical limit due to PAH layer orientation, particle aging, growth and maturity~\citep{haynes1982surface, harris1985chemical}, and it has been observed to depend on temperature-time-history~\cite{homann1985formation, dasch1985decay}. The value of $\alpha$ has been described using constant target-specific values as well as empirical equations based on particle size and flame temperature. A detailed review of these can be found in the chapter 4 of \citep{veshkini2015understanding}.  Here, the empirical equation proposed by \citet{appel2000kinetic} is used to calculate $\mathrm{\alpha}$:
+In Equation~\eqref{eqn:hacaRate}, $\alpha^i$ is the surface reactivity factor between 0 and 1 that represents the decline of reaction sites from the theoretical limit due to PAH layer orientation, particle aging, growth and maturity~\citep{haynes1982surface, harris1985chemical}, and it has been observed to depend on temperature-time history~\cite{homann1985formation, dasch1985decay}. The value of $\alpha$ has been described using constant target-specific values as well as empirical equations based on particle size and flame temperature. A detailed review of these can be found in Chapter~4 of \citep{veshkini2015understanding}.  Here, the empirical equation proposed by \citet{appel2000kinetic} is used to calculate $\alpha^i$ as:
 \begin{equation}
 	\alpha^i = \tanh 
 	\left(
-	\frac{12.56 - 0.00563\cdot T}
+	\frac{12.56 - 0.00563 T}
 	{\mbox{log}_{10}
-		\left( \frac{\rho_{soot}\cdot Av}{W_{carbon}} \frac{\pi}{6}{d^i_p}^3 \right) } -1.38+0.00068\cdot T
+		\left( \frac{\rho_{soot}\cdot Av}{W_{carbon}} \frac{\pi}{6}{d^i_p}^3 \right) } -1.38+0.00068T
 	\right)
 	\label{eqn:alpha}.
 \end{equation}
 
-Alternatively, $\mathrm{\alpha}$ can be related to the H/C ratio of soot particles by assuming that all hydrogen atoms reside on the particle surface~\citep{blanquart2009joint} as:
+Alternatively, $\alpha^i$ can be related to the H/C ratio of soot particles by assuming that all hydrogen atoms reside on the particle surface~\citep{blanquart2009joint} as:
 
 \begin{equation}
 	\alpha^i = \frac{H^i_{tot}}{C^i_{tot}}
@@ -46,15 +46,15 @@ Alternatively, $\mathrm{\alpha}$ can be related to the H/C ratio of soot particl
 The contribution of HACA to growth source terms can be computed from HACA rates considering the number of carbon atoms in $\mathrm{C_2H_2}$ and number of arm-chair and zig-zag hydrogenated sites on soot particle~\cite{blanquart2009analyzing} using
 
 \begin{equation}
-	I^i_{C_{tot},gr} = 2\omega^i_{gr}/\rho
+	I^i_{C_{tot},haca} = 2\omega^i_{gr}/\rho
 	\label{eqn:IiCtotgr},
 \end{equation}
 \begin{equation}
-	I^i_{H_{tot},gr} = 0.25\omega^i_{gr}/\rho
+	I^i_{H_{tot},haca} = 0.25\omega^i_{gr}/\rho
 	\label{eqn:IiHtotgr}.
 \end{equation}
 
-The rate of concentration change of $\mathrm{C_2H_2}$, and H radical due to HACA is written as:
+The rates of concentration change of $\mathrm{C_2H_2}$ and H radical due to HACA are written as:
 
 \begin{equation}
 	\left(\frac{d\left[{\mathrm{C_2H_2}}\right]}{dt}\right)_{gr} = -\sum_{i=1}^{n_{sec}}\omega^i_{gr},
@@ -72,27 +72,27 @@ The rate of concentration change of $\mathrm{C_2H_2}$, and H radical due to HACA
 
 \renewcommand{\arraystretch}{1.5}
 \begin{table}
-	\caption{Arrhenius rate coefficients of the various surface reactions in HACA~\citep{appel2000kinetic}, $\mathrm{k=AT^n\cdot e^{-E/RT}}$}
+	\caption{Arrhenius rate coefficients of the surface reactions in HACA~\citep{appel2000kinetic}, ${k=AT^n\cdot e^{-E/RT}}$.}
 	\label{tab:HACA}
 	\centering
 	\begin{tabular}{l l l l l l}
 		\hline
-		No. & Reaction & \hspace{0.1cm} & A~$\mathrm{\left[ {m^3}/{mol\cdot s} \right]}$ & n & $\mathrm{{E}/{R} [K]}$  \\
+		No. & Reaction & \hspace{0.1cm} & A~$\mathrm{\left[ {m^3}/{mol\cdot s} \right]}$ & n & {E}/{R}~[K]  \\
 		\hline
-		\refstepcounter{reaction}\label{reac:haca1}\thetag{\thereaction} & \ce{C_{soot-H} + H <--> C_{soot\textdegree} + H_2}  & f & $4.17\times 10^7$ & 0 & 6542.52 \\
+		\refstepcounter{reaction}\label{reac:haca1}\thetag{\thereaction} & \ce{C_{soot-H} + H <-->[$k_{f,1}$][$k_{r,1}$] C_{soot\textdegree} + H_2}  & f & $4.17\times 10^7$ & 0 & 6542.52 \\
 		& & r & $3.9\times 10^6$ & 0 & 5535.98 \\
-		{\refstepcounter{reaction}\label{reac:haca2}\thetag{\thereaction}} & \ce{C_{soot-H} + OH <--> C_{soot\textdegree} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
+		{\refstepcounter{reaction}\label{reac:haca2}\thetag{\thereaction}} & \ce{C_{soot-H} + OH <-->[$k_{f,2}$][$k_{r,2}$] C_{soot\textdegree} + H_2O} & f & $10^4$ & 0.734 & 719.68\\
 		&  & r & 3.68$\times 10^2$ & 1.139 & 8605.94 \\
-		\refstepcounter{reaction}\label{reac:haca3}\thetag{\thereaction} & \ce{C_{soot\textdegree} + H -> C_{soot-H}} & f & $10^4$ & 0.734 & 719.68\\
-		{\refstepcounter{reaction}\label{reac:haca4}\thetag{\thereaction}} & \ce{C_{soot\textdegree} + C_2H_2 -> C_{soot-H} + H} & f & 80 & 1.56 & 1912.43\\
-		\refstepcounter{reaction}\label{reac:haca5}\thetag{\thereaction} & \ce{C_{soot\textdegree} + O_2 -> 2CO + product} & f & 2.2 $\times 10^6$ & 0 & 3774.53\\
-		\refstepcounter{reaction}\label{reac:haca6}\thetag{\thereaction} & \ce{C_{soot}-H + OH -> CO + product} & f & \multicolumn{3}{c}{$\gamma_{OH}$ = 0.13} \\
+		\refstepcounter{reaction}\label{reac:haca3}\thetag{\thereaction} & \ce{C_{soot\textdegree} + H ->[$k_{f,3}$] C_{soot-H}} & f & $10^4$ & 0.734 & 719.68\\
+		{\refstepcounter{reaction}\label{reac:haca4}\thetag{\thereaction}} & \ce{C_{soot\textdegree} + C_2H_2 ->[$k_{f,4}$] C_{soot-H} + H} & f & 80 & 1.56 & 1912.43\\
+		\refstepcounter{reaction}\label{reac:haca5}\thetag{\thereaction} & \ce{C_{soot\textdegree} + O_2 ->[$k_{f,5}$] 2CO + product} & f & 2.2 $\times 10^6$ & 0 & 3774.53\\
+		\refstepcounter{reaction}\label{reac:haca6}\thetag{\thereaction} & \ce{C_{soot}-H + OH ->[$k_{f,6}$] CO + product} & f & \multicolumn{3}{c}{$\gamma_{OH}$ = 0.13} \\
 		\hline
 	\end{tabular}
 \end{table}
 
 
-The carbons on the surface of soot are oxidized via reaction with $\mathrm{O_2}$ (Reaction~\eqref{reac:haca5}) and $\mathrm{OH}$ (Reaction~\eqref{reac:haca6}) which decreases total carbon of soot and releases CO and $\mathrm{H_2}$ to gas mixture. $\mathrm{O_2}$ and $\mathrm{OH}$ oxidation rates are calculated as
+The carbons on the surface of soot are oxidized via reaction with $\mathrm{O_2}$ (Reaction~\eqref{reac:haca5}) and $\mathrm{OH}$ (Reaction~\eqref{reac:haca6}). As a result, oxidation decreases the total carbon of soot and releases CO and $\mathrm{H_2}$ to the gas mixture. The $\mathrm{O_2}$ and $\mathrm{OH}$ oxidation rates are calculated as:
 
 \begin{equation}
 	\omega^i_{ox,O_2} = \alpha^i k_{f5} [\mathrm{O_2}][C^i_{soot\mbox{\textdegree}}],
@@ -117,28 +117,28 @@ The carbons on the surface of soot are oxidized via reaction with $\mathrm{O_2}$
 \noindent where $m_{OH}=2.824\times10^{-26}$ kg, and $d_{OH}=0.3$ nm~\citep{shepherd2022measurement} are the mass and equivalent diameter of a OH radical, respectively. Then, the oxidation source term is calculated considering the number of carbon atoms removed from soot through each oxidation pathway as:
 
 \begin{equation}
-	I^i_{C_{tot},ox} = -(2\omega^i_{ox,O_2} + \omega^i_{ox,OH})/\rho
+	I^i_{C_{tot},ox} = (2\omega^i_{ox,O_2} + \omega^i_{ox,OH})/\rho
 	\label{eqn:ICtot}.
 \end{equation}
 
-We assume that oxidation does not change the number of surface hydrogen atoms. The rate of change of concentration of CO, $\mathrm{O_2}$ and OH by oxidation is calculates as:
+The rate of change of concentration of CO, $\mathrm{O_2}$ and OH by oxidation is calculates as:
 
 \begin{equation}
-	\left(\frac{d\left[{\mathrm{CO}}\right]}{dt}\right)_{ox} = 2\sum_{i=1}^{n_{sec}}\omega^i_{ox,O_2}
-	\label{eqn:COrate_ox}.
+	\left(\frac{d\left[{\mathrm{CO}}\right]}{dt}\right)_{ox} = 2\sum_{i=1}^{n_{sec}}\omega^i_{ox,O_2},
+	\label{eqn:COrate_ox}
 \end{equation}
 
 \begin{equation}
-	\left(\frac{d\left[{\mathrm{O_2}}\right]}{dt}\right)_{ox} = -\sum_{i=1}^{n_{sec}}\omega^i_{ox,O_2}
-	\label{eqn:O2rate_ox}.
+	\left(\frac{d\left[{\mathrm{O_2}}\right]}{dt}\right)_{ox} = -\sum_{i=1}^{n_{sec}}\omega^i_{ox,O_2},
+	\label{eqn:O2rate_ox}
 \end{equation}
 
 \begin{equation}
-	\left(\frac{d\left[{\mathrm{OH}}\right]}{dt}\right)_{ox} = -\sum_{i=1}^{n_{sec}}\omega^i_{ox,OH}
-	\label{eqn:Hrate_ox}.
+	\left(\frac{d\left[{\mathrm{OH}}\right]}{dt}\right)_{ox} = -\sum_{i=1}^{n_{sec}}\omega^i_{ox,OH},
+	\label{eqn:Hrate_ox}
 \end{equation}
 
 \begin{equation}
-	\left(\frac{d\left[{\mathrm{H}}\right]}{dt}\right)_{ox} = \sum_{i=1}^{n_{sec}}\omega^i_{ox,OH}
-	\label{eqn:OHrate_ox}.
+	\left(\frac{d\left[{\mathrm{H}}\right]}{dt}\right)_{ox} = \sum_{i=1}^{n_{sec}}\omega^i_{ox,OH}.
+	\label{eqn:OHrate_ox}
 \end{equation}

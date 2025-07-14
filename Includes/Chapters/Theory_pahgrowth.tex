@@ -1,7 +1,10 @@
 
 \section{PAH growth models}
 \label{sec:pahgrowmodel}
-Here, four different PAH growth models are used to describe the conversion of PAHs to incipient particles and their adsorption on existing agglomerates. As mentioned before, the soot inception and surface growth is not fully understood yet, but there is substantial evidence to support the collision of PAHs as a key step in inception and surface growth~\citep{zhao2003measurement, abid2009quantitative, happold2009soot}. So, global inception models have been developed based on PAH collision consisting of different pathways with single- or multi-step reactions. The collision frequency of gaseous species including PAH molecules and polymers depends on their mass and diameter, and it is obtained as:
+
+Four different PAH growth models are implemented in Omnisoot to describe the conversion of PAHs into incipient particles and their adsorption onto existing agglomerates. In other words, these models explain the calculation of $I_{\varphi, inc}$ and $I^i_{\varphi, ads}$. The implemented models are: Irreversible Dimerization~\cite{frenklach1991detailed}, Reactive Dimerization~\citep{kholghy2018reactive}, Dimer Coalescence~\citep{blanquart2009joint}, and E-Bridge Modified~\citep{frenklach2020mechanism}. All models are based on PAH collision, as supported by ample evidence in the literature~\citep{zhao2003measurement, abid2009quantitative, happold2009soot}, but they differ in terms of reversibility, temperature dependence, and the number of steps involved. The collision frequency of gaseous species including PAH molecules and polymers depends on their mass and diameter, and it is obtained as:
+
+The collision frequency of gaseous species, including PAH molecules and polymers, depends on their mass and diameter and is calculated as:
 
 \begin{equation}
 	\beta_{dim_{jk}}=
@@ -13,17 +16,17 @@ Here, four different PAH growth models are used to describe the conversion of PA
 
 \begin{equation}
 	d_{r}=
-	\frac{d_{{PAH}_k}\cdot d_{\mathrm{PAH}_j}}{d_{{PAH}_k}+d_{{PAH}_k}},
+	\frac{d_{{PAH}_k}\cdot d_{{PAH}_j}}{d_{{PAH}_k}+d_{{PAH}_j}},
 	\label{eqn:drPAH}
 \end{equation}
 
 \begin{equation}
 	m_{r}=
-		\frac{m_{{PAH}_k}\cdot m_{{PAH}_j}}{m_{{PAH}_j}+ m_{\mathrm{PAH}_k}},
+	\frac{m_{{PAH}_k}\cdot m_{{PAH}_j}}{m_{{PAH}_k}+ m_{{PAH}_j}},
 	\label{eqn:mrPAH}
 \end{equation}
 
-\noindent where $m_{PAH_j}$ and $d_{PAH_j}$ are the mass and equivalent diameter $\mathrm{j}^{th}$ PAH molecule, respectively, that are obtained as:
+\noindent where $m_{PAH_j}$ and $d_{PAH_j}$ are the mass and equivalent diameter of the ${j}^{th}$ PAH molecule, respectively, and are obtained as:
 
 \begin{equation}
 	m_{PAH_j}=
@@ -34,7 +37,7 @@ Here, four different PAH growth models are used to describe the conversion of PA
 \begin{equation}
 	d_{PAH_j}=
 	\left(
-		\frac{6\cdot m_{{PAH}_j}}{\pi\cdot\rho_{{PAH}_j}}
+	\frac{6\cdot m_{{PAH}_j}}{\pi\cdot\rho_{{PAH}_j}}
 	\right)^{1/3},
 	\label{eqn:dPAH}
 \end{equation}
@@ -45,11 +48,11 @@ Here, four different PAH growth models are used to describe the conversion of PA
 	\rho_{PAH_j}= 
 	171943.5197
 	\frac{W_{carbon}\cdot n_{C,{PAH}_j}+W_{hydrogen}\cdot n_{H,{PAH}_j}}
-	{n_{C,{PAH}_j}+n_{H,\mathrm{PAH}_j}},
+	{n_{C,{PAH}_j}+n_{H,{PAH}_j}},
 	\label{eqn:rhoPAH}
 \end{equation}
 
-\noindent where ${n_{C,{PAH}_j}}$ and ${n_{H,{PAH}_j}}$ denote the number of carbon and hydrogen atoms in $j^{th}$ PAH molecule, respectively. The collision frequency of $\mathrm{PAH}_j$ and soot agglomerates in each section can be determined for the entire regime by harmonic mean of the collision frequency in the free molecular and continuum regimes as:
+\noindent where ${n_{C,{PAH}_j}}$ and ${n_{H,{PAH}_j}}$ denote the number of carbon and hydrogen atoms in the $j^{th}$ PAH molecule, respectively. The collision frequency of $\mathrm{PAH}_j$ and soot agglomerates in each section can be determined for the entire regime by harmonic mean of the collision frequencies in the free-molecular and continuum regimes as:
 
 \begin{equation}
 	\beta^i_{ads_j}=
@@ -69,32 +72,33 @@ Here, four different PAH growth models are used to describe the conversion of PA
 \end{equation}
 
 \begin{equation}
-	\beta^i_{cont, ad_js}=
-		\frac{2 k_B T}{3 \mu}
-		\left[
-			\frac{C^i\left(d_m\right)}{d^i_g}+
-			\frac{C^i\left(d_{PAH_j}\right)}{d_{PAH_j}}
-		\right]
-		\left(d_g+d_{PAH_j}\right).
+	\beta^i_{cont, ads_j}=
+	\frac{2 k_B T}{3 \mu}
+	\left[
+	\frac{C^i\left(d_m\right)}{d^i_g}+
+	\frac{C^i\left(d_{PAH_j}\right)}{d_{PAH_j}}
+	\right]
+	\left(d_g+d_{PAH_j}\right),
 	\label{eqn:betacontads}
 \end{equation}
-where $C^i$ is the Cunningham factor calculated using Equation~\eqref{eqn:cun}.
+where $C^i$ is the Cunningham correction factor calculated using Equation~\eqref{eqn:cun}.
 \subsection{Irreversible Dimerization}
+\label{sec:irrevdim}
 
-The Irreversible Dimerization is based on the collision of a pair of PAHs molecules forming a dimer. The sequential growth continues leading formation of trimers, and tetramers until the PAH cluster mass reaches a threshold that can be considered a solid particle. For practical purposes, dimer is usually considered as an incipient particle that grows by surface growth and coagulation. A single-step collision of two similar PAHs forms a new dimer as:
+The Irreversible Dimerization is based on the collision of a pair of PAH molecules forming a dimer. The sequential growth continues leading formation of trimers and tetramers until the PAH cluster mass reaches a threshold that can be considered a solid particle. For practical purposes, a dimer is usually considered as an incipient particle that grows by surface growth and coagulation. A single-step collision of two similar PAHs forms a new dimer as:
 
 \reaction[react:irrevdiminc]{
 	$\mathrm{PAH}_j$ + $\mathrm{PAH}_j$ ->[$k_{f,dim_j}$] $\mathrm{Dimer}_j$
 }
 Similarly, the adsorption of each PAH molecule on soot particles is described by the irreversible collision of soot and $\mathrm{PAH}_j$ as:
 \reaction[react:irrevdimads]{
-	$\mathrm{PAH_j}$ + Soot ->[k_{f,ads_j}] $\mathrm{Soot-PAH_j}$
+	$\mathrm{PAH}_j$ + Soot ->[$k_{f,ads_j}$] Soot-$\mathrm{PAH}_j$
 }
-The forward rate of dimerization, ${k_{f,dim_j}}$ and adsorption, $k_{f,ads_j}$ in Reactions~\eqref{react:irrevdiminc} and \eqref{react:irrevdimads} are calculated as:
+The forward rate of dimerization, ${k_{f,dim_j}}$, and adsorption, $k_{f,ads_j}$, in Reactions~\eqref{react:irrevdiminc} and \eqref{react:irrevdimads} are calculated as:
 
 \begin{equation}
 	k_{f,dim_j}=
-	\gamma_{inc}\cdot\beta_{jk,PAH}\cdot Av
+	\gamma_{inc}\cdot\beta_{jj,PAH}\cdot Av
 	\label{eqn:kfdim},
 \end{equation}
 
@@ -104,76 +108,88 @@ The forward rate of dimerization, ${k_{f,dim_j}}$ and adsorption, $k_{f,ads_j}$ 
 	\label{eqn:kfads},
 \end{equation}
 
-\noindent where $\beta_{jk,PAH}$ and $\beta^i_{j,ads}$ are computed using Equations~\eqref{eqn:betadim} and \eqref{eqn:betahmads}, respectively, and ${\gamma_{inc}}$ and ${\gamma_{ads}}$ are the collision efficiencies for dimerization and adsorption, respectively. Their value vary in the range of [$\mathrm{10^{-7}}$, 1], and are usually chosen to match the predicted soot mass with the experimental data. The rate of dimerization of $\mathrm{PAH_j}$ are calculated accordingly as:
+\noindent where $\beta_{jk,\mathrm{PAH}}$ and $\beta^i_{j,\mathrm{ads}}$ are computed using Equations~\eqref{eqn:betadim} and~\eqref{eqn:betahmads}, respectively, and $\gamma_{\mathrm{inc}}$ and $\gamma_{\mathrm{ads}}$ are the collision efficiencies for dimerization and adsorption, respectively. Their values range from $\mathrm{10^{-7}}$ to 1 and are typically chosen to match the predicted soot properties with experimental data. The dimerization rate of $\mathrm{PAH}_j$ is then calculated as:
+
 \begin{equation}
-	w_{dim_j} = \eta_{inc} k_{f,dim_{jj}} [\mathrm{PAH_j}] [\mathrm{PAH_j}],
+	\omega_{dim_j} = \eta_{inc} k_{f,dim_{j}} [\mathrm{PAH}_j] [\mathrm{PAH}_j].
 	\label{eqn:irrevdim_wdim}
 \end{equation}
 
-The partial source terms for inception are calculated as:
+The partial source terms of inception are calculated as:
 
 \begin{equation}
-	I_{N,inc} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH}} 2w_{dim_j} n_{PAH_j,C},
+	I_{N,inc} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH}} 2\omega_{dim_j} n_{PAH_j,C},
 	\label{eqn:INinc}
 \end{equation}
 \begin{equation}
-	I_{C_{tot},inc} = \frac{1}{\rho}\sum_{j=1}^{n_{PAH}} 2w_{dim_j} n_{PAH_j,C},
+	I_{C_{tot},inc} = \frac{1}{\rho}\sum_{j=1}^{n_{PAH}} 2\omega_{dim_j} n_{PAH_j,C}.
 	\label{eqn:ICtotinc}
 \end{equation}
 \begin{equation}
-	I_{H_{tot},inc} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH}} 2w_{dim_j} n_{PAH_j,H}.
+	I_{H_{tot},inc} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH}} 2\omega_{dim_j} n_{PAH_j,H}.
 	\label{eqn:IHtotinc}
 \end{equation}
 The rate of PAH adsorption for each section is obtained as:
 \begin{equation}
-	w^i_{ads_j} = \eta_{ads} k^i_{f,ads_{j}} [\mathrm{soot}] [\mathrm{PAH_j}],
+	\omega^i_{ads_j} = \eta_{ads} k^i_{f,ads_{j}} [\mathrm{soot}^i] [\mathrm{PAH}_j].
 	\label{eqn:adsrate_irrevdim}
 \end{equation}
 
 The contribution of PAH adsorption to the source terms are expressed as:
 
 \begin{equation}
-	I^i_{C_{tot},ads} = \frac{1}{\rho}\sum_{j=1}^{n_{PAH}} w^i_{ads_j} n_{PAH,C}
+	I^i_{C_{tot},ads} = \frac{1}{\rho}\sum_{j=1}^{n_{PAH_j}} \omega^i_{ads_j} n_{PAH_j,C},
 	\label{eqn:ICtotads}
 \end{equation}
 \begin{equation}
-	I^i_{H_{tot},ads} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH}} w^i_{dim_j} (n_{PAH,H}-2)
+	I^i_{H_{tot},ads} =\frac{1}{\rho} \sum_{j=1}^{n_{PAH_j}} \omega^i_{ads_j} (n_{PAH_j,H}-2).
 	\label{eqn:IHtotads}
 \end{equation}
 
-Note that PAH adoption is a mass growth phenomenon that only changes the carbon ($C_{tot}$) and hydrogen ($H_{tot}$) content of soot but does not affect number of agglomerates ($N_{agg}$) and primary particles ($N_{pri}$). Each PAH molecule loses one H atom becoming a radical that forms bonds with a dehydrogenated site on soot surface, so two H atoms are released during adsorption that is taken into account in Equation~\eqref{eqn:IHtotads}.
+Note that PAH adsorption is a mass growth phenomenon that only changes $C_{tot}$ and $H_{tot}$ but does not affect number of $N_{agg}$ and $N_{pri}$. Each PAH molecule loses one H atom becoming a radical that forms bonds with a dehydrogenated site on soot surface, so two H atoms are released during adsorption that is taken into account in Equation~\eqref{eqn:IHtotads}.
 
-The formation of a dimer consumes two PAH molecules, and during adsorption one PAH molecule is removed from the gas mixture, so the total rate of removal of $\mathrm{PAH_j}$ by the irreversible dimerization is obtained as:
+The formation of a dimer consumes two PAH molecules, and during adsorption one PAH molecule is removed from the gas mixture, so the total rate of removal of $\mathrm{PAH}_j$ by Irreversible Dimerization is obtained as:
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{inc}
 	= 
-	-2w_{dim_j}-\sum_{i=1}^{n_{sec}}w^i_{ads_j}
-	\label{eqn:PAHscrub_irrevdim}.
+	-2\omega_{dim_j},
+	\label{eqn:PAHscrub_irrevdim_inc}
+\end{equation}
+
+\begin{equation}
+	\left(
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
+	\right)_{inc}
+	= 
+	-\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}.
+	\label{eqn:PAHscrub_irrevdim_ads}
 \end{equation}
 
 Moreover, one $\mathrm{H_2}$ is released to the gas mixture as a result of the adsorption process.
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
-	\right)_{inc}
+	\frac{\mathrm{d}\left[{\mathrm{H_2}}\right]}{\mathrm{d}t}
+	\right)_{ads}
 	= 
-	\sum_{i=1}^{n_{sec}}w^i_{ads_j}
+	\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}
 	\label{eqn:H2scrub_irrevdim}.
 \end{equation}
 
 
 \subsection{Reactive Dimerization}
-This model is built on Irreversible Dimerization with two main differences: The first step of dimerization and adsorption is reversible forming physically bonded dimers followed by a irreversible carbonization that leads to chemical bond formation in dimers \citep{kholghy2018reactive}. This approach allows formation of homo- and heterodimers. The dimerization of $\mathrm{PAH_j}$ and $\mathrm{PAH_k}$ is described as:
+\label{sec:reacvdim}
+
+This model was built on Irreversible Dimerization with a main difference: The first step of dimerization and adsorption is reversible forming physically bonded dimers followed by a irreversible carbonization that leads to chemical bond formation in dimers \citep{kholghy2018reactive}. This approach allows the formation of homo- and hetero-dimers. The dimerization of $\mathrm{PAH}_j$ and $\mathrm{PAH}_k$ is described as:
 \reaction[reac:phydim_reacdim]{
 	PAH_j + PAH_k <-->[$k_{f,dim_{jk}}$][$k_{r,dim_{jk}}$] Dimer^*_{$ij$}
 }
 \reaction[reac:chemdim_reacdim]{
 	Dimer^*_{$jk$} ->[$k_{reac}$] Dimer_{$jk$}
 }
-\noindent where $\mathrm{Dimer^*}_{jk}$ and $\mathrm{Dimer}_{jk}$ physically and chemically bonded dimers, respectively, from $\mathrm{PAH}_j$ and $\mathrm{PAH}_k$. The forward rate of physical dimerization, ${k_{f,dim_{jk}}}$ is calculated as:
+\noindent where $\mathrm{Dimer^*}_{jk}$ and $\mathrm{Dimer}_{jk}$ are physically and chemically bonded dimers, respectively, from $\mathrm{PAH}_j$ and $\mathrm{PAH}_k$. The forward rate of physical dimerization, ${k_{f,dim_{jk}}}$, is calculated as:
 
 \begin{equation}
 	k_{f,dim_{jk}}=
@@ -181,13 +197,14 @@ This model is built on Irreversible Dimerization with two main differences: The 
 	\label{eqn:kfphydim_reacdim},
 \end{equation}
 
-\noindent where $\beta_{jk,PAH}$ is calculated using Equation~\eqref{eqn:betadim}, and ${p^{''}}=0.1$ accounts for the probability of PAH-PAH collisions in “FACE” configuration that results in successful vdW bond formation~\citep{miller1984intermolecular}. The reverse rate of physical dimerization, ${k_{r,dim_{jk}}}$ is obtained from the dimerization equilibrium constant~\citep{miller1991kinetics} as:
+\noindent where $\beta_{jk,\mathrm{PAH}}$ is calculated using Equation~\eqref{eqn:betadim}, and $p^{\prime\prime} = 0.1$ accounts for the probability of PAH–PAH collisions occurring in the "FACE" configuration that result in successful van der Waals (vdW) bond formation~\citep{miller1984intermolecular}. The reverse rate of physical dimerization, $k_{r,\mathrm{dim}_{jk}}$, is obtained from the dimerization equilibrium constant~\citep{miller1991kinetics} as:
+
 
 \begin{equation}
 	k_{r,dim_{jk}} = \frac{k_{f,dim_{jk}}}{K_{eq}} 
 	\label{eqn:krphydim_reacdim},
 \end{equation}
-	
+
 \begin{equation}
 	\mathrm{log}_{10}K_{eq}=
 	a\frac{\epsilon_{jk}}{RT}+b
@@ -203,23 +220,24 @@ This model is built on Irreversible Dimerization with two main differences: The 
 	W_{jk} = \frac{W_j\cdot W_k}{W_j+W_k}
 	\label{eqn:Wjk_reacdim},
 \end{equation}
-\noindent where $a=0.115$ (obtained from pyrere dimerization data~\citep{sabbah2010exploring}) and $b=1.8$~\citep{kholghy2018reactive}, $c=933420$~J/kg, and d=34053~j/mol~\cite{kholghy2018reactive}. 
+\noindent where $a=0.115$ (obtained from pyrere dimerization data~\citep{sabbah2010exploring}) and $b=1.8$~\citep{kholghy2018reactive}, $c=933420$~J/kg, and $d=34053$~J/mol~\cite{kholghy2018reactive}. 
 
-The rate of chemical bond formation, $\mathrm{k_{reac}}$ is defined in the Arrhenius form~\cite{naseri2022simulating} as
+The rate constant of chemical bond formation, $k_{reac}$, is defined in the Arrhenius form~\cite{naseri2022simulating} as
 \begin{equation}
 	k_{reac} = 5\times10^6\cdot e^{(-96232/RT)}
 	\label{eqn:kc_reacdim}.
 \end{equation}
 
-Assuming a steady state condition for the physical dimers, $\mathrm{\partial [Dimer^*_{jk}]/\partial t=0}$, the rate of formation of chemically-bonded dimers can be obtained as
+Assuming a steady state condition for physical dimers, i.e., $\mathrm{\partial [Dimer^*_{jk}]/\partial t=0}$, the rate of formation of chemically-bonded dimers can be obtained as:
 
 \begin{equation}
-	\omega_{dim_{jk}} = k_{reac}\frac{k_{f,dim_{jk}}[\mathrm{PAH_j}][\mathrm{PAH_k}]}
+	\omega_{dim_{jk}} = k_{reac}\frac{k_{f,dim_{jk}}[\mathrm{PAH}_j][\mathrm{PAH}_k]}
 	{k_{r,dim_{jk}}+k_{reac}}
 	\label{eqn:chemdimer_reacdim}.
 \end{equation}
 
-The contribution of dimer formation to partial source terms is expressed by looping over all combinations of precursors as:
+The contribution of dimer formation to the partial source terms is evaluated by looping over all combinations of PAH precursors as:
+
 
 \begin{equation}
 	I_{N,{inc}} = 
@@ -251,7 +269,7 @@ The contribution of dimer formation to partial source terms is expressed by loop
 	\label{eqn:IHtot_inc}
 \end{equation}
 
-Similarly, PAH adsorption is described by a two-step process where the collision of $\mathrm{PAH_j}$ with soot agglomerates leads to physically bonded $\mathrm{Soot-PAH^*}$ that is carbonized and forms chemically bonded $\mathrm{Soot-PAH}$ on soot surface.
+Similarly, PAH adsorption is described by a two-step process where the collision of $\mathrm{PAH}_j$ with soot agglomerates leads to a physically bonded Soot$-$$\mathrm{PAH}^*_j$ that is carbonized and forms a chemically bonded Soot$-$$\mathrm{PAH}_j$ on soot surface.
 
 \reaction[reac:physootPAH_reacdim]{
 	PAH_j + Soot <-->[$k_{f,ads_j}$][$k_{r,ads_j}$] Soot-PAH^*_j
@@ -264,42 +282,42 @@ Similarly, PAH adsorption is described by a two-step process where the collision
 The forward and reverse rate of PAH-soot collision are calculated as:
 
 \begin{equation}
-	k^i_{f,ads}=\beta^i_{jk,ads}\cdot Av,
+	k^i_{f,ads_j}=\beta^i_{j,ads}\cdot Av,
 	\label{eqn:kfads_reacdim}
 \end{equation}
 
 \begin{equation}
-	k^i_{r,ads}=k^i_{f,ads}\cdot10^{-b}e^{-a\epsilon_{soot,j} \mathrm{ln}(10)/(RT)},
+	k^i_{r,ads_j}=k^i_{f,ads_j}\cdot10^{-b}e^{-a\epsilon^i_{soot,j} \mathrm{ln}(10)/(RT)},
 	\label{eqn:krads_reacdim}
 \end{equation}
 
 \begin{equation}
-	\epsilon_{soot,j} = cW_{soot,j} - d,
+	\epsilon^i_{soot,j} = cW^i_{soot,j} - d,
 	\label{eqn:epsilonads_reacdim}
 \end{equation}
 
-\noindent where $\beta^i_{jk,ads}$ is calculated using Equation~\eqref{eqn:betahmads}. The values of a, b, c, and d are the same as those explained in the inception part. Computing ${\epsilon_{soot,j}}$ also requires equivalent soot molecular weight, ${W_{soot}}$ for section i, which is estimated from carbon mass of each agglomerate as:
+\noindent where $\beta^i_{j,ads}$ is calculated using Equation~\eqref{eqn:betahmads}. The values of $a$, $b$, $c$, and $d$ are the same as those explained in the inception part. Computing ${\epsilon^i_{soot,j}}$ also requires the equivalent soot molecular weight, ${W^i_{soot}}$, which is estimated from carbon mass of each agglomerate as:
 
 \begin{equation}
 	W^i_{soot}=\frac{C^i_{tot}W_{carbon}}{N^i_{agg}}.
 \end{equation}
 
-The rate constant of carbonization of $\mathrm{Soot-PAH^*}_j$ is defined as in the Arrhenius form similar to the inception formulation (Equation~\eqref{eqn:kc_reacdim}). The pre-exponential factor is adjusted by matching the numercial PSD~\citep{naseri2022simulating} with measurements in the ethylene pyrolysis in a flow reactor~\cite{araki2021effects}. 
+The rate constant of carbonization of Soot$-$$\mathrm{PAH}^*_j$ is defined as in an Arrhenius form similar to the inception formulation (Equation~\eqref{eqn:kc_reacdim}). The pre-exponential factor is adjusted by matching the numercial PSD~\citep{naseri2022simulating} with measurements in the ethylene pyrolysis in a flow reactor~\cite{araki2021effects}. 
 
 \begin{equation}
-	k_{c,dim} = 2\times10^{10}\cdot e^{(-96232/RT)}
+	k_{c,ads} = 2\times10^{10}\cdot e^{(-96232/RT)}
 	\label{eqn:kcads_reacdim}.
 \end{equation}
 
 
-The total adsorption rate can be calculated assuming a steady-state concentration for physically adsorbed PAH on soot, i.e., ${\partial{[\mathrm{Soot-PAH^*}]}/\partial t = 0}$, calculated in a similar way to inception flux (Equation~\eqref{eqn:chemdimer_reacdim}) as:
+The total adsorption rate can be calculated assuming a steady-state concentration for the physically adsorbed PAH on soot, i.e., $\partial$[Soot$-\mathrm{PAH}^*_j$]/$\partial t=0$, calculated in a similar way to the inception flux (Equation~\eqref{eqn:chemdimer_reacdim}) as:
 
 \begin{equation}
-	\omega^i_{ads_j} = k_{c,ads}\frac{k_{f,ads_j}[\mathrm{soot}][\mathrm{PAH_j}]}{k_{r,ads_j}+k_{c,ads_j}}
+	\omega^i_{ads_j} = k_{c,ads}\frac{k_{f,ads_j}[\mathrm{soot}^i][\mathrm{PAH}_j]}{k_{r,ads_j}+k_{c,ads_j}}
 	\label{eqn:wads_reacdim},
 \end{equation}
 
-The contribution of PAH adsorption rate to partial source terms can be expressed as:
+The contribution of PAH adsorption rate to the partial source terms can be expressed as:
 
 \begin{equation}
 	I^i_{C_{tot},ads} =
@@ -323,32 +341,33 @@ The rate of removal of PAH from the gas mixture due to inception and PAH adsorpt
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{inc}
 	= 
-	-\sum_{k=1}^{n_{PAH}}w_{dim_{jk}},
+	-\sum_{k=1}^{n_{PAH}}\omega_{dim_{jk}},
 	\label{eqn:PAHscrub_inc_reacdim}
 \end{equation}
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{ads}
-	= -\sum_{i=1}^{n_{sec}}w^i_{ads_j}.
+	= -\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}.
 	\label{eqn:PAHscrub_ads_reacdim}
 \end{equation}
 
 Additionally, during the PAH adsorption process one $\mathrm{H_2}$ is released to the gas mixture changing the concentration of $\mathrm{H_2}$ as:
 \begin{equation}
 	\left(
-		\frac{d\left[{\mathrm{H_2}}\right]}{dt}
-	\right)_{inc, ads}
+	\frac{\mathrm{d}\left[{\mathrm{H_2}}\right]}{\mathrm{d}t}
+	\right)_{ads}
 	= 
-	\sum_{i=1}^{n_{sec}}w^i_{ads_j}
+	\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}
 	\label{eqn:H2scrub_reacdim}.
 \end{equation}
 
 \subsection{Dimer Coalescence}
+\label{sec:dimcoal}
 The Dimer Coalescence model is a multi-step irreversible model proposed by \citet{blanquart2009joint} where self-collision of PAH molecules forms dimers, which are an intermediate state between gaseous PAH molecules and solid soot particles. The dimers can either form incipient soot particles through self-coalescence or adsorb on the surface of existing soot particles and contribute to their surface growth. The following equations describing the inception and surface growth in Dimer Coalescence adopted from the work of \citet{sun2021modelling}.
 
 \reaction[reac:dim_dimcoal]{
@@ -361,7 +380,7 @@ The Dimer Coalescence model is a multi-step irreversible model proposed by \cite
 	Dimer_{j} + Soot ->[$k_{ads_j}$] Soot-PAH_{j}
 }
 
-\noindent where the rate constant of dimerization, ${k_{dim_{j}}}$, and inception, ${k_{inc_{j}}}$, are calculated from the collision rate of PAHs as:
+The rate constant of dimerization, ${k_{dim_{j}}}$, and inception, ${k_{inc_{j}}}$, are calculated from the collision rate of PAHs as:
 
 \begin{equation}
 	k_{dim_{j}}=
@@ -375,7 +394,7 @@ The Dimer Coalescence model is a multi-step irreversible model proposed by \cite
 	\label{eqn:kinc_dimcoal},
 \end{equation}
 
-\noindent where $\beta_{jj,PAH}$, $\beta^i_{jj,ads}$ are calculated using Equations~\eqref{eqn:betadim}~and~\eqref{eqn:betahmads}, respectively. $\gamma_{dim_j}$ is the dimerization efficiency assumed to scale with the fourth power of PAH molecular weight~\cite{blanquart2009analyzing} as:
+\noindent where $\beta_{jj,PAH}$, $\beta_{jj,dimer}$ are both calculated using Equation~\eqref{eqn:betadim}. $\gamma_{dim_j}$ is the dimerization efficiency assumed to scale with the fourth power of the PAH molecular weight~\cite{blanquart2009analyzing} as:
 
 \begin{equation}
 	\gamma_{dim_j}=
@@ -383,22 +402,29 @@ The Dimer Coalescence model is a multi-step irreversible model proposed by \cite
 	\label{eqn:gamma_dimcoal}
 \end{equation} 
 
-\citet{blanquart2009joint} estimated the constant ${C_{N,j}}$ in Equation~\eqref{eqn:gamma_dimcoal} by comparing the profiles of several PAH species with experimental measurements in a single premixed benzene flame~\citep{tregrossi1999combustion}, and provide ${C_{N,j}}$ values for various PAHs, which are listed in Table 1 in~\citep{blanquart2009analyzing}. The rate of dimer collision is expressed as:
+\citet{blanquart2009joint} estimated the constant ${C_{N,j}}$ in Equation~\eqref{eqn:gamma_dimcoal} by comparing the profiles of several PAH species with the experimental measurements in a single premixed benzene flame~\citep{tregrossi1999combustion}, and provide ${C_{N,j}}$ values for various PAHs, which are listed in Table 1 in~\citep{blanquart2009analyzing}. The rate of dimer collision is expressed as:
 
 \begin{equation}
-	w_{dim_j} = \eta_{inc} k_{inc_{j}} [\mathrm{Dimer}_j] [\mathrm{Dimer}_j]
+	\omega_{dim_j} = \eta_{inc} k_{inc_{j}} [\mathrm{Dimer}_j] [\mathrm{Dimer}_j].
 	\label{eqn:wdim_dimcoal}
 \end{equation}
+
 
 Similarly, the rate of adsorption of dimers on soot particles is obtained as:
 
 \begin{equation}
-	w^i_{ads_j} = \eta_{ads} k^i_{ads_{j}} [\mathrm{soot}^i] [\mathrm{Dimer}_j]
+	\omega^i_{ads_j} = \eta_{ads} k^i_{ads_{j}} [\mathrm{soot}^i] [\mathrm{Dimer}_j],
+\end{equation}
+
+\begin{equation}
+	k^i_{ads_{j}}=
+	\beta^i_{ads_j}\cdot Av.
+	\label{eqn:kads_dimcoal}
 \end{equation}
 
 Assuming fast dimer consumption leads to the steady-state concentration of dimers, which can be determined by solving a quadratic equation~\citep{blanquart2009analyzing} as:
 \begin{equation}
-	a_{inc_j}[\mathrm{dimer}]^2+b_{ads_j}[\mathrm{dimer}]=\omega_{dim,j},
+	a_{inc_j}[\mathrm{Dimer}_j]^2+b_{ads_j}[\mathrm{Dimer}_j]=\omega_{dim,j},
 	\label{eqn:quad_dimcoal}
 \end{equation}
 \begin{equation}
@@ -417,11 +443,11 @@ Assuming fast dimer consumption leads to the steady-state concentration of dimer
 	\label{eqn:dimer_dimcoal}
 \end{equation}
 \begin{equation}
-	\Delta_j = b_{ads_j}^2-4a_{inc_j}\omega_{dim,j},
+	\Delta_j = b_{ads_j}^2+4a_{inc_j}\omega_{dim,j},
 	\label{eqn:delta_dimcoal}
 \end{equation}
 
-\noindent where ${a_{inc_j} = k_{inc_{j}}}$ and ${b_{ads_j}}$ is calculated by summing the adsorption rate of dimer for all sections as:
+\noindent where ${a_{inc_j} = k_{inc_{j}}}$ and ${b_{ads_j}}$ is calculated by summing the adsorption rate of dimers for all sections as:
 
 \begin{equation}
 	b_{ads_j} = \sum_{i=1}^{n_{sec}} k^i_{ads_{j}} [\mathrm{soot}^i]
@@ -470,9 +496,7 @@ After determining the concentration of each dimer, the contributions of inceptio
 	I_{H_{tot},{inc}} = \frac{1}{\rho}
 	\sum_{j=1}^{n_{PAH}}
 	4\omega_{inc_{j}} 
-	\left(
-	n_{PAH_j,H}-2
-	\right)
+	n_{PAH_j,H}
 	\label{eqn:IHtot_inc_dimcoal},
 \end{equation}
 
@@ -490,58 +514,60 @@ After determining the concentration of each dimer, the contributions of inceptio
 	\frac{1}{\rho}
 	\sum_{i=1}^{n_{PAH}}
 	2\omega^i_{ads_j}
-	\left(n_{H,PAH_j}-2\right)
+	\left(n_{H,PAH_j}-1\right)
 	\label{eqn:IHtotads_dimcoal}.
 \end{equation}
 
-The rate of removal of PAHs and release of $\mathrm{H_2}$ molecule due to inception and PAH adsorption is calculated as:
+The rate of removal of PAHs and release of $\mathrm{H_2}$ molecule due to PAH adsorption is calculated as:
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{inc}
 	= 
-	-4\sum_{k=1}^{n_{PAH}}w_{inc_{j}},
+	-4\sum_{k=1}^{n_{PAH}}\omega_{inc_{j}},
 	\label{eqn:PAHscrub_dimcoal_inc}
 \end{equation}
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{ads}
 	= 
-	-2\sum_{i=1}^{n_{sec}}w^i_{ads_j},
+	-2\sum_{i=1}^{n_{sec}}\omega^i_{ads_j},
 	\label{eqn:PAHscrub_dimcoal_ads}
 \end{equation}
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
-	\right)_{inc}
+	\frac{\mathrm{d}\left[{\mathrm{H_2}}\right]}{\mathrm{d}t}
+	\right)_{ads}
 	= 
-	2\sum_{i=1}^{n_{sec}}w^i_{ads_j}
+	\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}
 	\label{eqn:H2scrub_dimcoal}.
 \end{equation}
 
+
 \subsection{E-Bridge Modified}
-The E-Bridge model was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with the dehydrogenation of PAH monomers, often pyrene, which forms the monomer radicals and continues with the sequential addition of the radicals to PAHs that form dimers, trimers and larger polymers until the PAH structure reaches the mass threshold and the clustering process becomes irreversible~\citep{frenklach2020mechanism}. Here, a modified version of this model, called E-Bridge Modified, is used where dimers are considered as incipient soot, and monomer radical are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
+\label{sec:ebrimod}
+The E-Bridge model was originally proposed by \citet{frenklach2020mechanism} to describe soot inception using a HACA-like scheme that starts with the dehydrogenation of PAH monomers, often pyrene, which forms the monomer radicals and continues with the sequential addition of the radicals that form dimers, trimers and larger polymers until the PAH structure reaches a mass threshold and the clustering process becomes irreversible~\citep{frenklach2020mechanism}. Here, a modified version of this model, called E-Bridge Modified, is used where dimers are considered as incipient soot, and monomer radicals are adsorbed on soot agglomerates. This PAH growth model is described using the following set of pathways:
 
 \reaction[reac:dehyd_ebri]{
-	PAH_j + H <-->[$k_{f,d_{j}}$][$k_{r,d_{j}}$] $\mathrm{\dot{PAH}}_j$ + H2,
+	PAH_j + H <-->[$k_{f,d_{j}}$][$k_{r,d_{j}}$] $\dot{\mathrm{PAH}}_j$ + H
 }
 
 \reaction[reac:hyd_ebri]{
-	$\mathrm{\dot{PAH}}_j$ + H ->[$k_{f,h_{j}}$] PAH_$j$ ,
+	$\mathrm{\dot{PAH}}_j$ + H ->[$k_{f,h_{j}}$] PAH_$j$ 
 }
 
 \reaction[reac:ebri]{
-	$\mathrm{\dot{PAH}}_j$ + PAH_j ->[$k_{inc_j}$] Dimer_{$j$},
+	$\mathrm{\dot{PAH}}_j$ + $\mathrm{\dot{PAH}}_j$ ->[$k_{inc_j}$] Dimer_{$j$}
 }
 \reaction[reac:ads_ebri]{
-	$\mathrm{\dot{PAH}}_j$ + Soot ->[$k_{ads_j}$] Soot-PAH_{$j$},
+	$\mathrm{\dot{PAH}}_j$ + Soot ->[$k_{ads_j}$] Soot-PAH_{$j$}
 }
 
-The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri} are listed in Table~\ref{tab:Ebridge} while those of dimer production and adsorption are calculated based on Equations~\eqref{eqn:betadim}~and~\eqref{eqn:betahmads}, respectively. For both steps, it is assumed that all collisions are successful i.e., 100\% collision efficiency for radical-monomer and radical-soot.
+The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri} are listed in Table~\ref{tab:Ebridge}. $k_{inc_j}$ and $k_{ads_j}$ are the rate constants of dimer production and PAH adsorption, respectively, which are calculated as:
 
 \begin{equation}
 	k_{inc_j}=
@@ -555,33 +581,37 @@ The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri
 	\label{eqn:kads_ebir},
 \end{equation}
 
+\noindent where $\beta_{jj,PAH}$ and $\beta^i_{ads_j}$ are obtained using Equations~\eqref{eqn:betadim}~and~\eqref{eqn:betahmads}, respectively. The rate of dimer formation and adsorption is calculated as:
+
+\begin{equation}
+	\omega_{dim_j} = k_{inc_{j}} [\cdot{\mathrm{PAH}}_j]^2,
+	\label{eqn:wdim_ebri}
+\end{equation}
+
+\begin{equation}
+	\omega^i_{ads_j} = k^i_{ads_{j}} [\mathrm{soot}^i] [\mathrm{\dot{PAH}}_j].
+\end{equation}
+
+
+
 \renewcommand{\arraystretch}{1.5}
 \begin{table}
-	\caption{Rate coefficients for the monomer de-/hydrogenation reaction of E-bridge formation in Arrhenius form $\mathrm{k=AT^n\cdot e^{-E/RT}}$~\citep{frenklach2020mechanism}}
+	\caption{Rate coefficients for the monomer de-/hydrogenation reaction of E-bridge formation in Arrhenius form $\mathrm{k=AT^n\cdot e^{-E/RT}}$~\citep{frenklach2020mechanism}.}
 	\label{tab:Ebridge}
 	\centering
 	\begin{tabular}{l l l l l}
 		\hline
-		Reaction & \hspace{0.1cm} & A~$\mathrm{\left[{m^3}/{mol\cdot s} \right]}$ & n & $\mathrm{{E}/{R} [K]}$  \\
+		Reaction & \hspace{0.1cm} & A~$\mathrm{\left[{m^3}/{mol\cdot s} \right]}$ & n & {E}/{R}~[K]  \\
 		\hline
-		\eqref{reac:dehyd_ebri} & f & $98\times$ $\mathrm{n_{C, PAH_j}}$ & 1.8 & 7,563.519 \\
-		  & r & $1.6\times 10^{-2}$ & 2.63 & 2145.346\\
+		\eqref{reac:dehyd_ebri} & f & $98\times$ $\mathrm{n_{C, PAH_j}}$ & 1.8 & 7563.519 \\
+		& r & $1.6\times 10^{-2}$ & 2.63 & 2145.346\\
 		\eqref{reac:hyd_ebri} & f & $4.8658\times10^7
 		$ & 0.13 & 0.0\\
 		\hline
 	\end{tabular}
 \end{table}
 
-\noindent where $\beta_{jj,PAH}$, and $\beta^i_{ads_j}$ are calculated using Equations~\eqref{eqn:betadim}~and~\eqref{eqn:betahmads}, respectively. The rate of dimer formation and adsorption is calculated as:
 
-\begin{equation}
-	w_{dim_j} = k_{inc_{j}} [\mathrm{PAH}_j] [\mathrm{\dot{PAH}}_j],
-	\label{eqn:wdim_ebri}
-\end{equation}
-
-\begin{equation}
-	w^i_{ads_j} = k^i_{ads_{j}} [\mathrm{soot}^i] [\mathrm{\dot{PAH}}_j].
-\end{equation}
 
 The calculation of rate of inception and PAH adsorption from $\mathrm{PAH}_j$ requires the concentration of $\mathrm{\dot{PAH}}_j$, which can be determined by applying the steady-state assumption for $\mathrm{\dot{PAH}_j}$, i.e., $d[\mathrm{\dot{PAH}}_j]/dt=0$, resulting in a quadratic equation as:
 
@@ -603,8 +633,8 @@ The calculation of rate of inception and PAH adsorption from $\mathrm{PAH}_j$ re
 %The above equations can be rearranged as a quadratic equation similar to the dimer coalescence.
 
 \begin{equation}
-	a_{inc_j}[\mathrm{\dot{PAH}_j}]^2+
-	b_{ads_j}[\mathrm{\dot{PAH}_j}] + c_j = 0,
+	a_{inc_j}[\mathrm{\dot{PAH}}_j]^2+
+	b_{ads_j}[\mathrm{\dot{PAH}}_j] + c_j = 0,
 \end{equation}
 \begin{equation}
 	a_{inc_j}=k_{inc_j}
@@ -613,12 +643,12 @@ The calculation of rate of inception and PAH adsorption from $\mathrm{PAH}_j$ re
 	b_{ads_j}=k_{r,d_j}[\mathrm{H_2}]+k_{f,h_j}[\mathrm{H}]+\sum_{i=1}^{n_{sec}}k^i_{ads_j}[\mathrm{Soot}]^i
 \end{equation}
 \begin{equation}
-	c_{inc_j}=k_{f,d_j}[\mathrm{PAH_j}][\mathrm{H}]
+	c_{inc_j}=k_{f,d_j}[\mathrm{PAH}_j][\mathrm{H}]
 \end{equation}
 
 Solving the quadratic equation for each PAH gives the concentration of $\mathrm{\mathrm{\dot{PAH}}}_j$ as:
 \begin{equation}
-	[\mathrm{\mathrm{\dot{PAH}}_j}]=
+	[\mathrm{\mathrm{\dot{PAH}}}_j]=
 	\left\{
 	\begin{aligned}
 		&\frac{-b_{ads_j}+\sqrt{\Delta_j}}{2a_{inc_j}},
@@ -637,12 +667,12 @@ Solving the quadratic equation for each PAH gives the concentration of $\mathrm{
 	\label{eqn:delta_ebri}
 \end{equation}
 
-The contribution of inception and adsorption to the partial source terms for E-Bridge formation can be written as:
+The partial source terms of inception, $I_{\varphi, inc}$, are calculated in the E-Bridge Modified model as: 
 
 \begin{equation}
 	I_{N,{inc}} = \frac{1}{\rho}
 	\sum_{j=1}^{n_{PAH}}
-	2\omega_{inc_{j}} 
+	2\omega_{inc_{j}}
 	n_{PAH_j,C}
 	\label{eqn:IN_inc_ebri},
 \end{equation}
@@ -658,12 +688,15 @@ The contribution of inception and adsorption to the partial source terms for E-B
 \begin{equation}
 	I_{H_{tot},{inc}} = \frac{1}{\rho}
 	\sum_{j=1}^{n_{PAH}}
-	2\omega_{inc_{j}} 
+	\omega_{inc_{j}} 
 	\left(
 	n_{PAH_j,H}-2
 	\right)
 	\label{eqn:IHtot_inc_ebri},
 \end{equation}
+
+
+The partial source terms of PAH adsorption, $I^i_{\varphi, ads}$, are calculated for each section in this PAH growth model as: 
 
 \begin{equation}
 	I^i_{C_{tot},ads} =
@@ -675,7 +708,7 @@ The contribution of inception and adsorption to the partial source terms for E-B
 \end{equation}
 
 \begin{equation}
-	I^i_{C_{tot},ads} =
+	I^i_{H_{tot},ads} =
 	\frac{1}{\rho}
 	\sum_{i=1}^{n_{PAH}}
 	\omega^i_{ads_j}
@@ -687,26 +720,26 @@ The rate of removal of each PAH involved in soot inception and PAH adsorption, a
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
 	\right)_{inc}
 	= 
-	-2\sum_{k=1}^{n_{PAH}}w_{inc_{j}},
+	-2\sum_{k=1}^{n_{sec}}\omega_{inc_{j}},
 \end{equation}
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{PAH_j}}\right]}{dt}
-	\right)_{inc}
+	\frac{\mathrm{d}\left[{\mathrm{PAH}_j}\right]}{\mathrm{d}t}
+	\right)_{ads}
 	= 
-	-\sum_{i=1}^{n_{sec}}w^i_{ads_j},
+	-\sum_{i=1}^{n_{sec}}\omega^i_{ads_j},
 	\label{eqn:PAHscrub_ebri_ads}
 \end{equation}
 
 \begin{equation}
 	\left(
-	\frac{d\left[{\mathrm{H_2}}\right]}{dt}
+	\frac{\mathrm{d}\left[{\mathrm{H_2}}\right]}{\mathrm{d}t}
 	\right)_{inc}
 	= 
-	\sum_{i=1}^{n_{sec}}w^i_{ads_j}.
+	\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}.
 	\label{eqn:H2scrub_ebri}
 \end{equation}
