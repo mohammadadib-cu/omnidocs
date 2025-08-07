@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 
-src_path = Path("");
+src_path = Path(os.path.dirname(os.path.realpath(__file__)));
 allbib_path = src_path/Path("all.bib");
 allbib_content = [];
 
