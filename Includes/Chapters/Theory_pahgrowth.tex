@@ -615,22 +615,6 @@ The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri
 
 The calculation of rate of inception and PAH adsorption from $\mathrm{PAH}_j$ requires the concentration of $\mathrm{\dot{PAH}}_j$, which can be determined by applying the steady-state assumption for $\mathrm{\dot{PAH}_j}$, i.e., $d[\mathrm{\dot{PAH}}_j]/dt=0$, resulting in a quadratic equation as:
 
-%\begin{equation*}
-%	\frac{d[\mathrm{\dot{PAH}_j}]}{dt} = 0
-%\end{equation*}
-
-%\begin{equation*}
-%\begin{aligned}
-%	&&k_{f,d_j}[\mathrm{PAH_j}][\mathrm{H}]
-%	-k_{r,d_j}[\mathrm{\dot{PAH}_j}][\mathrm{H_2}]
-%	-k_{f,h_j}[\mathrm{\dot{PAH}_j}][\mathrm{H}]
-%	-k_{inc_j}[\mathrm{\dot{PAH}_j}]^2 &\\
-%	&&-\sum_{i=1}^{n_{sec}}k^i_{ads_j}[\mathrm{\dot{PAH}_j}][\mathrm{Soot}]^i
-%	&= 0
-%\end{aligned}
-%\end{equation*}
-
-%The above equations can be rearranged as a quadratic equation similar to the dimer coalescence.
 
 \begin{equation}
 	a_{inc_j}[\mathrm{\dot{PAH}}_j]^2+
@@ -743,3 +727,43 @@ The rate of removal of each PAH involved in soot inception and PAH adsorption, a
 	\sum_{i=1}^{n_{sec}}\omega^i_{ads_j}.
 	\label{eqn:H2scrub_ebri}
 \end{equation}
+
+\subsection{Summary of features}
+
+The comparison of key features of the implemented PAH growth models is provided in Table~\ref{tab:incsummary}. As shown in Fig.~\ref{fig:inceptempdep} the inception flux predicted by the Reactive Dimerization and E-Bridge Modified models increases exponentially with temperature (that is, decreases with its inverse), whereas the Irreversible Dimerization and Dimer Coalescence models show only about a factor-of-two increase over the range 500-2500~K.
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table*}
+	\caption{The summary of key features of PAH growth models.}
+	\label{tab:incsummary}
+	\centering
+	\begin{tabular}{l l p{1.5cm} p{7.5cm}}
+		\hline
+		Name & Reversibility & Temperature dependence & The sequence of steps in inception mechanism \\
+		\hline
+		Irrev.Dim.~\cite{frenklach1991detailed}  & Irreversible & Weak, $\propto$$\sqrt{T}$ &
+		{[PAH]$\xrightarrow[\text{}]{\text{collision}}$[Dim.]}
+		\\
+		Reac.Dim.~\citep{kholghy2018reactive} & Reversible & Strong, $\propto$$\:\mathrm{e}^{-E/(RT)}$  &
+		{[PAH]$\xleftrightarrow[\text{}]{\text{collision}}$[Phy.Dim.]$\xrightarrow[\text{}]{\text{carbonization}}$[Chem.Dim]}
+		\\
+		Dim.Coal.~\citep{blanquart2009analyzing} & Irreversible & Weak, $\propto$$\sqrt{T}$ &
+		{[PAH]$\xrightarrow[\text{}]{\text{collision}}$[Dim.]
+			$\xrightarrow[\text{}]{\text{collision}}$[Tetra.]}
+		\\
+		EBri.Mod.~\citep{frenklach2020mechanism}  & Reversible & Strong, $\propto$$\:\mathrm{e}^{-E/(RT)}$ & 
+		{[PAH]$\xleftrightarrow[\text{}]{\text{dehydrogenation}}$[Rad.]
+			$\xrightarrow[\text{}]{\text{collision}}$[Chem.Dim.]}
+		\\
+		\hline
+		\multicolumn{4}{l}{\footnotesize{Dim. denotes PAH dimers. Phy.Dim. and Chem.Dim. represent physically- and chemically-bonded dimers, respectively.}} \\
+		\multicolumn{4}{l}{\footnotesize{Rad. and Tetra. refer to a PAH radical and a tetramer, respectively.}}
+	\end{tabular}
+\end{table*}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.45\textwidth]{Figures/Theory/incepmodels_T_dep.pdf}
+	\caption{The temperature dependence of inception flux, $I_{inc}$, predicted using various PAH growth models. $I_{inc}$ of each model is normalized with its maximum to facilitate the comparison.}
+	\label{fig:inceptempdep} 
+\end{figure}

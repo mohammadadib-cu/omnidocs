@@ -1,4 +1,4 @@
-\section{Code Validation}
+\chapter{Code Validation}
 A set of simulations was performed to evaluate the accuracy and reliability of Omnisoot in predicting soot formation. The aerosol dynamics models were validated by comparing the results of the population balance models implemented in Omnisoot with DEM simulations reported in the literature. In addition, carbon and hydrogen mass and energy balances were rigorously assessed to ensure that residuals remain within the bounds of acceptable numerical error.
 
 
@@ -21,7 +21,7 @@ a cubic cell with the constant temperature of 298 K and pressure of 1 atm~\citep
 \end{figure}
 
 
-\subsection{Coagulation}
+\section{Coagulation}
 Two test cases were set up to validate the coagulation sub-model of MPBM and SPBM in the free-molecular\footnote{\href{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/coagulation/free_molecular}{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/coagulation/free\_molecular}} and continuum\footnote{\href{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/coagulation/continuum}{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/coagulation/continuum}} regimes. An adiabatic CVR with a volume of 1~$\mathrm{m}^3$ was populated with $2.6261 \times 10^{18}$ spherical particles with the initial diameters of 2~nm and 668~nm for the free-molecular and continuum cases, respectively. The initial temperature in the free-molecular and continuum simulations are 1800~K and 300~K, respectively.
 
 Figure~\ref{fig:coagscheme} illustrate the schematics of the designed test in which the particles collide and grow in size through coagulation in both simulations, without inception, surface growth, or oxidation. Figure~\ref{fig:coagvalid_Nd} demonstrates the evolution of ${N_{agg}}$, ${N_{pri}}$, ${d_m}$, and ${d_g}$ as predicted by MPBM and SPBM in the free-molecular regime, which are in good agreement with DEM results~\citep{kholghy2021surface}. ${N_{pri}}$ is conserved during coagulation, resulting in identical flat trends for both models. In contrast, ${N_{agg}}$ decreases over time, with a faster decay observed in SPBM due to its treatment of agglomerate polydispersity, which leads to a higher collision frequency compared to MPBM. Therefore, $d_m$ and $d_g$  predicted by SPBM, shown in Figure~\ref{fig:coagvalid_Nd}b, are slightly larger than those predicted by MPBM.
@@ -91,12 +91,12 @@ Figure~\ref{fig:coagvalid_psd}a shows the standard deviation of the mobility dia
 \end{figure}
 
 
-\subsection{Elemental and Energy Balance}
+\section{Elemental and Energy Balance}
 \noindent To ensure the accuracy and reliability of the simulations, the conservation of elemental mass and energy was assessed across all reactor models implemented in Omnisoot. The elemental balances of carbon, hydrogen, and the total energy (internal or enthalpy depending on the reactor type) of the gas-particle system were evaluated during soot formation processes under various pyrolysis and combustion conditions.
 A set of simulations\footnote{\href{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/mass_energy}{https://github.com/mohammadadib-cu/omnisoot-cv/tree/main/validations/mass\_energy}} was performed using different combinations of PAH growth and particle dynamics models, and the relative errors in elemental and energy balances were monitored over time or reactor length. The relative error of total carbon, hydrogen and energy are calculated for CVR, CPR, PSR, and PFR using different combinations of particle dynamics and inception models. The residuals for all reactor configurations remained within acceptable limits (typically below $10^{-10}$), confirming that Omnisoot accurately preserves mass and energy during the coupled evolution of gas-phase and soot particles. 
 
 
-\subsubsection{Constant Volume Reactor}
+\subsection{Constant Volume Reactor}
 The pyrolysis of 30\% $\mathrm{CH_4}$ diluted in $\mathrm{N_2}$ with the initial temperature and pressure of 2455 K and 3.47 atm, respectively, was simulated using CVR with a residence time of 40 ms. The combination of available PAH growth and particle dynamics models results in eight different cases, which were simulated to verify conservation of mass and energy. Here, we focus on the total elemental balance of carbon and hydrogen, as they are key elements involved in soot formation.
 Figure~\ref{fig:constuvvalid} shows the relative errors in total carbon, hydrogen, and energy for the different PAH growth and particle dynamics models. In all cases, the errors fall below $\mathrm{10^{-10}}$, confirming that CVR satisfies mass and energy conservation.
 \begin{figure}[H]
