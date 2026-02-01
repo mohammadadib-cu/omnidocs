@@ -584,7 +584,7 @@ The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri
 \noindent where $\beta_{jj,PAH}$ and $\beta^i_{ads_j}$ are obtained using Equations~\eqref{eqn:betadim}~and~\eqref{eqn:betahmads}, respectively. The rate of dimer formation and adsorption is calculated as:
 
 \begin{equation}
-	\omega_{dim_j} = k_{inc_{j}} [\cdot{\mathrm{PAH}}_j]^2,
+	\omega_{dim_j} = k_{inc_{j}} [\mathrm{\cdot{PAH}}_j]^2,
 	\label{eqn:wdim_ebri}
 \end{equation}
 
@@ -596,7 +596,7 @@ The rate constants of Reactions~\eqref{reac:dehyd_ebri}~and~\eqref{reac:hyd_ebri
 
 \renewcommand{\arraystretch}{1.5}
 \begin{table}
-	\caption{Rate coefficients for the monomer de-/hydrogenation reaction of E-bridge formation in Arrhenius form $\mathrm{k=AT^n\cdot e^{-E/RT}}$~\citep{frenklach2020mechanism}.}
+	\caption[Rate coefficients for the monomer de-/hydrogenation reaction of E-bridge formation in Arrhenius form $\mathrm{k=AT^n\cdot e^{-E/RT}}$.]{Rate coefficients for the monomer de-/hydrogenation reaction of E-bridge formation in Arrhenius form $\mathrm{k=AT^n\cdot e^{-E/RT}}$~\citep{frenklach2020mechanism}.}
 	\label{tab:Ebridge}
 	\centering
 	\begin{tabular}{l l l l l}
@@ -756,14 +756,15 @@ The comparison of key features of the implemented PAH growth models is provided 
 			$\xrightarrow[\text{}]{\text{collision}}$[Chem.Dim.]}
 		\\
 		\hline
-		\multicolumn{4}{l}{\footnotesize{Dim. denotes PAH dimers. Phy.Dim. and Chem.Dim. represent physically- and chemically-bonded dimers, respectively.}} \\
+		\multicolumn{4}{l}{\footnotesize{Dim. denotes PAH dimers.}} \\
+		\multicolumn{4}{l}{\footnotesize{Phy.Dim. and Chem.Dim. represent physically- and chemically-bonded dimers, respectively.}} \\
 		\multicolumn{4}{l}{\footnotesize{Rad. and Tetra. refer to a PAH radical and a tetramer, respectively.}}
 	\end{tabular}
 \end{table*}
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=0.45\textwidth]{Figures/Theory/incepmodels_T_dep.pdf}
+	\includegraphics[width=0.65\textwidth]{Figures/Theory/incepmodels_T_dep.pdf}
 	\caption{The temperature dependence of inception flux, $I_{inc}$, predicted using various PAH growth models. $I_{inc}$ of each model is normalized with its maximum to facilitate the comparison.}
 	\label{fig:inceptempdep} 
 \end{figure}
