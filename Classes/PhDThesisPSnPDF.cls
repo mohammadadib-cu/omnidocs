@@ -964,6 +964,17 @@ wish to left align your text}
 }
 
 
+% ********************************* Publications *********************************
+% The publications environment makes sure the publications gets its
+% own page, centered
+
+\newenvironment{publications}{
+\cleardoublepage
+\setsinglecolumn
+\chapter*{\centering \Large Publications}
+\thispagestyle{empty}
+}
+
 
 % ******************************* Declaration **********************************
 % The declaration environment puts a large, bold, centered

@@ -1,22 +1,21 @@
-\chapter{Theoretical Model}
+\chapter{Theoretical Foundation}
 \label{chap:theory}
 The mathematical basis for \textit{Omnisoot} is explained in the top-to-bottom hierarchical order. First, the governing equations for constant volume, constant pressure, perfectly stirred and plug flow reactor models are reviewed in Sections~\ref{sec:cvr}-\ref{sec:pfr}. These equations differ from pure gas-phase transport formulation as they consider the solid phase. The transport equations of ``soot variables" include the source terms that account for change in each soot variable due to inception, surface growth, oxidation and coagulation. Then, particle dynamics models are explained in Sections~\ref{sec:particledynamics} that entails description of size distribution and morphology of soot particles and their collision rate, which is used to determine the coagulation source term. Section~\ref{sec:pahgrowmodel} focuses on the \textit{``PAH growth model"}s that take care of inception and adsorption from designated precursors and calculates the corresponding source terms. Similarly, the \textit{``surface reactions"} model are detailed in Section~\ref{sec:surfreacmodel} that elaborates on the surface growth and oxidation rates based on HACA mechanism. %Finally, the rate of addition or removal of gaseous species due to soot formation is explained in Section~\ref{sec:gasscrub}. 
 Figure~\ref{fig:structure} illustrates the general structure of Omnisoot and the sub-models.
 
-\begin{figure}[!htbp]
+\begin{figure}[!t]
 	\centering
-	\includegraphics[height=90mm, ]{Figures/Theory/structure.pdf}
+	\includegraphics[width=0.9\textwidth ]{Figures/Theory/structure.pdf}
 	\caption{The structure of Omnisoot that illustrates the coupling with Cantera and sub-models including reactors, particle dynamic models, PAH growth models and surface reactions models}
 	\label{fig:structure}
 \end{figure}
 
 
-\section{Assumptions and conventions}
+\section{Assumptions and conventions}\label{sec:assumptions}
 Here, the main conventions and assumptions used in the derivation of the mathematical models are listed below.
 
 \begin{enumerate}
 	%\item The ideal gas law is used to calculated physical, transport, and chemical properties of gas mixtures.
-	
 	\item $f_v$ and $\varphi$ denote the volume of soot particles normalized by the gas volume and reactor volume, respectively. Their relationship can be expressed as:
 	
 	\begin{equation}

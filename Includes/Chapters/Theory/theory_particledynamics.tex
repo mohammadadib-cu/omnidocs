@@ -88,7 +88,7 @@ Mass of each agglomerate, $m^i_{agg}$ is expressed as:
 \end{equation}
 
 
-\subsubsection{Soot Composition}
+\subsubsection{Soot composition}
 \label{sec:sootcomp}
 The composition of soot characterized by their elemental carbon to hydrogen ratio (C/H) is a measure of soot maturity and increases from $\mathrm{C/H<2}$ for incipient soot~\citep{ciajolo1998spectroscopic} to $\mathrm{2<C/H<10}$ for nascent soot~\citep{betrancourt2017investigation} and $\mathrm{C/H>20}$ for mature soot~\citep{michelsen2017probing}. The soot agglomerates are assumed to have pure carbon graphitic core~\citep{kholghy2016core} with all hydrogen atoms on the surface~\citep{blanquart2009analyzing}. C/H ratio can be obtained from the total carbon and the hydrogen content as:
 
@@ -140,7 +140,7 @@ The diffusion coefficient of soot particle, $D^i$, is calculated as:
 Note that $\lambda$ is a property of the gas mixture that does not depend on particle mass and morphology. 
 
 
-\subsection{Sectional Population Balance Model}
+\subsection{Sectional Population Balance Model (SPBM)}
 A SPBM with fixed pivots is used to describe particle dynamics~\citep{wu1988discrete}. The mass range of particles is divided into discrete sections each of which includes agglomerates of the same mass. Figure~\ref{fig:sectional} illustrates the interaction between the gas phase and mass sections, as well as the mechanisms by which particles move between sections. Inception introduces new particles to the first section with the mass corresponding to the incipient particle. The particles of each section can migrate to upper sections by gaining mass via surface growth and coagulation, and return to lower sections when they lose mass through oxidation without breaking into smaller particles (i.e., fragmentation is not considered). Particles attach at point contact without coalescence. The mass of sections is determined by a geometric progression that has an initial value equal to the mass of incipient soot particle, and a common ratio of SF, known as sectional spacing factor. The mass of each section is approximated by the carbon content of agglomerates in moles as:
 
 \begin{equation}
@@ -151,7 +151,7 @@ A SPBM with fixed pivots is used to describe particle dynamics~\citep{wu1988disc
 The total number density of agglomerates, $N^i_{agg}$, and primary particles, ${N^i_{pri}}$, and the hydrogen content, $H_{tot}$, are tracked for each section. The mass of each section is fixed, so $C_{tot}$, for each section can be easily calculated by knowing the number of agglomerates; that is, $C_{tot} = N^i_{agg} \cdot {Av} \cdot C^i_{agg}$. Morphological parameters for each section are determined according to the equations provided in Section~\ref{sec:sootmorphology}.
 
 
-\begin{figure}[!htbp]
+\begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/Theory/Sectional.pdf}
 	\caption[The illustration of sections in SPBM.]{The illustration of sections in SPBM. The mass of sections grows progressively by the scale factor of SF. Inception introduces new particles to the first section that propagate to the upper section via coagulation and surface growth and return to lower sections by oxidation. Carbon and hydrogen pass from gas to solid phase through inception and surface growth and goes back via oxidation.}
@@ -187,8 +187,8 @@ New particles formed by coagulation are assigned to an upper section, with a tot
 	\label{eqn:S_Htotsect}.
 \end{equation}
  
-\subsubsection{Coagulation Source Term}
-\label{sec:sectcoagsource}
+%\subsubsection{Coagulation source terms}
+%\label{sec:sectcoagsource}
 Coagulation redistributes the total number of agglomerates and primary particles as well as hydrogen atoms among the sections. The partial coagulation source terms for ${N^i_{agg}}$, ${N^i_{pri}}$ and ${H^i_{tot}}$ can be calculated as:
 
 \begin{equation}
@@ -404,8 +404,8 @@ In Equation~\eqref{eqn:IcoagNaggsect}, $\zeta^{jk}$ is the coagulation efficienc
 Equation~\eqref{eqn:coageffphi} is valid for $d^{jk}_r$ between 1 and 7~nm, and $\zeta^{ij}$ is assumed as unity for particles with a reduced diameter larger than 7~nm.
 
 
-\subsubsection{Other Source terms}
-\label{sec:sectothersource}
+%\subsubsection{Other source terms}
+%\label{sec:sectothersource}
 
 Inception introduces equal number of agglomerates and primary particles to the first section.
 
@@ -490,29 +490,31 @@ As agglomerates move up/down through sections, they carry the number of primary 
 	\label{eqn:S_Npri_gradssect}
 \end{equation}
 
+
 \begin{equation}
 	\left(S^i_{H_{tot}}\right)_{haca, ads}=
 	\frac{1}{Av}
 	\left\{
-	\begin{aligned}
-		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg} 
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads},
-		&&
-		\text{if } i = 1
+	\begin{alignedat}{2}
+		&-\frac{I^i_{C_{tot},haca}+I^i_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg}
+		+ I^{i}_{H_{tot},haca} + I^{i}_{H_{tot},ads},
+		&\qquad& \text{if } i = 1
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
 		-\frac{I^{i}_{C_{tot},haca}+I^{i}_{C_{tot},ads}}{C^{i+1}_{agg}-C^{i}_{agg}}H^{i}_{agg}
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads},
-		&&
-		\text{if } 1 < i < n_{sec}
+		\\
+		&\quad 
+		+ I^{i}_{H_{tot},haca} + I^{i}_{H_{tot},ads},
+		&\qquad& \text{if } 1 < i < n_{sec}
 		\\
 		&\frac{I^{i-1}_{C_{tot},haca}+I^{i-1}_{C_{tot},ads}}{C^{i}_{agg}-C^{i-1}_{agg}}H^{i-1}_{agg}
-		+ I^{i}_{H_{tot}, haca} + I^{i}_{H_{tot}, ads}.
-		&&\text{if } i=n_{sec}
-	\end{aligned}
+		+ I^{i}_{H_{tot},haca} + I^{i}_{H_{tot},ads},
+		&\qquad& \text{if } i=n_{sec}
+	\end{alignedat}
 	\right.
 	\label{eqn:S_Htot_gradssect}
 \end{equation}
+
 
 Similarly, the agglomerates lose carbon mass by oxidation, and descend to the lower sections carrying primary particle and hydrogen.
 
@@ -598,7 +600,7 @@ Similarly, the agglomerates lose carbon mass by oxidation, and descend to the lo
 \end{equation}
 
 
-\subsection{Monodisperse Population Balance Model}
+\subsection{Monodisperse Population Balance Model (MPBM)}
 \label{sec:mpbm}
 The MPBM used in this study is based on the monodisperse model presented in \citep{kholghy2021surface}, and it tracks $N_{pri}$, $N_{agg}$, $C_{tot}$ and $H_{tot}$. The coagulation model follows the same principles as the SPBM, but the calculations are greatly simplified due to the monodispersity assumption. This approach has been shown to achieve accuracy comparable to that of DEM and SPBM when applied with well-justified assumptions~\citep{Kelesidis2017Flame, kelesidis2019estimating}. The rate of decay of agglomerates is simply described as:
 
